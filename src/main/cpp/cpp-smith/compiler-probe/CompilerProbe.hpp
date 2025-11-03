@@ -12,6 +12,7 @@
 inline std::vector<std::filesystem::path> parseIncludes(const std::string& command) {
     std::vector<std::filesystem::path> includes;
 
+    // TODO: test this for each compiler
     using Pipe = std::unique_ptr<FILE, int(*)(FILE*)>;
     Pipe pipe(popen((command + " 2>&1").c_str(), "r"), pclose);
 
@@ -38,8 +39,10 @@ inline std::vector<std::filesystem::path> parseIncludes(const std::string& comma
             break;
         }
         if (in_section) {
-            std::string trimmed = std::regex_replace(line, std::regex(R"(^\s+)"), "");
-            if (!trimmed.empty()) {
+            if (std::string trimmed = std::regex_replace(line, std::regex(R"(^\s+)"), "");
+                !trimmed.empty()
+            )
+            {
                 includes.emplace_back(trimmed);
             }
         }
@@ -48,28 +51,19 @@ inline std::vector<std::filesystem::path> parseIncludes(const std::string& comma
     return includes;
 }
 
-
-
 class CompilerProbe {
 public:
     virtual ~CompilerProbe() = default;
 
+    // TODO: add an exists() function?
     [[nodiscard]] virtual std::string name() const = 0;
     [[nodiscard]] virtual std::filesystem::path findCompiler() const = 0;
     [[nodiscard]] virtual std::vector<std::filesystem::path> getSystemIncludes() const = 0;
-};
 
-class GccProbe : public CompilerProbe {
-public:
-    [[nodiscard]] std::string name() const override { return "gcc"; }
-
-    [[nodiscard]] std::filesystem::path findCompiler() const override {
-        return "/usr/bin/g++";
-    }
-
-    [[nodiscard]] std::vector<std::filesystem::path> getSystemIncludes() const override {
-        return parseIncludes("g++ -std=c++23 -E -x c++ /dev/null -v");
-    }
+    [[nodiscard]] virtual std::pair<std::vector<std::filesystem::path>, std::vector<std::filesystem::path>>
+    getDependencies(
+        const std::vector<std::string>& compiler_arguments, const std::filesystem::path& translation_unit_path
+    ) const = 0;
 };
 
 class ClangProbe : public CompilerProbe {

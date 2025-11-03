@@ -12,4 +12,5 @@ target_sources(source-graph-lib
 target_link_libraries(source-graph-lib
     PUBLIC
         compiler-probe-lib
+        build-system
 )

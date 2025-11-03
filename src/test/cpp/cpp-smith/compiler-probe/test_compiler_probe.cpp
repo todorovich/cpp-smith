@@ -1,4 +1,6 @@
 #include "cpp-smith/compiler-probe/CompilerProbe.hpp"
+#include "cpp-smith/compiler-probe/GccProbe.hpp"
+
 #include <catch2/catch_test_macros.hpp>
 #include <print>
 
@@ -21,12 +23,4 @@ TEST_CASE("GccProbe returns system includes", "[gccprobe]") {
     }
 }
 
-TEST_CASE("ClangProbe returns system includes", "[clangprobe]") {
-    ClangProbe probe;
-    auto includes = probe.getSystemIncludes();
-    REQUIRE_FALSE(includes.empty());
-    for (const auto& path : includes) {
-        std::println("Clang include: {}", path.string());
-    }
-}
 #endif

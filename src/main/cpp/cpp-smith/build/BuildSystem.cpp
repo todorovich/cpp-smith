@@ -1,28 +1,36 @@
 #include "BuildSystem.hpp"
 
-ConfigurationBuilder BuildSystem::configuration(const std::string& name)
-{
-    return ConfigurationBuilder(*this, name);
-}
+#include "artifacts/ArtifactBuilder.hpp"
+#include "artifacts/ExecutableBuilder.hpp"
+#include "artifacts/StaticLibraryBuilder.hpp"
+#include "artifacts/SharedLibraryBuilder.hpp"
 
-BuildSystem& BuildSystem::add(Configuration config)
+namespace cpp_smith
 {
-    _configurations.emplace(config.name(), std::move(config));
-    return *this;
-}
+    ConfigurationBuilder BuildSystem::configuration(const std::string& name)
+    {
+        return {this, name};
+    }
 
-const Configuration& BuildSystem::getConfiguration(const std::string& name) const
-{
-    return _configurations.at(name);
-}
+    BuildSystem& BuildSystem::add(Configuration&& config)
+    {
+        _configurations.emplace(config.name(), std::move(config));
+        return *this;
+    }
 
-const std::unordered_map<std::string, Configuration>& BuildSystem::configurations() const
-{
-    return _configurations;
-}
+    BuildSystem& BuildSystem::addArtifact(std::unique_ptr<Artifact> artifact)
+    {
+        _artifacts.emplace(artifact->name(), std::move(artifact));
+        return *this;
+    }
 
-void BuildSystem::build()
-{
-    // TODO: actually do the build.
-    // Optional: finalize, validate configs, generate full build DAG, etc.
+    const Configuration& BuildSystem::getConfiguration(const std::string& name) const
+    {
+        return _configurations.at(name); // todo: this throws a bs exception, would be nice to throw something that says where you made the bad call
+    }
+
+    const std::unordered_map<std::string, Configuration>& BuildSystem::configurations() const
+    {
+        return _configurations;
+    }
 }

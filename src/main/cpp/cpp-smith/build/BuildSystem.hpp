@@ -3,24 +3,56 @@
 #include "Configuration.hpp"
 #include "ConfigurationBuilder.hpp"
 
+#include "artifacts/Artifact.hpp"
+#include "artifacts/ArtifactBuilder.hpp"
+
+#include <memory>
 #include <string>
 #include <unordered_map>
 
-class BuildSystem
+namespace cpp_smith
 {
-    std::unordered_map<std::string, Configuration> _configurations;
+    class BuildSystem
+    {
+        std::unordered_map<std::string, Configuration> _configurations;
+        std::unordered_map<std::string, std::unique_ptr<Artifact>> _artifacts;
 
-public:
-    // Start building a new configuration
-    ConfigurationBuilder configuration(const std::string& name);
+    public:
+        // Configuration DSL
+        ConfigurationBuilder configuration(const std::string& name);
 
-    // Finalize and store a Configuration
-    BuildSystem& add(Configuration config);
+        // Store a finalized Configuration
+        BuildSystem& add(Configuration&& config);
 
-    // Lookup or inspect configs (optional)
-    const Configuration& getConfiguration(const std::string& name) const;
-    const std::unordered_map<std::string, Configuration>& configurations() const;
+        // Artifact DSL
+        template<typename T>
+        ArtifactBuilder<T> artifact(const std::string& name)
+        {
+            return ArtifactBuilder<T>(*this, name);
+        }
 
-    // Final entry point
-    void build(); // optional: resolve graph, validate, etc.
-};
+        // Store a finalized Artifact
+        BuildSystem& addArtifact(std::unique_ptr<Artifact> artifact);
+
+        // Accessors
+        const Configuration& getConfiguration(const std::string& name) const;
+        const std::unordered_map<std::string, Configuration>& configurations() const;
+
+        const Artifact& getArtifact(const std::string& name) const
+        {
+            return *(_artifacts.at(name));
+        };
+
+        const std::unordered_map<std::string, std::unique_ptr<Artifact>>& artifacts() const
+        {
+            return _artifacts;
+        };
+
+        // Finalize the build: generate tasks, run dependency resolution, etc.
+        void build()
+        {
+            /*TODO*/
+        };
+    };
+}
+

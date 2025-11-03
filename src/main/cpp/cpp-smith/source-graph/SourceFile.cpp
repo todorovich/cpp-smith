@@ -4,12 +4,12 @@ namespace cpp_smith
 {
     SourceFile::SourceFile(
         const std::filesystem::path& path,
-        std::vector<std::filesystem::path> user_deps,
-        std::vector<std::filesystem::path> system_deps
+        std::vector<std::filesystem::path>& _direct_dependencies,
+        std::vector<std::filesystem::path>& _system_dependencies
     )
         : _path(std::filesystem::absolute(path).lexically_normal())
-        , _user_deps(std::move(user_deps))
-        , _system_deps(std::move(system_deps))
+        , _direct_dependencies(std::move(_direct_dependencies))
+        , _system_dependencies(std::move(_system_dependencies))
     {}
 
     const std::filesystem::path& SourceFile::path() const
@@ -17,13 +17,13 @@ namespace cpp_smith
         return _path;
     }
 
-    const std::vector<std::filesystem::path>& SourceFile::userDependencies() const
+    const std::vector<std::filesystem::path>& SourceFile::directDependencies() const
     {
-        return _user_deps;
+        return _direct_dependencies;
     }
 
     const std::vector<std::filesystem::path>& SourceFile::systemDependencies() const
     {
-        return _system_deps;
+        return _system_dependencies;
     }
 }

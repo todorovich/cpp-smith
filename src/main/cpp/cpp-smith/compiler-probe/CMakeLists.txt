@@ -6,3 +6,5 @@ target_sources(compiler-probe-lib
     PUBLIC
         CompilerProbe.hpp
 )
+
+target_include_directories(compiler-probe-lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
