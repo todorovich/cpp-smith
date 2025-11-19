@@ -1,8 +1,7 @@
 #pragma once
 
 #include "ArtifactBuilder.hpp"
-#include "SharedLibrary.hpp"
-#include "../BuildSystem.hpp"
+#include "StaticLibrary.hpp"
 
 #include <filesystem>
 #include <iterator>
@@ -12,16 +11,16 @@
 
 namespace cpp_smith
 {
-    // Builder specialization for SharedLibrary
+    // Builder specialization for StaticLibrary
     template <>
-    class ArtifactBuilder<SharedLibrary>
+    class ArtifactBuilder<StaticLibrary>
     {
-        BuildSystem& _parent;
+        Project& _parent;
         std::string _name;
         std::vector<std::filesystem::path> _sources;
 
     public:
-        ArtifactBuilder(BuildSystem& parent, std::string name)
+        ArtifactBuilder(Project& parent, std::string name)
             : _parent(parent)
             , _name(std::move(name))
         {}
@@ -43,11 +42,11 @@ namespace cpp_smith
             return *this;
         }
 
-        [[nodiscard]] std::unique_ptr<SharedLibrary> build() const
+        [[nodiscard]] std::unique_ptr<Artifact> create() const
         {
-            return std::make_unique<SharedLibrary>(_name, _sources);
+            return std::make_unique<StaticLibrary>(_name, _sources);
         }
 
-        [[maybe_unused]] BuildSystem& buildSystem();
+        [[maybe_unused]] Project& submit();
     };
 }

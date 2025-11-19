@@ -12,4 +12,5 @@ target_link_libraries(test_build_system
 target_sources(test_build_system
     PRIVATE
         test_build_system.cpp
+        test_executable.cpp
 )

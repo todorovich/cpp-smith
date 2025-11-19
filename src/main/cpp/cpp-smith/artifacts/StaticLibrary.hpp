@@ -18,9 +18,16 @@ namespace cpp_smith
             , _sources(std::move(sources))
         {}
 
-        [[nodiscard]] std::vector<std::filesystem::path> sourceFiles() const override
+        [[nodiscard]] const std::vector<std::filesystem::path>& sources() const override
         {
             return _sources;
+        }
+
+        void build(const Configuration* configuration,
+                   const std::filesystem::path& build_directory,
+                   const std::filesystem::path& install_directory) const override
+        {
+
         }
     };
 }

@@ -1,6 +1,7 @@
 #pragma once
 
-#include "GccProbe.hpp"
+#include "compiler-probe/CompilerProbe.hpp"
+#include "compiler-probe/GccProbe.hpp"
 
 #include <filesystem>
 #include <vector>
@@ -20,10 +21,10 @@ namespace cpp_smith
         );
 
     public:
-        static SourceFile from(const std::filesystem::path& path)
+        static SourceFile from(const std::filesystem::path& path, const CompilerProbe* probe)
         {
             constexpr std::vector<std::string> vector {};
-            auto [direct, system] = GccProbe().getDependencies(vector, path);
+            auto [direct, system] = probe->getDependencies(vector, path);
             return SourceFile{ path, direct, system };
         }
 

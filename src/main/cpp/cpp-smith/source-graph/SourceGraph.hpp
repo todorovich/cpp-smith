@@ -1,10 +1,10 @@
 // src/main/cpp/cpp-smith/source-graph/SourceGraph.hpp
 #pragma once
 
-#include "Configuration.hpp"
-#include "GccProbe.hpp"
 #include "SourceFile.hpp"
 #include "artifacts/Artifact.hpp"
+#include "compiler-probe/GccProbe.hpp"
+
 #include <print>
 
 namespace cpp_smith
@@ -14,9 +14,10 @@ namespace cpp_smith
     public:
         SourceGraph(const Artifact* artifact, const Configuration& configuration)
         {
-            for (const auto& path : artifact->sourceFiles())
+            cpp_smith::GccProbe probe{};
+            for (const auto& path : artifact->sources())
             {
-                SourceFile sourceFile = SourceFile::from(path);
+                SourceFile sourceFile = SourceFile::from(path, &probe);
 
                 std::println("Translation Unit: {}", sourceFile.path().string());
 

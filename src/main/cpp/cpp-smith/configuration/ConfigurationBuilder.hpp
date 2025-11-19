@@ -1,5 +1,6 @@
 #pragma once
 
+#include "CompilerType.hpp"
 
 #include <filesystem>
 #include <string>
@@ -7,14 +8,14 @@
 
 namespace cpp_smith
 {
-    class BuildSystem; // Forward declaration
+    class Project; // Forward declaration
     class Configuration;
 
     class ConfigurationBuilder
     {
-        BuildSystem* _parent;
+        Project* _buildSystem;
         std::string _name;
-        std::filesystem::path _compiler;
+        CompilerType _compiler;
         std::vector<std::string> _flags;
         std::vector<std::string> _defines;
         std::vector<std::filesystem::path> _user_includes;
@@ -22,13 +23,14 @@ namespace cpp_smith
         std::string _platform;
         std::string _architecture;
 
+
     public:
-        ConfigurationBuilder(BuildSystem* parent, std::string name);
+        ConfigurationBuilder(Project* buildSystem, std::string name);
 
         // Fluent mutation API
-        ConfigurationBuilder& setCompiler(std::filesystem::path compiler);
-        ConfigurationBuilder& setPlatform(std::string platform);
-        ConfigurationBuilder& setArchitecture(std::string architecture);
+        ConfigurationBuilder& withCompiler(CompilerType compiler);
+        ConfigurationBuilder& withPlatform(std::string platform);
+        ConfigurationBuilder& withArchitecture(std::string architecture);
 
         ConfigurationBuilder& addFlag(std::string flag);
         ConfigurationBuilder& addFlags(std::vector<std::string> flags);
@@ -40,9 +42,9 @@ namespace cpp_smith
         ConfigurationBuilder& addSystemIncludes(std::vector<std::filesystem::path> dirs);
 
         // Returns finalized Configuration
-        [[nodiscard]] Configuration build() const;
+        [[nodiscard]] Configuration create() const;
 
         // Registers into Build and returns Build&
-        BuildSystem& buildSystem();
+        Project& submit();
     };
 }

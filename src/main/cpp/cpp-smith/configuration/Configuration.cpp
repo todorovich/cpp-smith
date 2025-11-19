@@ -1,10 +1,12 @@
 #include "Configuration.hpp"
 
+#include <utility>
+
 namespace cpp_smith
 {
     Configuration::Configuration(
         std::string name,
-        std::filesystem::path compiler,
+        CompilerType compiler,
         std::vector<std::string> flags,
         std::vector<std::string> defines,
         std::vector<std::filesystem::path> user_includes,
@@ -13,7 +15,7 @@ namespace cpp_smith
         std::string architecture
     )
         : _name(std::move(name))
-        , _compiler(std::move(compiler))
+        , _compiler(compiler)
         , _flags(std::move(flags))
         , _defines(std::move(defines))
         , _user_includes(std::move(user_includes))
@@ -37,7 +39,7 @@ namespace cpp_smith
         return _architecture;
     }
 
-    const std::filesystem::path& Configuration::compiler() const
+    CompilerType Configuration::compiler() const
     {
         return _compiler;
     }

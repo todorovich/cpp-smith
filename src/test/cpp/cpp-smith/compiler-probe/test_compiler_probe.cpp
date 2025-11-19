@@ -15,7 +15,7 @@ TEST_CASE("MsvcProbe returns system includes", "[msvcprobe]") {
 }
 #else
 TEST_CASE("GccProbe returns system includes", "[gccprobe]") {
-    GccProbe probe;
+    cpp_smith::GccProbe probe;
     auto includes = probe.getSystemIncludes();
     REQUIRE_FALSE(includes.empty());
     for (const auto& path : includes) {

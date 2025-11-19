@@ -6,7 +6,7 @@
 
 namespace cpp_smith
 {
-    class BuildSystem;
+    class Project;
 
     template <typename T>
     concept ArtifactType = std::derived_from<T, Artifact>;
@@ -14,16 +14,16 @@ namespace cpp_smith
     // Primary template. Specializations are provided per artifact type.
     template <ArtifactType T> class ArtifactBuilder
     {
-        BuildSystem& _buildSystem;
+        Project& _buildSystem;
 
       public:
-        explicit ArtifactBuilder(BuildSystem& buildSystem);
+        explicit ArtifactBuilder(Project& buildSystem);
 
         virtual ~ArtifactBuilder() = default;
 
-        virtual std::unique_ptr<T> build() const = 0;
+        virtual std::unique_ptr<T> create() const = 0;
 
-        BuildSystem& buildSystem();
+        Project& submit();
     };
 
 } // namespace cpp_smith

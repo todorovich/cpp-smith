@@ -1,25 +1,28 @@
-#include "ConfigurationBuilder.hpp"
-#include "BuildSystem.hpp"
+#include "configuration/ConfigurationBuilder.hpp"
+#include "Project.hpp"
+#include "configuration/Configuration.hpp"
+
+#include "CompilerType.hpp"
 
 namespace cpp_smith
 {
-    ConfigurationBuilder::ConfigurationBuilder(
-        BuildSystem* parent,
-        std::string name
-    )
-        : _parent(parent)
+    ConfigurationBuilder::ConfigurationBuilder(Project* buildSystem, std::string name)
+        : _buildSystem(buildSystem)
         , _name(std::move(name))
-    {}
 
-    ConfigurationBuilder& ConfigurationBuilder::setCompiler(
-        std::filesystem::path compiler
+        , _compiler(CompilerType::GCC)
+    {
+    }
+
+    ConfigurationBuilder& ConfigurationBuilder::withCompiler(
+        CompilerType compiler
     )
     {
-        _compiler = std::move(compiler);
+        _compiler = compiler;
         return *this;
     }
 
-    ConfigurationBuilder& ConfigurationBuilder::setPlatform(
+    ConfigurationBuilder& ConfigurationBuilder::withPlatform(
         std::string platform
     )
     {
@@ -27,7 +30,7 @@ namespace cpp_smith
         return *this;
     }
 
-    ConfigurationBuilder& ConfigurationBuilder::setArchitecture(
+    ConfigurationBuilder& ConfigurationBuilder::withArchitecture(
         std::string architecture
     )
     {
@@ -115,7 +118,7 @@ namespace cpp_smith
         return *this;
     }
 
-    Configuration ConfigurationBuilder::build() const
+    Configuration ConfigurationBuilder::create() const
     {
         return Configuration(
             _name,
@@ -129,8 +132,8 @@ namespace cpp_smith
         );
     }
 
-    BuildSystem& ConfigurationBuilder::buildSystem()
+    Project& ConfigurationBuilder::submit()
     {
-        return _parent->add(build());
+        return _buildSystem->accept(create());
     }
 }

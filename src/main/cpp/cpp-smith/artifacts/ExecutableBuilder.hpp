@@ -1,26 +1,25 @@
 #pragma once
 
+#include "../Project.hpp"
 #include "ArtifactBuilder.hpp"
-#include "StaticLibrary.hpp"
+#include "Executable.hpp"
 
 #include <filesystem>
-#include <iterator>
 #include <memory>
 #include <string>
-#include <vector>
 
 namespace cpp_smith
 {
-    // Builder specialization for StaticLibrary
+    // Builder specialization for Executable
     template <>
-    class ArtifactBuilder<StaticLibrary>
+    class ArtifactBuilder<Executable>
     {
-        BuildSystem& _parent;
+        Project& _parent;
         std::string _name;
         std::vector<std::filesystem::path> _sources;
 
     public:
-        ArtifactBuilder(BuildSystem& parent, std::string name)
+        ArtifactBuilder(Project& parent, std::string name)
             : _parent(parent)
             , _name(std::move(name))
         {}
@@ -42,11 +41,11 @@ namespace cpp_smith
             return *this;
         }
 
-        [[nodiscard]] std::unique_ptr<Artifact> build() const
+        [[nodiscard]] std::unique_ptr<Executable> create() const
         {
-            return std::make_unique<StaticLibrary>(_name, _sources);
+            return std::make_unique<Executable>(_name, _sources);
         }
 
-        [[maybe_unused]] BuildSystem& buildSystem();
+        [[maybe_unused]] Project& submit();
     };
 }

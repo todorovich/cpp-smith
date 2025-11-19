@@ -4,8 +4,13 @@
 #include <string>
 #include <vector>
 
+#include "compiler-probe/CompilerProbe.hpp"
+
 namespace cpp_smith
 {
+    class Configuration;
+    class CompilerProbe;
+
     class Artifact
     {
         std::string _name;
@@ -20,6 +25,12 @@ namespace cpp_smith
         [[nodiscard]] const std::string& name() const { return _name; }
 
         // Return the translation units that define this artifact.
-        [[nodiscard]] virtual std::vector<std::filesystem::path> sourceFiles() const = 0;
+        [[nodiscard]] virtual const std::vector<std::filesystem::path>& sources() const = 0;
+
+        virtual void build(
+            const Configuration* configuration,
+            const std::filesystem::path& build_directory,
+            const std::filesystem::path& install_directory
+        ) const = 0;
     };
 }
