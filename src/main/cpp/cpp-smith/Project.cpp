@@ -3,7 +3,6 @@
 #include "artifacts/ArtifactBuilder.hpp"
 #include "artifacts/ExecutableBuilder.hpp"
 
-
 namespace cpp_smith
 {
     Project& Project::accept(Configuration&& config)
@@ -35,7 +34,7 @@ namespace cpp_smith
 
     const std::filesystem::path& Project::getInstallDirectory() const
     {
-        return _install_directory;
+        return _binary_directory;
     }
 
     const std::unordered_map<std::string, Configuration>& Project::getConfigurations() const
@@ -46,8 +45,9 @@ namespace cpp_smith
     Project& Project::withRootDirectory(std::filesystem::path project_directory)
     {
         _project_directory = project_directory;
-        _build_directory = project_directory/"build";
-        _install_directory = project_directory/"install";
+        _build_directory = project_directory/"build/obj";
+        _binary_directory = project_directory/"build/bin";
+        _library_directory = project_directory/"build/bin";
         return *this;
     }
 }

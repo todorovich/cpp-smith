@@ -10,9 +10,11 @@ AllowShortLoopsOnASingleLine: false
 AllowShortEnumsOnASingleLine: false
 
 BinPackParameters: false
+BinPackArguments: false
 AllowAllParametersOfDeclarationOnNextLine: false
 AlwaysBreakAfterReturnType: None
-BreakBeforeBraces: Allman
+BreakBeforeBraces: All
+AlignAfterOpenBracket: AlwaysBreak
 BraceWrapping:
   AfterClass: true
   AfterControlStatement: Always

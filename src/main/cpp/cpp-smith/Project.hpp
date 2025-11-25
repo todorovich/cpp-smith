@@ -23,7 +23,8 @@ namespace cpp_smith
         // TODO:: These should end up as the defaults in each configuration. and used from there.
         std::filesystem::path _project_directory;
         std::filesystem::path _build_directory;
-        std::filesystem::path _install_directory;
+        std::filesystem::path _binary_directory;
+        std::filesystem::path _library_directory;
 
         // Artifact DSL
         template<typename T>
@@ -77,7 +78,7 @@ namespace cpp_smith
             {
                 for (const auto& configuration : _configurations | std::views::values)
                 {
-                    artifact->build(&configuration, _build_directory, _install_directory);
+                    artifact->build(&configuration, _build_directory, _binary_directory);
                 }
             }
         }

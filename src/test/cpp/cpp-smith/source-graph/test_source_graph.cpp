@@ -1,5 +1,5 @@
-#include "../../../../main/cpp/cpp-smith/Project.hpp"
-#include "build/artifacts/Executable.hpp"
+#include "Project.hpp"
+#include "artifacts/Executable.hpp"
 
 #include "source-graph/SourceFile.hpp"
 #include "source-graph/SourceGraph.hpp"

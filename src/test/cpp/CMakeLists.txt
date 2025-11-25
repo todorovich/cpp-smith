@@ -6,3 +6,4 @@ target_compile_definitions(test_definitions INTERFACE TEST_DATA_DIR=\"${CMAKE_SO
 target_include_directories(test_definitions INTERFACE ${CMAKE_SOURCE_DIR}/src/main/cpp/)
 
 add_subdirectory(cpp-smith)
+add_subdirectory(prover)

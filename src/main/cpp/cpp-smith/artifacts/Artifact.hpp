@@ -15,11 +15,12 @@ namespace cpp_smith
     {
         std::string _name;
 
-    protected:
+      protected:
         explicit Artifact(std::string name)
-            : _name(std::move(name)) {}
+            : _name(std::move(name))
+        {}
 
-    public:
+      public:
         virtual ~Artifact() = default;
 
         [[nodiscard]] const std::string& name() const { return _name; }

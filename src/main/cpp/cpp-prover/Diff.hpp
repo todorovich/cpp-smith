@@ -1,0 +1,76 @@
+#pragma once
+
+#include <format>
+
+namespace prover
+{
+    class Diff
+    {
+        static std::string prefix_lines(std::string_view text, char prefix)
+        {
+            // count '\n'
+            std::size_t nl = 0;
+            for (char c : text) if (c == '\n') ++nl;
+
+            // reserve: original + (nl + 1) prefixes + newline at end
+            std::string out;
+            out.reserve(text.size() + (nl + 1) * 2);
+
+            out.push_back(prefix);
+
+            std::size_t start = 0;
+            while (true)
+            {
+                std::size_t pos = text.find('\n', start);
+                if (pos == std::string_view::npos)
+                {
+                    out.append(text.substr(start));
+                    out.push_back('\n');
+                    break;
+                }
+
+                out.append(text.substr(start, pos - start + 1)); // include '\n'
+                out.push_back(prefix);
+                start = pos + 1;
+            }
+
+            return out;
+        }
+
+        std::string _diff;
+
+    public:
+        Diff(const std::string& expected, const std::string& actual)
+        {
+            _diff = std::format(
+                "--- expected\n+++ actual\n@@\n{}{}",
+                prefix_lines(expected, '-'),
+                prefix_lines(actual,  '+')
+            );
+        }
+
+        explicit Diff(const std::string_view sv) : _diff(sv) {}
+
+        explicit operator std::string() const { return _diff; }
+        explicit operator std::string_view() const { return std::string_view{_diff}; }
+
+        [[nodiscard]] const char* data() const noexcept { return _diff.data(); }
+        [[nodiscard]] const char* c_str() const noexcept { return _diff.c_str(); }
+        [[nodiscard]] std::size_t size() const noexcept { return _diff.size(); }
+        [[nodiscard]] std::size_t length() const noexcept { return _diff.length(); }
+    };
+}
+
+template<>
+struct std::formatter<prover::Diff>
+    : std::formatter<std::string_view>
+{
+    auto format(const prover::Diff& d,
+                std::format_context& ctx) const
+    {
+        // cast to string_view → use std::formatter<string_view>
+        return std::formatter<std::string_view, char>::format(
+            static_cast<std::string_view>(d), ctx
+        );
+    }
+};

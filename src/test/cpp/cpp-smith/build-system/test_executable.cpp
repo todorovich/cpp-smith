@@ -1,9 +1,9 @@
 #include <catch2/catch_test_macros.hpp>
 
-#include "../../../../main/cpp/cpp-smith/Project.hpp"
-#include "cpp-smith/build/artifacts/Executable.hpp"
-#include "cpp-smith/build/configuration/Configuration.hpp"
-#include "cpp-smith/compiler-probe/GccProbe.hpp"
+#include "Project.hpp"
+#include "artifacts/Executable.hpp"
+#include "configuration/Configuration.hpp"
+#include "compiler-probe/GccProbe.hpp"
 
 TEST_CASE("ArtifactBuilder<Executable> build and register", "[artifact][executable]")
 {

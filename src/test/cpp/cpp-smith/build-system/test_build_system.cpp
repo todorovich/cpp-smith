@@ -1,12 +1,12 @@
 #include <catch2/catch_test_macros.hpp>
 
-#include "../../../../main/cpp/cpp-smith/Project.hpp"
-#include "build/artifacts/ArtifactBuilder.hpp"
-#include "build/artifacts/Executable.hpp"
-#include "build/artifacts/SharedLibrary.hpp"
-#include "build/artifacts/StaticLibrary.hpp"
-#include "build/configuration/Configuration.hpp"
-#include "build/configuration/ConfigurationBuilder.hpp"
+#include "Project.hpp"
+#include "artifacts/ArtifactBuilder.hpp"
+#include "artifacts/Executable.hpp"
+#include "artifacts/SharedLibrary.hpp"
+#include "artifacts/StaticLibrary.hpp"
+#include "configuration/Configuration.hpp"
+#include "configuration/ConfigurationBuilder.hpp"
 
 #include <filesystem>
 #include <string>
