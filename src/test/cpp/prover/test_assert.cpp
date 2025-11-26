@@ -1,8 +1,9 @@
-#include "Diff.hpp"
-#include "cpp-prover/prover_main.hpp"
-#include "cpp-prover/Assert.hpp"
+#include "cpp-prover/Diff.hpp"
+#include "cpp-prover/Test.hpp"
+
 #include <string>
 #include <regex>
+#include <print>
 
 namespace prover
 {
@@ -44,12 +45,12 @@ namespace prover
             throw AssertionFailedException(
                 std::format("{} threw the wrong message\n\n{}",
                     function_call,
-                    prover::Diff(expectedWhat, actual.what()))
+                    Diff(expectedWhat, actual.what()))
             );
         }
-        catch (const std::exception exception)
+        catch (const std::exception& exception)
         {
-            throw new AssertionFailedException(
+            throw AssertionFailedException(
                 std::format(
                     "{} threw {} instead of prover::AssertionFailedException",
                     fail_function_call,
@@ -68,7 +69,7 @@ namespace prover
         []()->void {
             const std::string expectedWhat =
                 "Assert::areEqual Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:82:64\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:84:64\n"
                 "\n"
                 "--- expected\n"
                 "+++ actual\n"
@@ -92,7 +93,7 @@ namespace prover
         []()->void {
             const std::string expectedWhat =
                 "Assert::areNotEqual Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:105:67\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:107:67\n"
                 "\n"
                 "--- expected\n"
                 "+++ actual\n"
@@ -119,7 +120,7 @@ namespace prover
 
             const std::string expectedWhat =std::format(
                 "Assert::areSame Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:139:36\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:141:36\n"
                 "\n"
                 "Provided objects do not share the same memory address\n"
                 "\n"
@@ -154,7 +155,7 @@ namespace prover
 
             const std::string expectedWhat =std::format(
                 "Assert::areNotSame Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:168:39\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:170:39\n"
                 "\n"
                 "Provided objects share the same memory address\n"
                 "Memory Address: {}\n",
@@ -178,7 +179,7 @@ namespace prover
         "Assert::isTrue",
         []()->void {
             const std::string expectedWhat ="Assert::isTrue Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:196:35\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:198:35\n"
                 "\n"
                 "Provided expression evaluated to false\n"
                 "\n"
@@ -206,7 +207,7 @@ namespace prover
         "Assert::isFalse",
         []()->void {
             const std::string expectedWhat ="Assert::isFalse Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:224:36\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:226:36\n"
                 "\n"
                 "Provided expression evaluated to true\n"
                 "\n"
@@ -240,7 +241,7 @@ namespace prover
 
             const std::string expectedWhat = std::format(
                 "Assert::isNullptr Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:260:38\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:262:38\n"
                 "\n"
                 "Provided pointer was not nullptr\n"
                 "\n"
@@ -275,7 +276,7 @@ namespace prover
 
             const std::string expectedWhat =
                 "Assert::isNotNullptr Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:293:41\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:295:41\n"
                 "\n"
                 "Provided pointer was nullptr\n"
                 "\n"
@@ -304,7 +305,7 @@ namespace prover
         []()->void {
             const std::string expectedWhat =
                 "Assert::throwsException Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:319:63\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:321:63\n"
                 "\n"
                 "Assert::throws function did not throw\n";
 
@@ -325,57 +326,3 @@ namespace prover
         }
     );
 }
-/*
-
-
-static prover::Test<void> test_throwsException(
-    "Assert::throwsException",
-    []()->void
-    {
-        auto throwingLambda = []() { throw std::runtime_error("Test exception"); };
-        auto nonThrowingLambda = []() { return; };
-
-        try
-        {
-            Assert::throwsException<std::runtime_error>(throwingLambda, "This should throw.");
-        }
-        catch (const std::exception exception)
-        {
-            throw new prover::AssertionFailedException(
-                std::format("Assert::throwsException(throwingLambda) threw {}", exception.what())
-            );
-        }
-
-        try {
-            Assert::throwsException<std::runtime_error>(nonThrowingLambda, "This should throw.");
-            throw new prover::AssertionFailedException(
-               "Assert::throwsException(nonThrowingLambda) did not throw prover::AssertionFailedException"
-           );
-        }
-        catch (const prover::AssertionFailedException& expected)
-        {
-            if (expected.what() != std::string("This should throw."))
-            {
-                throw new prover::AssertionFailedException(
-                    std::format("Assert::throwsException(nonThrowingLambda) threw wrong message: {}", expected.what())
-                );
-            }
-        }
-        catch (const std::exception exception)
-        {
-            throw new prover::AssertionFailedException(
-                std::format(
-                    "Assert::throwsException(nonThrowingLambda) threw {} instead of prover::AssertionFailedException",
-                    exception.what()
-                )
-            );
-        }
-    }
-);
-*/
-
-
-
-
-
-

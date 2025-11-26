@@ -5,8 +5,8 @@ add_test(NAME SourceGraphTest COMMAND test_source_graph)
 target_link_libraries(test_source_graph
     PRIVATE
         cpp-smith
+        cpp-prover-main
         test_definitions
-        Catch2::Catch2WithMain
 )
 
 target_sources(test_source_graph

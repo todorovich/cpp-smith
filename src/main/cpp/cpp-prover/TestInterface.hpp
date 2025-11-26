@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+#include <source_location>
+
 namespace prover
 {
     class TestInterface

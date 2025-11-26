@@ -1,9 +1,12 @@
-#include "cpp-prover/prover_main.hpp"
+#include "Test.hpp"
 
 #include "cpp-prover/Ansi.hpp"
-#include <format>
 
-static prover::Test<void> test(
+#include <print>
+
+using namespace prover;
+
+static Test<void> test(
     "Test ANSI Color Formatting",
     []()->void
     {
@@ -61,7 +64,7 @@ static prover::Test<void> test_color_function(
 
 
         // Foreground default + normal colors
-        std::string multiple_colors_concatenated = "";
+        std::string multiple_colors_concatenated;
         multiple_colors_concatenated += check(ansi::default_fg, "default_fg");
         multiple_colors_concatenated += " " + check(ansi::black,      "black");
         multiple_colors_concatenated += " " + check(ansi::red,        "red");

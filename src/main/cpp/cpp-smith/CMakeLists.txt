@@ -19,6 +19,7 @@ target_sources(cpp-smith
         source-graph/SourceGraph.cpp
         source-graph/TranslationUnit.cpp
     PUBLIC
+        Platform.hpp
         Project.hpp
         configuration/Configuration.hpp
         configuration/ConfigurationBuilder.hpp

@@ -1,29 +1,33 @@
-#include <catch2/catch_test_macros.hpp>
+#include "cpp-smith/Project.hpp"
+#include "cpp-smith/artifacts/Executable.hpp"
+#include "cpp-smith/configuration/Configuration.hpp"
+#include "cpp-smith/compiler-probe/GccProbe.hpp"
+#include "cpp-prover/Test.hpp"
 
-#include "Project.hpp"
-#include "artifacts/Executable.hpp"
-#include "configuration/Configuration.hpp"
-#include "compiler-probe/GccProbe.hpp"
+using namespace prover;
 
-TEST_CASE("ArtifactBuilder<Executable> build and register", "[artifact][executable]")
-{
-    cpp_smith::Project build_system;
+static Test<void> test(
+    "ArtifactBuilder<Executable> build and register",
+    []() -> void
+    {
+        cpp_smith::Project build_system;
 
-    auto configuration = build_system.define<cpp_smith::Configuration>("debug")
-        .withCompiler(cpp_smith::CompilerType::GCC)
-        .withPlatform("linux")
-        .withArchitecture("x64")
-        .addFlag("-g")
-        .addDefine("DEBUG")
-        .create();
+        auto configuration = build_system.define<cpp_smith::Configuration>("debug")
+            .withCompiler(cpp_smith::CompilerType::GCC)
+            .withPlatform("linux")
+            .withArchitecture("x64")
+            .addFlag("-g")
+            .addDefine("DEBUG")
+            .create();
 
-    auto executable = build_system.define<cpp_smith::Executable>("app")
-        .addSource("src/main.cpp")
-        .create();
+        const auto executable = build_system.define<cpp_smith::Executable>("app")
+            .addSource("src/main.cpp")
+            .create();
 
-    REQUIRE(executable->name() == "app");
+        Assert::areEqual(std::string("app"), executable->name());
 
-    auto files = executable->sources();
-    REQUIRE(files.size() == 1);
-    CHECK(files[0].string() == "src/main.cpp");
-}
+        const auto files = executable->sources();
+        Assert::areEqual(1, files.size());
+        Assert::areEqual(std::string("src/main.cpp"), files[0].string());
+    }
+);

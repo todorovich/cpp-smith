@@ -5,8 +5,8 @@ add_test(NAME CompilerProbeTest COMMAND test_compiler_probe)
 target_link_libraries(test_compiler_probe
     PRIVATE
         cpp-smith
+        cpp-prover-main
         test_definitions
-        Catch2::Catch2WithMain
 )
 
 target_sources(test_compiler_probe
