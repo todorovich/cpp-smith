@@ -1,14 +1,14 @@
 #include "cpp-smith/Project.hpp"
 #include "cpp-smith/artifacts/Executable.hpp"
 #include "cpp-smith/configuration/Configuration.hpp"
-#include "cpp-smith/compiler-probe/GccProbe.hpp"
+
 #include "cpp-prover/Test.hpp"
 
 using namespace prover;
 
-static Test<void> test(
+[[maybe_unused]] const static Test<void> test(
     "ArtifactBuilder<Executable> build and register",
-    []() -> void
+    []
     {
         cpp_smith::Project build_system;
 

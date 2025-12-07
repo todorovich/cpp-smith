@@ -16,4 +16,5 @@ target_link_libraries(test_cpp_smith
 target_sources(test_cpp_smith
     PRIVATE
         test_cpp_smith.cpp
+        test_project.cpp
 )

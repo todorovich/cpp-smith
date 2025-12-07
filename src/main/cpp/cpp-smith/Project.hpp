@@ -1,8 +1,7 @@
 #pragma once
 
-#include "configuration/Configuration.hpp"
-#include "configuration/ConfigurationBuilder.hpp"
-
+#include "Configuration.hpp"
+#include "TransparentContainers.hpp"
 #include "artifacts/Artifact.hpp"
 #include "artifacts/ArtifactBuilder.hpp"
 
@@ -11,14 +10,13 @@
 #include <memory>
 #include <ranges>
 #include <string>
-#include <unordered_map>
 
 namespace cpp_smith
 {
     class Project
     {
-        std::unordered_map<std::string, Configuration> _configurations;
-        std::unordered_map<std::string, std::unique_ptr<Artifact>> _artifacts;
+        TransparentUnorderedMap<std::string, Configuration> _configurations;
+        TransparentUnorderedMap<std::string, std::unique_ptr<Artifact>> _artifacts;
 
         // TODO:: These should end up as the defaults in each configuration. and used from there.
         std::filesystem::path _project_directory;
@@ -53,15 +51,15 @@ namespace cpp_smith
         // Store a finalized Configuration
         Project& accept(Configuration&& config);
 
-        Project& withRootDirectory(std::filesystem::path project_directory);
+        Project& withRootDirectory(const std::filesystem::path& project_directory);
 
         // Accessors
         [[nodiscard]] const Artifact& getArtifact(const std::string& name) const
         {
-            return *(_artifacts.at(name));
+            return *_artifacts.at(name);
         };
 
-        [[nodiscard]] const std::unordered_map<std::string, std::unique_ptr<Artifact>>& getArtifacts() const
+        [[nodiscard]] const TransparentUnorderedMap<std::string, std::unique_ptr<Artifact>>& getArtifacts() const
         {
             return _artifacts;
         };
@@ -70,7 +68,7 @@ namespace cpp_smith
         [[nodiscard]] const std::filesystem::path& getProjectDirectory() const;
         [[nodiscard]] const std::filesystem::path& getBuildDirectory() const;
         [[nodiscard]] const std::filesystem::path& getInstallDirectory() const;
-        [[nodiscard]] const std::unordered_map<std::string, Configuration>& getConfigurations() const;
+        [[nodiscard]] const TransparentUnorderedMap<std::string, Configuration>& getConfigurations() const;
 
         void build()
         {

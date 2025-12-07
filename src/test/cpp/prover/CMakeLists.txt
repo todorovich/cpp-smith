@@ -23,6 +23,7 @@ target_link_libraries(test_ansi
         cpp-smith
         cpp-prover-main
         test_definitions
+
 )
 
 target_sources(test_ansi

@@ -6,46 +6,54 @@
 
 using namespace prover;
 
-static Test<void> test(
+static void testStandardColors()
+{
+    // Standard colors
+    Assert::areEqual<std::string>(ansi::black,   "\x{1b}[30m", "black code mismatch");
+    Assert::areEqual<std::string>(ansi::red,     "\x{1b}[31m", "red code mismatch");
+    Assert::areEqual<std::string>(ansi::green,   "\x{1b}[32m", "green code mismatch");
+    Assert::areEqual<std::string>(ansi::yellow,  "\x{1b}[33m", "yellow code mismatch");
+    Assert::areEqual<std::string>(ansi::blue,    "\x{1b}[34m", "blue code mismatch");
+    Assert::areEqual<std::string>(ansi::magenta, "\x{1b}[35m", "magenta code mismatch");
+    Assert::areEqual<std::string>(ansi::cyan,    "\x{1b}[36m", "cyan code mismatch");
+    Assert::areEqual<std::string>(ansi::white,   "\x{1b}[37m", "white code mismatch");
+}
+
+static void testBrightColors()
+{
+    // Bright colors
+    Assert::areEqual<std::string>(ansi::bright_black,   "\x{1b}[90m", "bright_black code mismatch");
+    Assert::areEqual<std::string>(ansi::bright_red,     "\x{1b}[91m", "bright_red code mismatch");
+    Assert::areEqual<std::string>(ansi::bright_green,   "\x{1b}[92m", "bright_green code mismatch");
+    Assert::areEqual<std::string>(ansi::bright_yellow,  "\x{1b}[93m", "bright_yellow code mismatch");
+    Assert::areEqual<std::string>(ansi::bright_blue,    "\x{1b}[94m", "bright_blue code mismatch");
+    Assert::areEqual<std::string>(ansi::bright_magenta, "\x{1b}[95m", "bright_magenta code mismatch");
+    Assert::areEqual<std::string>(ansi::bright_cyan,    "\x{1b}[96m", "bright_cyan code mismatch");
+    Assert::areEqual<std::string>(ansi::bright_white,   "\x{1b}[97m", "bright_white code mismatch");
+}
+
+[[maybe_unused]] const static Test<void> test_ansi_color_formatting(
     "Test ANSI Color Formatting",
-    []()->void
+    []
     {
-        Assert::areEqual<std::string>(ansi::reset,      "\x1b[0m",  "reset code mismatch");
-        Assert::areEqual<std::string>(ansi::default_fg, "\x1b[39m", "default_fg code mismatch");
-        Assert::areEqual<std::string>(ansi::default_bg, "\x1b[49m", "default_bg code mismatch");
+        Assert::areEqual<std::string>(ansi::reset,      "\x{1b}[0m",  "reset code mismatch");
+        Assert::areEqual<std::string>(ansi::default_fg, "\x{1b}[39m", "default_fg code mismatch");
+        Assert::areEqual<std::string>(ansi::default_bg, "\x{1b}[49m", "default_bg code mismatch");
 
-        // Standard colors
-        Assert::areEqual<std::string>(ansi::black,   "\x1b[30m", "black code mismatch");
-        Assert::areEqual<std::string>(ansi::red,     "\x1b[31m", "red code mismatch");
-        Assert::areEqual<std::string>(ansi::green,   "\x1b[32m", "green code mismatch");
-        Assert::areEqual<std::string>(ansi::yellow,  "\x1b[33m", "yellow code mismatch");
-        Assert::areEqual<std::string>(ansi::blue,    "\x1b[34m", "blue code mismatch");
-        Assert::areEqual<std::string>(ansi::magenta, "\x1b[35m", "magenta code mismatch");
-        Assert::areEqual<std::string>(ansi::cyan,    "\x1b[36m", "cyan code mismatch");
-        Assert::areEqual<std::string>(ansi::white,   "\x1b[37m", "white code mismatch");
-
-        // Bright colors
-        Assert::areEqual<std::string>(ansi::bright_black,   "\x1b[90m", "bright_black code mismatch");
-        Assert::areEqual<std::string>(ansi::bright_red,     "\x1b[91m", "bright_red code mismatch");
-        Assert::areEqual<std::string>(ansi::bright_green,   "\x1b[92m", "bright_green code mismatch");
-        Assert::areEqual<std::string>(ansi::bright_yellow,  "\x1b[93m", "bright_yellow code mismatch");
-        Assert::areEqual<std::string>(ansi::bright_blue,    "\x1b[94m", "bright_blue code mismatch");
-        Assert::areEqual<std::string>(ansi::bright_magenta, "\x1b[95m", "bright_magenta code mismatch");
-        Assert::areEqual<std::string>(ansi::bright_cyan,    "\x1b[96m", "bright_cyan code mismatch");
-        Assert::areEqual<std::string>(ansi::bright_white,   "\x1b[97m", "bright_white code mismatch");
-
+        testStandardColors();
+        testBrightColors();
     }
 );
 
-static prover::Test<void> test_color_function(
+[[maybe_unused]] const static Test<void> test_color_function(
     "Test ANSI Color Function",
-    []() -> void
+    []
     {
         using std::string;
 
-        auto check = [&](std::string_view code, std::string_view name)->std::string
+        auto check = [&](const std::string_view code, const std::string_view name)
         {
-            // expected = <code> + text + <default_fg>
+            // Expected: <code> + text + <default_fg>
             const std::string expected =
                 std::string(code) +
                 std::string(name) +
@@ -90,13 +98,13 @@ static prover::Test<void> test_color_function(
 );
 
 // Background test in the same style
-static prover::Test<void> test_background_function(
+[[maybe_unused]] const static Test<void> test_background_function(
     "Test ANSI Background Function",
-    []() -> void
+    []
     {
         using std::string;
 
-        auto check = [&](std::string_view code, std::string_view name) -> std::string
+        auto check = [&](const std::string_view code, const std::string_view name)
         {
             const std::string expected =
                 std::string(code) +
@@ -138,13 +146,13 @@ static prover::Test<void> test_background_function(
     }
 );
 
-static prover::Test<void> test_style_function(
+[[maybe_unused]] const static Test<void> test_style_function(
     "Test ANSI Style Function",
-    []() -> void
+    []
     {
         using std::string;
 
-        auto check = [&](std::string_view attr, std::string_view name) -> std::string
+        auto check = [&](const std::string_view attr, const std::string_view name)
         {
             const std::string expected =
                 std::string(attr) +
@@ -176,9 +184,9 @@ static prover::Test<void> test_style_function(
     }
 );
 
-static prover::Test<void> test_nested_composition(
+[[maybe_unused]] const static Test<void> test_nested_composition(
     "Test ANSI Nested Composition",
-    []() -> void
+    []
     {
         using std::string;
         using namespace ansi;

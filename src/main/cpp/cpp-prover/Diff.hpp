@@ -6,32 +6,32 @@ namespace prover
 {
     class Diff
     {
-        static std::string prefix_lines(std::string_view text, char prefix)
+        static std::string prefix_lines(std::string_view text, const char prefix)
         {
             // count '\n'
-            std::size_t nl = 0;
-            for (char c : text) if (c == '\n') ++nl;
+            std::size_t new_line = 0;
+            for (const char character : text) if (character == '\n') ++new_line;
 
             // reserve: original + (nl + 1) prefixes + newline at end
             std::string out;
-            out.reserve(text.size() + (nl + 1) * 2);
+            out.reserve(text.size() + (new_line + 1) * 2);
 
             out.push_back(prefix);
 
             std::size_t start = 0;
             while (true)
             {
-                std::size_t pos = text.find('\n', start);
-                if (pos == std::string_view::npos)
+                const std::size_t index = text.find('\n', start);
+                if (index == std::string_view::npos)
                 {
                     out.append(text.substr(start));
                     out.push_back('\n');
                     break;
                 }
 
-                out.append(text.substr(start, pos - start + 1)); // include '\n'
+                out.append(text.substr(start, index - start + 1)); // include '\n'
                 out.push_back(prefix);
-                start = pos + 1;
+                start = index + 1;
             }
 
             return out;
@@ -69,7 +69,7 @@ struct std::formatter<prover::Diff>
                 std::format_context& ctx) const
     {
         // cast to string_view → use std::formatter<string_view>
-        return std::formatter<std::string_view, char>::format(
+        return std::formatter<std::string_view>::format(
             static_cast<std::string_view>(d), ctx
         );
     }

@@ -1,20 +1,19 @@
 #pragma once
 
-#include "../Project.hpp"
-#include "ArtifactBuilder.hpp"
-#include "SharedLibrary.hpp"
+#include "Project.hpp"
+#include "artifacts/ArtifactBuilder.hpp"
+#include "Executable.hpp"
 
 #include <filesystem>
-#include <iterator>
 #include <memory>
 #include <string>
-#include <vector>
 
+// ReSharper disable once CppRedundantNamespaceDefinition
 namespace cpp_smith
 {
-    // Builder specialization for SharedLibrary
+    // Builder specialization for Executable
     template <>
-    class ArtifactBuilder<SharedLibrary>
+    class ArtifactBuilder<Executable>
     {
         Project& _parent;
         std::string _name;
@@ -43,9 +42,9 @@ namespace cpp_smith
             return *this;
         }
 
-        [[nodiscard]] std::unique_ptr<SharedLibrary> create() const
+        [[nodiscard]] std::unique_ptr<Executable> create() const
         {
-            return std::make_unique<SharedLibrary>(_name, _sources);
+            return std::make_unique<Executable>(_name, _sources);
         }
 
         [[maybe_unused]] Project& submit();

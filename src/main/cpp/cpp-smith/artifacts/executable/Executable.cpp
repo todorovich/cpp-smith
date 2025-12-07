@@ -15,42 +15,40 @@ namespace cpp_smith
 
         std::println(
             "\nBuilding Executable\nName: {}\nCompiler: {}\nBuild Directory: {}\n",
-            name().c_str(), compiler, build_directory.c_str()
+            name(), compiler, build_directory.c_str()
         );
 
-        CompilerProbe* compiler_probe;
+        std::unique_ptr<CompilerProbe> compiler_probe;
         switch (compiler)
         {
-            case CompilerType::GCC:
-                compiler_probe = new GccProbe{};
+            using enum CompilerType;
+            case GCC:
+                compiler_probe = std::make_unique<GccProbe>();
                 break;
-            case CompilerType::CLANG: // FALLTHROUGH
-            case CompilerType::MSVC:
-                throw std::runtime_error("Not implemented yet");
+            case CLANG: // FALLTHROUGH
+            case MSVC:
+                static_assert(true, "Not implemented yet");
             default:
-                throw std::logic_error("Unknown compiler type");
+                static_assert(true, "Unknown compiler type");
         }
 
-        // TODO: cache all the things!
-        std::vector<TranslationUnit*> translationUnits;
+        std::vector<std::unique_ptr<TranslationUnit>> translationUnits;
         for (const auto& source : sources())
         {
-            auto* translation_unit = new TranslationUnit {
-                SourceFile::from(source, compiler_probe), *configuration
-            };
-
-            translationUnits.push_back(translation_unit);
+            translationUnits.emplace_back(
+                std::make_unique<TranslationUnit>(SourceFile::from(source, compiler_probe.get()), *configuration)
+            );
         }
 
         for (const auto& translationUnit : translationUnits)
         {
-            compiler_probe->build(translationUnit, build_directory);
+            compiler_probe->build(translationUnit.get(), build_directory);
         }
 
         compiler_probe->link(
             translationUnits,
             install_directory,
             std::string { name() + ".exe" }
-        );
+            );
     }
 }

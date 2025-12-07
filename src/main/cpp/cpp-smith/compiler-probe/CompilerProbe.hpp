@@ -13,15 +13,16 @@ namespace cpp_smith
     public:
         virtual ~CompilerProbe() = default;
 
-        // TODO: add an exists() function?
         [[nodiscard]] virtual std::string name() const = 0;
         [[nodiscard]] virtual std::filesystem::path findCompiler() const = 0;
         [[nodiscard]] virtual std::vector<std::filesystem::path> getSystemIncludes() const = 0;
+        [[nodiscard]] virtual bool exists() = 0;
+        [[nodiscard]] virtual std::string version() = 0;
 
         virtual void build(TranslationUnit* translationUnit, const std::filesystem::path& build_directory) const = 0;
 
         virtual void link(
-            const std::vector<TranslationUnit*>& translation_units,
+            const std::span<std::unique_ptr<TranslationUnit>>& translation_units,
             const std::filesystem::path& install_directory,
             const std::string& filename
         ) const = 0;

@@ -4,8 +4,6 @@
 #include <string>
 #include <vector>
 
-#include "compiler-probe/CompilerProbe.hpp"
-
 namespace cpp_smith
 {
     class Configuration;

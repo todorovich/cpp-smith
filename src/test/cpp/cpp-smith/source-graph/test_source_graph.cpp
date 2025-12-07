@@ -9,21 +9,21 @@ namespace fs = std::filesystem;
 
 const auto cpp_smith_source_directory = fs::path(CPP_SMITH_SOURCE_DIR);
 
-static prover::Test<void> test(
+[[maybe_unused]] const static prover::Test<void> test(
     "SourceGraph gets dependencies",
-    []()->void {
+    [] {
         Project buildSystem;
 
     const auto configuration = buildSystem.define<Configuration>("default").create();
 
-    fs::path entryPoint = cpp_smith_source_directory/ "src/test/data/main.cpp";
+    const fs::path entryPoint = cpp_smith_source_directory/ "src/test/data/main.cpp";
 
     const auto artifact = buildSystem
         .define<Executable>("executable")
         .addSource(entryPoint)
         .create();
 
-    Executable* executable = artifact.get();
-    SourceGraph sourceGraph = SourceGraph(executable, configuration);
+    const Executable* executable = artifact.get();
+    const auto sourceGraph = SourceGraph(executable, configuration);
     }
 );

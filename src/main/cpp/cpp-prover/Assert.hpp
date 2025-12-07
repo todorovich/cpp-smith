@@ -1,14 +1,13 @@
 #pragma once
 
 #include <string>
-#include <string_view>
 #include <format>
 #include <utility>
 #include <memory>
 #include <exception>
-#include <source_location>
 
 #include "Diff.hpp"
+#include "Exceptions.hpp"
 
 template <typename T>
 concept DerivedFromException = std::derived_from<T, std::exception>
@@ -24,31 +23,10 @@ namespace prover
         { f() };
     };
     
-    class AssertionFailedException final : public std::exception
-    {
-    public:
-        const std::string _message;
-        const std::source_location _source_location;
 
-        // ReSharper disable once CppNonExplicitConvertingConstructor
-        // This is a feature not a bug!
-        AssertionFailedException(
-            const std::string& message,
-            const std::source_location source_location = std::source_location::current()
-        )
-            : _message(message)
-            , _source_location(source_location)
-        {}
-
-        [[nodiscard]] const std::source_location& source_location() const noexcept { return _source_location; }
-        [[nodiscard]] const char* what() const noexcept override { return _message.c_str(); }
-    };
-    
     class Assert
     {
-        Assert() = delete;
-
-        static std::string formatUserMessage(const std::string message)
+        static std::string formatUserMessage(const std::string& message)
         {
             if (message.empty())
             {
@@ -59,6 +37,7 @@ namespace prover
         }
 
       public:
+        Assert() = delete;
 
         template <typename ExpectedT, typename ActualT>
             requires std::equality_comparable_with<ExpectedT, ActualT>
@@ -182,7 +161,7 @@ namespace prover
         }
 
         static void isFalse(
-            bool expression,
+            const bool expression,
             const std::string& message = {},
             const std::source_location& source_location = std::source_location::current()
         )
@@ -209,7 +188,7 @@ namespace prover
         }
 
         static void isTrue(
-            bool expression,
+            const bool expression,
             const std::string& message = {},
             const std::source_location& source_location = std::source_location::current()
         )
@@ -307,8 +286,24 @@ namespace prover
                 function();
                 fail("Assert::throws function did not throw", source_location);
             }
-            catch (const ExceptionT&) {
-                return;
+            catch (const ExceptionT&) {}
+            catch (const exceptions::CppSmithException& exception) {
+                fail(
+                    std::format(
+                        "Assert::throwsException Failed: {}\n"
+                        "Assertion Source Location: {}:{}:{}\n"
+                        "\n"
+                        "{}\n",
+                        message,
+                        source_location.file_name(),
+                        source_location.line(),
+                        source_location.column(),
+                        exception.message,
+                        "",
+                        ""
+                    ),
+                    source_location
+                );
             }
             catch (const std::exception& exception) {
                 fail(
@@ -316,7 +311,7 @@ namespace prover
                         "Assert::throwsException Failed: {}\n"
                         "Assertion Source Location: {}:{}:{}\n"
                         "\n"
-                        "{}\n",
+                        "What: {}\n",
                         message,
                         source_location.file_name(),
                         source_location.line(),
@@ -333,10 +328,11 @@ namespace prover
         // Existing simple overload is fine to keep:
         [[noreturn]] static void fail(
             const std::string& message,
-            const std::source_location& source_location = std::source_location::current()
+            const std::source_location& source_location = std::source_location::current(),
+            const std::stacktrace& stacktrace = std::stacktrace::current()
         )
         {
-            throw AssertionFailedException(message, source_location);
+            throw exceptions::AssertionFailed(message, source_location, stacktrace);
         }
     };
 }

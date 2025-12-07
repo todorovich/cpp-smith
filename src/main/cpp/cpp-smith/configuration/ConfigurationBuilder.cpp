@@ -15,7 +15,7 @@ namespace cpp_smith
     }
 
     ConfigurationBuilder& ConfigurationBuilder::withCompiler(
-        CompilerType compiler
+        const CompilerType compiler
     )
     {
         _compiler = compiler;
@@ -120,19 +120,20 @@ namespace cpp_smith
 
     Configuration ConfigurationBuilder::create() const
     {
-        return Configuration(
+        return {
             _name,
             _compiler,
+            _platform,
+            _architecture,
             _flags,
             _defines,
             _user_includes,
-            _system_includes,
-            _platform,
-            _architecture
-        );
+            _system_includes
+        };
     }
 
-    Project& ConfigurationBuilder::submit()
+    // ReSharper disable once CppMemberFunctionMayBeConst
+    [[maybe_unused]] Project& ConfigurationBuilder::submit()
     {
         return _buildSystem->accept(create());
     }

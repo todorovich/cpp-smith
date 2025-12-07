@@ -14,7 +14,7 @@ namespace cpp_smith
     public:
         SourceGraph(const Artifact* artifact, const Configuration& configuration)
         {
-            cpp_smith::GccProbe probe{};
+            const GccProbe probe{};
             for (const auto& path : artifact->sources())
             {
                 SourceFile sourceFile = SourceFile::from(path, &probe);

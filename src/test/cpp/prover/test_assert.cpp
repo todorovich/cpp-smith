@@ -1,3 +1,4 @@
+#include "Exceptions.hpp"
 #include "cpp-prover/Diff.hpp"
 #include "cpp-prover/Test.hpp"
 
@@ -23,7 +24,7 @@ namespace prover
         }
         catch (const std::exception& exception)
         {
-            throw AssertionFailedException(
+            throw exceptions::AssertionFailed(
                 std::format("{} threw {}", function_call, exception.what())
             );
         }
@@ -32,25 +33,25 @@ namespace prover
         {
             assertFail(message);
         }
-        catch (const AssertionFailedException& actual)
+        catch (const exceptions::AssertionFailed& actual)
         {
-            if (std::string{actual.what()} == expectedWhat)
+            if (std::string{actual.message} == expectedWhat)
             {
-                std::string formattedWhat = actual.what();
+                std::string formattedWhat = actual.message;
                 formattedWhat = std::regex_replace(formattedWhat, std::regex("\n"), "\n    ");
-                std::println("Example Failure Output:\n\n    {}", formattedWhat);
+                std::println("Example Failure Message:\n\n    {}", formattedWhat);
                 return;
             }
 
-            throw AssertionFailedException(
+            throw exceptions::AssertionFailed(
                 std::format("{} threw the wrong message\n\n{}",
                     function_call,
-                    Diff(expectedWhat, actual.what()))
+                    Diff(expectedWhat, actual.message))
             );
         }
         catch (const std::exception& exception)
         {
-            throw AssertionFailedException(
+            throw exceptions::AssertionFailed(
                 std::format(
                     "{} threw {} instead of prover::AssertionFailedException",
                     fail_function_call,
@@ -59,14 +60,14 @@ namespace prover
             );
         }
 
-        throw AssertionFailedException(
+        throw exceptions::AssertionFailed(
            std::format("{} did not throw prover::AssertionFailedException", fail_function_call)
         );
     }
     
-    static Test<void> areEqual(
+    [[maybe_unused]] const static Test<void> areEqual(
         "Assert::areEqual",
-        []()->void {
+        []{
             const std::string expectedWhat =
                 "Assert::areEqual Failed: custom message\n"
                 "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:84:64\n"
@@ -88,9 +89,9 @@ namespace prover
         }
     );
 
-    static Test<void> areNotEqual(
+    [[maybe_unused]] const static Test<void> areNotEqual(
         "Assert::areNotEqual",
-        []()->void {
+        []{
             const std::string expectedWhat =
                 "Assert::areNotEqual Failed: custom message\n"
                 "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:107:67\n"
@@ -111,9 +112,9 @@ namespace prover
         }
     );
 
-    static Test<void> areSame(
+    [[maybe_unused]] const static Test<void> areSame(
         "Assert::areSame",
-        []()->void {
+        [] {
             const auto object_1 = std::make_unique<int>(47);
             const auto object_2 = object_1.get();
             const auto object_3 = object_1.get();
@@ -133,10 +134,10 @@ namespace prover
                 static_cast<const void*>(std::addressof(object_3))
             );
             runAssertionTest(
-                [&](const std::string& message) {
+                [&object_2, &object_3](const std::string& message) {
                     Assert::areSame(*object_2,  *object_3, message);
                 },
-                [&](const std::string& message) {
+                [&object_2, &object_3](const std::string& message) {
                     Assert::areSame(object_2, object_3, message);
                 },
                 expectedWhat,
@@ -146,9 +147,9 @@ namespace prover
         }
     );
 
-    static Test<void> areNotSame(
+    [[maybe_unused]] const static Test<void> areNotSame(
         "Assert::areNotSame",
-        []()->void {
+        [] {
             const auto object_1 = std::make_unique<int>(47);
             const auto object_2 = object_1.get();
             const auto object_3 = object_1.get();
@@ -159,14 +160,14 @@ namespace prover
                 "\n"
                 "Provided objects share the same memory address\n"
                 "Memory Address: {}\n",
-                static_cast<const void*>(std::addressof(*object_2))
+                static_cast<const void*>(std::to_address(object_2))
             );
             runAssertionTest(
-                [&](const std::string& message) {
+                [&object_2, &object_3](const std::string& message) {
                     Assert::areNotSame(object_2, object_3, message);
                 },
-                [&](const std::string& message) {
-                    Assert::areNotSame(*object_2,  *object_3, message);
+                [&object_2](const std::string& message) {
+                    Assert::areNotSame(*object_2,  *object_2, message);
                 },
                 expectedWhat,
                 "Assert::areNotSame(object_2, object_3, message)",
@@ -175,9 +176,9 @@ namespace prover
         }
     );
 
-    static Test<void> isTrue(
+    [[maybe_unused]] const static Test<void> isTrue(
         "Assert::isTrue",
-        []()->void {
+        [] {
             const std::string expectedWhat ="Assert::isTrue Failed: custom message\n"
                 "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:198:35\n"
                 "\n"
@@ -190,10 +191,10 @@ namespace prover
                 "+false\n";
 
             runAssertionTest(
-                [&](const std::string& message) {
+                [](const std::string& message) {
                     Assert::isTrue(true, message);
                 },
-                [&](const std::string& message) {
+                [](const std::string& message) {
                     Assert::isTrue(false, message);
                 },
                 expectedWhat,
@@ -203,9 +204,9 @@ namespace prover
         }
     );
 
-    static Test<void> isFalse(
+    [[maybe_unused]] const static Test<void> isFalse(
         "Assert::isFalse",
-        []()->void {
+        [] {
             const std::string expectedWhat ="Assert::isFalse Failed: custom message\n"
                 "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:226:36\n"
                 "\n"
@@ -218,10 +219,10 @@ namespace prover
                 "+true\n";
 
             runAssertionTest(
-                [&](const std::string& message) {
+                [](const std::string& message) {
                     Assert::isFalse(false, message);
                 },
-                [&](const std::string& message) {
+                [](const std::string& message) {
                     Assert::isFalse(true, message);
                 },
                 expectedWhat,
@@ -231,13 +232,13 @@ namespace prover
         }
     );
 
-    static Test<void> isNullptr(
+    [[maybe_unused]] const static Test<void> isNullptr(
         "Assert::isNullptr",
-        []()->void {
+        [] {
 
             const auto pointer = std::make_unique<int>(42);
 
-            auto pointer1 = pointer.get();
+            const auto pointer1 = pointer.get();
 
             const std::string expectedWhat = std::format(
                 "Assert::isNullptr Failed: custom message\n"
@@ -254,10 +255,10 @@ namespace prover
             );
 
             runAssertionTest(
-                [&](const std::string& message) {
+                [](const std::string& message) {
                     Assert::isNullptr(nullptr, message);
                 },
-                [&](const std::string& message) {
+                [&pointer1](const std::string& message) {
                     Assert::isNullptr(pointer1, message);
                 },
                 expectedWhat,
@@ -267,9 +268,9 @@ namespace prover
         }
     );
 
-    static Test<void> isNotNullptr(
+    [[maybe_unused]] const static Test<void> isNotNullptr(
         "Assert::isNotNullptr",
-        []()->void {
+        [] {
 
             const auto pointer = std::make_unique<int>(42);
             const auto pointer1 = pointer.get();
@@ -287,10 +288,10 @@ namespace prover
                 "+0x0\n";
 
             runAssertionTest(
-                [&](const std::string& message) {
+                [&pointer1](const std::string& message) {
                     Assert::isNotNullptr(pointer1, message);
                 },
-                [&](const std::string& message) {
+                [](const std::string& message) {
                     Assert::isNotNullptr(nullptr, message);
                 },
                 expectedWhat,
@@ -300,24 +301,27 @@ namespace prover
         }
     );
 
-    static Test<void> throwsException(
+    [[maybe_unused]] const static Test<void> throwsException(
         "Assert::throwsException",
-        []()->void {
+        [] {
             const std::string expectedWhat =
                 "Assert::throwsException Failed: custom message\n"
                 "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:321:63\n"
                 "\n"
                 "Assert::throws function did not throw\n";
 
-            auto throwingLambda = []() { throw std::runtime_error("Test exception"); };
-            auto nonThrowingLambda = []() { return; };
-
             runAssertionTest(
-               [&](const std::string& message) {
-                   Assert::throwsException<std::runtime_error>(throwingLambda, message);
+               [](const std::string& message) {
+                   Assert::throwsException<std::runtime_error>(
+                       [] { throw std::runtime_error("Test exception"); },
+                       message
+                    );
                },
-               [&](const std::string& message) {
-                   Assert::throwsException<std::runtime_error>(nonThrowingLambda, message);
+               [](const std::string& message) {
+                   Assert::throwsException<std::runtime_error>(
+                       [] { /*noop*/ },
+                       message
+                    );
                },
                expectedWhat,
                "Assert::throwsException<std::exception>(throwingLambda, message)",

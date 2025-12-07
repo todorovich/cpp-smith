@@ -3,7 +3,9 @@
 int main()
 {
     try {
-        return prover::Prover::test();
+        const auto [failures, test_results] = prover::Prover::test();
+
+        return failures;
     }
     catch (...)
     {

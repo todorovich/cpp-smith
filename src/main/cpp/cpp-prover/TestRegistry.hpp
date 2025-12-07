@@ -13,20 +13,22 @@ namespace prover
         TestRegistry() = default;
 
     public:
-        static TestRegistry& instance()
-        {
-            static TestRegistry r;
-            return r;
-        }
+        static TestRegistry& instance();
 
         void add(TestInterface* t)
         {
             tests.push_back(t);
         }
 
-        const std::vector<TestInterface*>& all() const
+        [[nodiscard]] const std::vector<TestInterface*>& all() const
         {
             return tests;
         }
     };
+
+    inline TestRegistry& TestRegistry::instance()
+    {
+        static TestRegistry registry; // NOSONAR
+        return registry;
+    }
 }

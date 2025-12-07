@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Logger.hpp"
+#include "TestResult.hpp"
+
 #include <string>
 #include <source_location>
 
@@ -10,14 +13,22 @@ namespace prover
     public:
         const std::string name;
         const std::source_location source_location;
+        logging::Logger logger;
 
-        explicit TestInterface(std::string_view name, const std::source_location& source_location)
+        explicit TestInterface(
+            const std::string_view name,
+            const std::source_location& source_location,
+            logging::Logger _logger
+        )
             : name(name)
             , source_location(source_location)
+            , logger(std::move(_logger))
         {}
 
         virtual ~TestInterface() = default;
 
-        virtual void test() const = 0;
+        virtual std::pair<int, std::vector<TestResult>> test() = 0;
+
+        virtual std::string_view output() const = 0;
     };
 }

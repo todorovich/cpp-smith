@@ -13,7 +13,7 @@ BinPackParameters: false
 BinPackArguments: false
 AllowAllParametersOfDeclarationOnNextLine: false
 AlwaysBreakAfterReturnType: None
-BreakBeforeBraces: All
+BreakBeforeBraces: Allman
 AlignAfterOpenBracket: AlwaysBreak
 BraceWrapping:
   AfterClass: true

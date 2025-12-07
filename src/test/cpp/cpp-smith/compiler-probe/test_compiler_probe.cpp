@@ -4,12 +4,12 @@
 
 #include <print>
 
-static prover::Test<void> test(
+[[maybe_unused]] const static prover::Test<void> test(
     "GccProbe returns system includes",
-    []()->void {
+    [] {
 
-        cpp_smith::GccProbe probe;
-        auto includes = probe.getSystemIncludes();
+        const cpp_smith::GccProbe probe;
+        const auto includes = probe.getSystemIncludes();
 
         prover::Assert::isFalse(includes.empty());
 

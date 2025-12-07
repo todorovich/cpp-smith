@@ -14,6 +14,9 @@ namespace cpp_smith
         std::filesystem::path _objectFile = std::filesystem::path{};
         std::filesystem::path _dependencyFile = std::filesystem::path{};
 
+        // TODO: dirty flag? Should check last updated or hash the file and store that when compiling. Check against
+        //  that when recompiling. Double check expected output is there and matches hash or version.
+
     public:
         TranslationUnit(SourceFile&& source, Configuration configuration)
             : _source(source)
@@ -30,12 +33,11 @@ namespace cpp_smith
         void setObjectFile(const std::filesystem::path& path)
         {
             _objectFile = path;
-        };
+        }
+
         void setDependencyFile(const std::filesystem::path& path)
         {
             _dependencyFile = path;
-        };
-
-        // TODO: dirty flag
+        }
     };
 }

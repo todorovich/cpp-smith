@@ -1,4 +1,6 @@
 #pragma once
+#include "Exceptions.hpp"
+
 #include <string>
 #include <vector>
 #include <filesystem>
@@ -6,14 +8,40 @@
 #include <sstream>
 #include <memory>
 #include <cstdio>
-#include <utility>
 
 namespace fs = std::filesystem;
+
+struct CommandResult {
+    int exit_code;       // raw exit status or decoded
+    std::string output;  // stdout + stderr
+};
+
+inline CommandResult ExecuteCommand(const std::string& cmd)
+{
+    using Pipe = std::unique_ptr<FILE, int(*)(FILE*)>;
+
+    Pipe pipe(
+        popen((cmd + " 2>&1").c_str(), "r"),
+        pclose
+    );
+    if (!pipe) return { -1, {} };
+
+    char buffer[4096];
+    std::string out;
+    while (fgets(buffer, sizeof(buffer), pipe.get()))
+        out += buffer;
+
+    int status = pclose(pipe.release());   // retrieve raw exit status
+
+    int exit_code = WIFEXITED(status) ? WEXITSTATUS(status) : -1;
+
+    return { exit_code, out };
+}
 
 inline std::string ExecuteCommandAndCaptureOutput(const std::string& command_line)
 {
     using Pipe = std::unique_ptr<FILE, int(*)(FILE*)>;
-    Pipe pipe(popen((command_line + " 2>&1").c_str(), "r"), pclose);
+    const Pipe pipe(popen((command_line + " 2>&1").c_str(), "r"), pclose);
     if (!pipe) { return {}; }
 
     char buffer[4096];
@@ -26,31 +54,43 @@ inline std::vector<fs::path> ParseSystemIncludeSearchPaths(const std::string& dr
 {
     std::vector<fs::path> include_directories;
 
-    std::istringstream stream(ExecuteCommandAndCaptureOutput(driver_command_for_verbose_includes));
-    std::string line;
-    auto in_section = false;
-
-    while (std::getline(stream, line))
+    if (auto [failed, output] = ExecuteCommand(driver_command_for_verbose_includes); !failed)
     {
-        if (line.find("#include <...> search starts here:") != std::string::npos)
+        std::istringstream stream(output);
+        std::string line;
+        auto in_section = false;
+
+        while (std::getline(stream, line))
         {
-            in_section = true;
-            continue;
-        }
-        if (line.find("End of search list.") != std::string::npos)
-        {
-            break;
-        }
-        if (in_section)
-        {
-            std::string trimmed = std::regex_replace(line, std::regex(R"(^\s+)"), "");
-            if (!trimmed.empty())
+            if (line.find("#include <...> search starts here:") != std::string::npos)
             {
-                include_directories.emplace_back(trimmed);
+                in_section = true;
+                continue;
+            }
+            if (line.find("End of search list.") != std::string::npos)
+            {
+                break;
+            }
+            if (in_section)
+            {
+                if (std::string trimmed = std::regex_replace(line, std::regex(R"(^\s+)"), "");
+
+                    !trimmed.empty()
+                )
+                {
+                    include_directories.emplace_back(trimmed);
+                }
             }
         }
+        return include_directories;
     }
-    return include_directories;
+    else
+    {
+        throw exceptions::ParseSystemIncludesFailed(
+            std::format("Command Execution Failed\nCommand: {} ", driver_command_for_verbose_includes)
+        );
+    }
+
 }
 
 inline std::vector<fs::path> ParseMakeStyleDependencies(const std::string& make_style_dependency_text)

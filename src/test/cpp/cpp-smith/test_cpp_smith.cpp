@@ -1,7 +1,7 @@
 #include "cpp-prover/Test.hpp"
 
 #include "Project.hpp"
-#include "artifacts/Executable.hpp"
+#include "cpp-smith/artifacts/Executable.hpp"
 #include "compiler-probe/ProbeUtils.hpp"
 
 #include <filesystem>
@@ -11,14 +11,9 @@ using namespace prover;
 
 const auto cpp_smith_source_directory = fs::path(CPP_SMITH_SOURCE_DIR);
 
-void require(const bool cond)
-{
-    if (!cond) throw std::runtime_error("Test failed: Test 2");
-}
-
-static prover::Test<void, std::string> test(
+[[maybe_unused]] const static Test<void, std::string> test(
     "Compile and Run hello_world.cpp",
-    [](const std::string& name)->void
+    [](const std::string& name)
     {
         std::println("CPP_SMITH_SOURCE_DIR: {}", CPP_SMITH_SOURCE_DIR);
 

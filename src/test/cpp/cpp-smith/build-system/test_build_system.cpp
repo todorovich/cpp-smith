@@ -8,13 +8,14 @@
 
 #include <filesystem>
 #include <string>
+#include <utility>
 #include <vector>
 
 using namespace prover;
 
-static Test<void> test_configuration(
+[[maybe_unused]] const static Test<void> test_configuration(
     "ConfigurationBuilder builds and Inspect",
-    []() -> void
+    []
     {
         cpp_smith::Project build_system;
         build_system.define<cpp_smith::Configuration>("debug")
@@ -30,7 +31,8 @@ static Test<void> test_configuration(
         Assert::areEqual(config.platform(), std::string{"linux"});
         Assert::areEqual(config.architecture(), std::string{"x64"});
         Assert::areEqual(
-            static_cast<int>(config.compiler()), static_cast<int>(cpp_smith::CompilerType::GCC)
+            std::to_underlying(config.compiler()),
+            std::to_underlying(cpp_smith::CompilerType::GCC)
         );
         Assert::areEqual(config.flags().size(), 1);
         Assert::areEqual(config.flags()[0], std::string{"-g"});
@@ -40,9 +42,9 @@ static Test<void> test_configuration(
     }
 );
 
-static Test<void> test_configuration_builder(
+[[maybe_unused]] const static Test<void> test_configuration_builder(
     "ConfigurationBuilder builds and Inspect",
-    []() -> void
+    []
     {
         cpp_smith::Project build_system;
         build_system.define<cpp_smith::Configuration>("debug")
@@ -58,8 +60,9 @@ static Test<void> test_configuration_builder(
         Assert::areEqual(config.platform(), std::string{"linux"});
         Assert::areEqual(config.architecture(), std::string{"x64"});
         Assert::areEqual(
-            static_cast<int>(config.compiler()), static_cast<int>(cpp_smith::CompilerType::GCC)
-        );
+            std::to_underlying(config.compiler()),
+            std::to_underlying(cpp_smith::CompilerType::GCC)
+            );
         Assert::areEqual(config.flags().size(), 1);
         Assert::areEqual(config.flags()[0], std::string{"-g"});
 
@@ -68,19 +71,19 @@ static Test<void> test_configuration_builder(
     }
 );
 
-static Test<void> test_configuration_add_retrieve(
+[[maybe_unused]] const static Test<void> test_configuration_add_retrieve(
     "BuildSystem add and retrieve Configuration",
-    []() -> void
+    []
     {
         cpp_smith::Configuration config(
             "release",
             cpp_smith::CompilerType::CLANG,
+            "macos",
+            "arm64",
             std::vector<std::string>{ "-O2" },
             std::vector<std::string>{ "NDEBUG" },
             std::vector<std::filesystem::path>{ "include/" },
-            std::vector<std::filesystem::path>{ "/usr/include/" },
-            "macos",
-            "arm64"
+            std::vector<std::filesystem::path>{ "/usr/include/" }
         );
 
         cpp_smith::Project build_system;
@@ -97,9 +100,9 @@ static Test<void> test_configuration_add_retrieve(
     }
 );
 
-static Test<void> test_static_library_build(
+[[maybe_unused]] const static Test<void> test_static_library_build(
     "ArtifactBuilder<StaticLibrary> build and register",
-    []() -> void
+    []
     {
         cpp_smith::Project build_system;
         build_system
@@ -107,8 +110,6 @@ static Test<void> test_static_library_build(
             .withPlatform("linux")
             .addFlag("-g")
             .submit();
-
-        // TODO: adding sources should
 
         build_system
             .define<cpp_smith::StaticLibrary>("core")
@@ -119,16 +120,16 @@ static Test<void> test_static_library_build(
         const auto& lib = build_system.getArtifact("core");
         Assert::areEqual(lib.name(), std::string{"core"});
 
-        const auto files = lib.sources();
+        const auto& files = lib.sources();
         Assert::areEqual(files.size(), 2);
         Assert::areEqual(files[0].string(), std::string{"src/core/math.cpp"});
         Assert::areEqual(files[1].string(), std::string{"src/core/io.cpp"});
     }
 );
 
-static Test<void> test_shared_library_build(
+[[maybe_unused]] const static Test<void> test_shared_library_build(
     "ArtifactBuilder<SharedLibrary> build and register",
-    []() -> void
+    []
     {
         cpp_smith::Project build_system;
         build_system
@@ -147,7 +148,7 @@ static Test<void> test_shared_library_build(
         const auto& lib = build_system.getArtifact("plugin");
         Assert::areEqual(lib.name(), std::string{"plugin"});
 
-        const auto files = lib.sources();
+        const auto& files = lib.sources();
         Assert::areEqual(files.size(), 2);
         Assert::areEqual(files[0].string(), std::string{"src/plugin/entry.cpp"});
         Assert::areEqual(files[1].string(), std::string{"src/plugin/helper.cpp"});

@@ -1,7 +1,6 @@
 #pragma once
 
-#include "ArtifactBuilder.hpp"
-#include "StaticLibrary.hpp"
+#include "artifacts/ArtifactBuilder.hpp"
 
 #include <filesystem>
 #include <iterator>
