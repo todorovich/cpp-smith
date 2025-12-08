@@ -14,8 +14,8 @@ using namespace prover;
 
         auto configuration = build_system.define<cpp_smith::Configuration>("debug")
             .withCompiler(cpp_smith::CompilerType::GCC)
-            .withPlatform("linux")
-            .withArchitecture("x64")
+            .withPlatform(cpp_smith::Platform::LINUX)
+            .withArchitecture(cpp_smith::Architecture::X64)
             .addFlag("-g")
             .addDefine("DEBUG")
             .create();

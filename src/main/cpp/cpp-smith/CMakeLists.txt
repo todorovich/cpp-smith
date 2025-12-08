@@ -26,8 +26,11 @@ target_sources(cpp-smith
         Platform.hpp
         Project.hpp
         Configuration.hpp
+        configuration/Architecture.hpp
+        configuration/CompilerType.hpp
         configuration/Configuration.hpp
         configuration/ConfigurationBuilder.hpp
+        configuration/Platform.hpp
         artifacts/Artifact.hpp
         artifacts/ArtifactBuilder.hpp
         artifacts/Executable.hpp

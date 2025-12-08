@@ -12,27 +12,28 @@
 #include <vector>
 
 using namespace prover;
+using namespace cpp_smith;
 
 [[maybe_unused]] const static Test<void> test_configuration(
     "ConfigurationBuilder builds and Inspect",
     []
     {
-        cpp_smith::Project build_system;
-        build_system.define<cpp_smith::Configuration>("debug")
-            .withCompiler(cpp_smith::CompilerType::GCC)
-            .withPlatform("linux")
-            .withArchitecture("x64")
+        Project build_system;
+        build_system.define<Configuration>("debug")
+            .withCompiler(CompilerType::GCC)
+            .withPlatform(Platform::LINUX)
+            .withArchitecture(Architecture::X64)
             .addFlag("-g")
             .addDefine("DEBUG")
             .submit();
 
         const auto& config = build_system.getConfiguration("debug");
         Assert::areEqual(config.name(), std::string{"debug"});
-        Assert::areEqual(config.platform(), std::string{"linux"});
-        Assert::areEqual(config.architecture(), std::string{"x64"});
+        Assert::areEqual(config.platform(), Platform::LINUX);
+        Assert::areEqual(config.architecture(), Architecture::X64);
         Assert::areEqual(
             std::to_underlying(config.compiler()),
-            std::to_underlying(cpp_smith::CompilerType::GCC)
+            std::to_underlying(CompilerType::GCC)
         );
         Assert::areEqual(config.flags().size(), 1);
         Assert::areEqual(config.flags()[0], std::string{"-g"});
@@ -46,22 +47,22 @@ using namespace prover;
     "ConfigurationBuilder builds and Inspect",
     []
     {
-        cpp_smith::Project build_system;
-        build_system.define<cpp_smith::Configuration>("debug")
-            .withCompiler(cpp_smith::CompilerType::GCC)
-            .withPlatform("linux")
-            .withArchitecture("x64")
+        Project build_system;
+        build_system.define<Configuration>("debug")
+            .withCompiler(CompilerType::GCC)
+            .withPlatform(Platform::LINUX)
+            .withArchitecture(Architecture::X64)
             .addFlag("-g")
             .addDefine("DEBUG")
             .submit();
 
         const auto& config = build_system.getConfiguration("debug");
         Assert::areEqual(config.name(), std::string{"debug"});
-        Assert::areEqual(config.platform(), std::string{"linux"});
-        Assert::areEqual(config.architecture(), std::string{"x64"});
+        Assert::areEqual(config.platform(), Platform::LINUX);
+        Assert::areEqual(config.architecture(), Architecture::X64);
         Assert::areEqual(
             std::to_underlying(config.compiler()),
-            std::to_underlying(cpp_smith::CompilerType::GCC)
+            std::to_underlying(CompilerType::GCC)
             );
         Assert::areEqual(config.flags().size(), 1);
         Assert::areEqual(config.flags()[0], std::string{"-g"});
@@ -77,16 +78,14 @@ using namespace prover;
     {
         cpp_smith::Configuration config(
             "release",
-            cpp_smith::CompilerType::CLANG,
-            "macos",
-            "arm64",
+            { CompilerType::CLANG, Platform::MAC_OS, Architecture::ARM_64 },
             std::vector<std::string>{ "-O2" },
             std::vector<std::string>{ "NDEBUG" },
             std::vector<std::filesystem::path>{ "include/" },
             std::vector<std::filesystem::path>{ "/usr/include/" }
         );
 
-        cpp_smith::Project build_system;
+        Project build_system;
         build_system.accept(std::move(config));
 
         const auto& retrieved = build_system.getConfiguration("release");
@@ -104,15 +103,15 @@ using namespace prover;
     "ArtifactBuilder<StaticLibrary> build and register",
     []
     {
-        cpp_smith::Project build_system;
+        Project build_system;
         build_system
-            .define<cpp_smith::Configuration>("debug")
-            .withPlatform("linux")
+            .define<Configuration>("debug")
+            .withPlatform(Platform::LINUX)
             .addFlag("-g")
             .submit();
 
         build_system
-            .define<cpp_smith::StaticLibrary>("core")
+            .define<StaticLibrary>("core")
             .addSource("src/core/math.cpp")
             .addSource("src/core/io.cpp")
             .submit();
@@ -131,16 +130,16 @@ using namespace prover;
     "ArtifactBuilder<SharedLibrary> build and register",
     []
     {
-        cpp_smith::Project build_system;
+        Project build_system;
         build_system
-            .define<cpp_smith::Configuration>("release")
-            .withPlatform("macos")
-            .withArchitecture("arm64")
+            .define<Configuration>("release")
+            .withPlatform(Platform::MAC_OS)
+            .withArchitecture(Architecture::ARM_64)
             .addFlag("-O2")
             .submit();
 
         build_system
-            .define<cpp_smith::SharedLibrary>("plugin")
+            .define<SharedLibrary>("plugin")
             .addSource("src/plugin/entry.cpp")
             .addSource("src/plugin/helper.cpp")
             .submit();

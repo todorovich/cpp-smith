@@ -24,7 +24,7 @@ const auto cpp_smith_source_directory = fs::path(CPP_SMITH_SOURCE_DIR);
         project.withRootDirectory(cpp_smith_source_directory)
             .define<cpp_smith::Configuration>("standard")
             .withCompiler(cpp_smith::CompilerType::GCC)
-            .withPlatform("linux")
+            .withPlatform(cpp_smith::Platform::LINUX)
             .submit()
             .define<cpp_smith::Executable>(name)
             .addSource(entryPoint)

@@ -1,6 +1,8 @@
 #pragma once
 
+#include "Architecture.hpp"
 #include "CompilerType.hpp"
+#include "Platform.hpp"
 
 #include <filesystem>
 #include <string>
@@ -16,21 +18,20 @@ namespace cpp_smith
         Project* _buildSystem;
         std::string _name;
         CompilerType _compiler;
+        Platform _platform;
+        Architecture _architecture;
         std::vector<std::string> _flags;
         std::vector<std::string> _defines;
         std::vector<std::filesystem::path> _user_includes;
         std::vector<std::filesystem::path> _system_includes;
-        std::string _platform;
-        std::string _architecture;
-
 
     public:
         ConfigurationBuilder(Project* buildSystem, std::string name);
 
         // Fluent mutation API
         ConfigurationBuilder& withCompiler(CompilerType compiler);
-        ConfigurationBuilder& withPlatform(std::string platform);
-        ConfigurationBuilder& withArchitecture(std::string architecture);
+        ConfigurationBuilder& withPlatform(Platform platform);
+        ConfigurationBuilder& withArchitecture(Architecture architecture);
 
         ConfigurationBuilder& addFlag(std::string flag);
         ConfigurationBuilder& addFlags(std::vector<std::string> flags);

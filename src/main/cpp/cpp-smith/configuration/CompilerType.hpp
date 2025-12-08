@@ -4,7 +4,6 @@
 
 namespace cpp_smith
 {
-    // TODO: the compiler version should end up being used somewhere.
     enum class CompilerType { GCC, CLANG, MSVC };
 }
 
@@ -12,22 +11,14 @@ template <> struct std::formatter<cpp_smith::CompilerType> : formatter<string_vi
 {
     auto format(const cpp_smith::CompilerType value, format_context& ctx) const
     {
-        using cpp_smith::CompilerType;
-        string_view name = "unknown";
-
+        string_view name;
         switch (value)
         {
-        case CompilerType::GCC:
-            name = "GCC";
-            break;
-
-        case CompilerType::CLANG:
-            name = "Clang";
-            break;
-
-        case CompilerType::MSVC:
-            name = "MSVC";
-            break;
+            using enum cpp_smith::CompilerType;
+            case    GCC:    name = "GCC";       break;
+            case    CLANG:  name = "Clang";     break;
+            case    MSVC:   name = "MSVC";      break;
+            default:        name = "unknown";
         }
 
         return formatter<string_view>::format(name, ctx);

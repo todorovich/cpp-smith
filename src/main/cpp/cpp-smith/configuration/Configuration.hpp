@@ -1,19 +1,29 @@
 #pragma once
 
+#include "Architecture.hpp"
+
 #include <filesystem>
 #include <string>
 #include <vector>
 
 #include "CompilerType.hpp"
+#include "Platform.hpp"
 
 namespace cpp_smith
 {
+    struct Triplet
+    {
+        CompilerType compiler;
+        Platform platform;
+        Architecture architecture;
+    };
+
     class Configuration
     {
         const std::string _name;
         const CompilerType _compiler;
-        const std::string _platform;
-        const std::string _architecture;
+        const Platform _platform;
+        const Architecture _architecture;
         const std::vector<std::string> _flags;
         const std::vector<std::string> _defines;
         const std::vector<std::filesystem::path> _user_includes;
@@ -22,9 +32,7 @@ namespace cpp_smith
     public:
         Configuration(
             std::string name,
-            CompilerType compiler, // Which configuration type?
-            std::string platform,
-            std::string architecture,
+            Triplet triplet,
             std::vector<std::string> flags,
             std::vector<std::string> defines,
             std::vector<std::filesystem::path> user_includes,
@@ -32,25 +40,16 @@ namespace cpp_smith
         );
 
         [[nodiscard]] const std::string& name() const;
-        [[nodiscard]] const std::string& platform() const;
-        [[nodiscard]] const std::string& architecture() const;
 
+        [[nodiscard]] Platform platform() const;
+        [[nodiscard]] Architecture architecture() const;
         [[nodiscard]] CompilerType compiler() const;
+
         [[nodiscard]] const std::vector<std::string>& flags() const;
         [[nodiscard]] const std::vector<std::string>& defines() const;
         [[nodiscard]] const std::vector<std::filesystem::path>& userIncludes() const;
         [[nodiscard]] const std::vector<std::filesystem::path>& systemIncludes() const;
 
-        bool operator==(const Configuration& other) const
-        {
-            return _name == other._name
-                && _compiler == other._compiler
-                && _platform == other._platform
-                && _architecture == other._architecture
-                && _flags == other._flags
-                && _defines == other._defines
-                && _user_includes == other._user_includes
-                && _system_includes == other._system_includes;
-        }
+        bool operator==(const Configuration& other) const = default;
     };
 }

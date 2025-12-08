@@ -286,7 +286,10 @@ namespace prover
                 function();
                 fail("Assert::throws function did not throw", source_location);
             }
-            catch (const ExceptionT&) {}
+            catch (const ExceptionT& ignored) // NOSONAR
+            {
+                /* this is the success case */
+            }
             catch (const exceptions::CppSmithException& exception) {
                 fail(
                     std::format(

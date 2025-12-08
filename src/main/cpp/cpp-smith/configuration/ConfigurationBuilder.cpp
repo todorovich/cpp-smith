@@ -23,18 +23,18 @@ namespace cpp_smith
     }
 
     ConfigurationBuilder& ConfigurationBuilder::withPlatform(
-        std::string platform
+        const Platform platform
     )
     {
-        _platform = std::move(platform);
+        _platform = platform;
         return *this;
     }
 
     ConfigurationBuilder& ConfigurationBuilder::withArchitecture(
-        std::string architecture
+        const Architecture architecture
     )
     {
-        _architecture = std::move(architecture);
+        _architecture = architecture;
         return *this;
     }
 
@@ -122,9 +122,7 @@ namespace cpp_smith
     {
         return {
             _name,
-            _compiler,
-            _platform,
-            _architecture,
+            { _compiler, _platform, _architecture },
             _flags,
             _defines,
             _user_includes,
