@@ -24,8 +24,12 @@ namespace cpp_smith
         static SourceFile from(const std::filesystem::path& path, const CompilerProbe* probe)
         {
             constexpr std::vector<std::string> vector {};
-            auto [direct, system] = probe->getDependencies(vector, path);
-            return SourceFile{ path, direct, system };
+
+            const auto absolute_path = std::filesystem::absolute(path).lexically_normal();
+
+            auto [direct, system] = probe->getDependencies(vector, absolute_path);
+
+            return SourceFile{ absolute_path, direct, system };
         }
 
         [[nodiscard]] const std::filesystem::path& path() const;
