@@ -12,8 +12,19 @@ namespace cpp_smith
     class GccProbe final : public CompilerProbe
     {
     public:
-        // TODO : check that its gcc 14+ when you init
-        GccProbe() = default;
+        static constexpr std::string_view minimal_version = "14.0.0";
+        std::string current_version;
+
+        GccProbe()
+        {
+            current_version = version();
+            if (current_version < minimal_version)
+            {
+                throw std::runtime_error(
+                    "GCC version must be 14.0.0 or higher. Current version: " + current_version
+                );
+            }
+        }
 
         [[nodiscard]] std::string name() const override
         {

@@ -8,15 +8,15 @@
 using namespace prover;
 using namespace logging;
 
-Test<void> logger_string_sink_multiple(
-    "logger_string_sink_multiple",
-    [] {
+namespace logger_test
+{
+    void LoggerStringSinkMultiple()
+    {
         std::string buffer;
         auto s = std::make_unique<StringSink>(
             std::make_unique<MinimalFormatter>(), buffer
         );
 
-        auto* raw = s.get();
         Logger log("scope", std::move(s));
 
         log.print("A");
@@ -25,11 +25,9 @@ Test<void> logger_string_sink_multiple(
 
         Assert::areEqual<std::string>("AB 2C 3", buffer);
     }
-);
 
-Test<void> logger_file_sink(
-    "logger_file_sink",
-    [] {
+    void loggerFileSink()
+    {
         const std::string path = "logger_test_file.txt";
 
         {
@@ -50,11 +48,9 @@ Test<void> logger_file_sink(
 
         Assert::areEqual<std::string>("file 55", contents);
     }
-);
 
-Test<void> logger_multi_string_and_file_sinks(
-    "logger_multi_string_and_file_sinks",
-    [] {
+    void LoggerMultiStringAndFileSinks()
+    {
         std::string buffer_1;
         // create string sinks
         auto unique_string_sink_1 = std::make_unique<StringSink>(
@@ -65,25 +61,23 @@ Test<void> logger_multi_string_and_file_sinks(
             std::make_unique<MinimalFormatter>(), buffer_2
         );
 
-        auto* string_sink_1 = unique_string_sink_1.get();
-        auto* string_sink_2 = unique_string_sink_2.get();
-
         // file sink paths
         const std::string filepath_1 = "multi_sink_file1.txt";
         const std::string filepath_2 = "multi_sink_file2.txt";
 
         // create file sinks
-        auto file_sink_1 = std::make_unique<FileSink>(
-            std::make_unique<MinimalFormatter>(),
-            filepath_1
-        );
+        {
+            auto file_sink_1 = std::make_unique<FileSink>(
+                std::make_unique<MinimalFormatter>(),
+                filepath_1
+            );
 
-        auto file_sink_2 = std::make_unique<FileSink>(
-            std::make_unique<MinimalFormatter>(),
-            filepath_2
-        );
+            auto file_sink_2 = std::make_unique<FileSink>(
+                std::make_unique<MinimalFormatter>(),
+                filepath_2
+            );
 
-        { // scope for log so it'll close the file so that the test can read it.
+            // scope for log so it'll close the file so that the test can read it.
             Logger log(
                 "scope",
                 std::move(unique_string_sink_1),
@@ -111,38 +105,37 @@ Test<void> logger_multi_string_and_file_sinks(
         Assert::areEqual<std::string>("combo 777", read_file(filepath_1));
         Assert::areEqual<std::string>("combo 777", read_file(filepath_2));
     }
-);
 
+    namespace {
+        class StdoutRedirect {
+            int saved_fd_;
+            bool active_;
+        public:
+            explicit StdoutRedirect(const char* path)
+            {
+                saved_fd_ = dup(fileno(stdout));
 
-namespace {
-    class StdoutRedirect {
-        int saved_fd_;
-        bool active_;
-    public:
-        explicit StdoutRedirect(const char* path)
-            : saved_fd_(dup(fileno(stdout))), active_(false)
-        {
-            FILE* f = std::freopen(path, "w", stdout);
-            if (f)
-                active_ = true;
-        }
-
-        ~StdoutRedirect() {
-            if (active_) {
-                fflush(stdout);
-                dup2(saved_fd_, fileno(stdout));
-                close(saved_fd_);
+                if (const FILE* file = std::freopen(path, "w", stdout); file)
+                    active_ = true;
+                else
+                    active_ = false;
             }
-        }
 
-        StdoutRedirect(const StdoutRedirect&) = delete;
-        StdoutRedirect& operator=(const StdoutRedirect&) = delete;
-    };
-}
+            ~StdoutRedirect() {
+                if (active_) {
+                    fflush(stdout);
+                    dup2(saved_fd_, fileno(stdout));
+                    close(saved_fd_);
+                }
+            }
 
-Test<void> logger_console_sink_redirects_stdout(
-    "logger_console_sink_redirects_stdout",
-    [] {
+            StdoutRedirect(const StdoutRedirect&) = delete;
+            StdoutRedirect& operator=(const StdoutRedirect&) = delete;
+        };
+    }
+
+    void LoggerConsoleSinkRedirectsStdout()
+    {
         const char* file = "console_capture.txt";
         { // to scope closing the file the test needs to read.
             StdoutRedirect redirect(file);
@@ -163,5 +156,18 @@ Test<void> logger_console_sink_redirects_stdout(
 
         Assert::areEqual<std::string>("hello 99234", data);
     }
-);
 
+    struct Tests
+    {
+        inline const static Test<void> logger_string_sink_multiple {"logger_string_sink_multiple", LoggerStringSinkMultiple };
+        inline const static Test<void> logger_file_sink {"logger_file_sink", loggerFileSink };
+        inline const static Test<void> logger_multi_string_and_file_sinks {
+            "logger_multi_string_and_file_sinks", LoggerMultiStringAndFileSinks
+        };
+        inline const static Test<void> logger_console_sink_redirects_stdout {
+            "logger_console_sink_redirects_stdout", LoggerConsoleSinkRedirectsStdout
+        };
+    };
+
+    const Tests tests;
+}

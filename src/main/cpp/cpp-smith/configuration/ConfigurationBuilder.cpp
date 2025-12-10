@@ -38,6 +38,38 @@ namespace cpp_smith
         return *this;
     }
 
+    ConfigurationBuilder& ConfigurationBuilder::withProjectDirectory(
+        const std::filesystem::path& project_directory
+    )
+    {
+        _project_directory = project_directory;
+        return *this;
+    }
+
+    ConfigurationBuilder& ConfigurationBuilder::withBuildDirectory(
+        const std::filesystem::path& build_directory
+    )
+    {
+        _build_directory = build_directory;
+        return *this;
+    }
+
+    ConfigurationBuilder& ConfigurationBuilder::withBinaryDirectory(
+        const std::filesystem::path& binary_directory
+    )
+    {
+        _binary_directory = binary_directory;
+        return *this;
+    }
+
+    ConfigurationBuilder& ConfigurationBuilder::withLibraryDirectory(
+        const std::filesystem::path& library_directory
+    )
+    {
+        _library_directory = library_directory;
+        return *this;
+    }
+
     ConfigurationBuilder& ConfigurationBuilder::addFlag(
         std::string flag
     )
@@ -123,6 +155,7 @@ namespace cpp_smith
         return {
             _name,
             { _compiler, _platform, _architecture },
+            {_project_directory, _build_directory, _binary_directory, _library_directory},
             _flags,
             _defines,
             _user_includes,

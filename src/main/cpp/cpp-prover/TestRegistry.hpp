@@ -20,7 +20,7 @@ namespace prover
             tests.push_back(t);
         }
 
-        [[nodiscard]] const std::vector<TestInterface*>& all() const
+        [[nodiscard]] std::vector<TestInterface*>& all()
         {
             return tests;
         }

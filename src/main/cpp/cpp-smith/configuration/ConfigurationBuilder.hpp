@@ -17,9 +17,16 @@ namespace cpp_smith
     {
         Project* _buildSystem;
         std::string _name;
+
         CompilerType _compiler;
         Platform _platform;
         Architecture _architecture;
+
+        std::filesystem::path _project_directory;
+        std::filesystem::path _build_directory;
+        std::filesystem::path _binary_directory;
+        std::filesystem::path _library_directory;
+
         std::vector<std::string> _flags;
         std::vector<std::string> _defines;
         std::vector<std::filesystem::path> _user_includes;
@@ -32,6 +39,11 @@ namespace cpp_smith
         ConfigurationBuilder& withCompiler(CompilerType compiler);
         ConfigurationBuilder& withPlatform(Platform platform);
         ConfigurationBuilder& withArchitecture(Architecture architecture);
+
+        ConfigurationBuilder& withProjectDirectory(const std::filesystem::path& project_directory);
+        ConfigurationBuilder& withBuildDirectory(const std::filesystem::path& build_directory);
+        ConfigurationBuilder& withBinaryDirectory(const std::filesystem::path& binary_directory);
+        ConfigurationBuilder& withLibraryDirectory(const std::filesystem::path& library_directory);
 
         ConfigurationBuilder& addFlag(std::string flag);
         ConfigurationBuilder& addFlags(std::vector<std::string> flags);

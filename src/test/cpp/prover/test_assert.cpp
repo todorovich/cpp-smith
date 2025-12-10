@@ -6,7 +6,9 @@
 #include <regex>
 #include <print>
 
-namespace prover
+using namespace prover;
+
+namespace assert_tests
 {
     static void runAssertionTest(
         const std::function<void(const std::string&)>& assert,
@@ -64,13 +66,12 @@ namespace prover
            std::format("{} did not throw prover::AssertionFailedException", fail_function_call)
         );
     }
-    
-    [[maybe_unused]] const static Test<void> areEqual(
-        "Assert::areEqual",
-        []{
-            const std::string expectedWhat =
+
+    static void testAreEqual()
+    {
+        const std::string expectedWhat =
                 "Assert::areEqual Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:84:64\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:85:60\n"
                 "\n"
                 "--- expected\n"
                 "+++ actual\n"
@@ -79,22 +80,20 @@ namespace prover
                 "+42\n";
 
 
-            runAssertionTest(
-                [](const std::string& message){Assert::areEqual(42, 42, message);},
-                [](const std::string& message){Assert::areEqual(47, 42, message);},
-                expectedWhat,
-                "Assert::areEqual(42, 42, message)",
-                "Assert::areEqual(47, 42, message)"
-            );
-        }
-    );
+        runAssertionTest(
+            [](const std::string& message){Assert::areEqual(42, 42, message);},
+            [](const std::string& message){Assert::areEqual(47, 42, message);},
+            expectedWhat,
+            "Assert::areEqual(42, 42, message)",
+            "Assert::areEqual(47, 42, message)"
+        );
+    }
 
-    [[maybe_unused]] const static Test<void> areNotEqual(
-        "Assert::areNotEqual",
-        []{
-            const std::string expectedWhat =
+    static void testAreNotEqual()
+    {
+        const std::string expectedWhat =
                 "Assert::areNotEqual Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:107:67\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:106:63\n"
                 "\n"
                 "--- expected\n"
                 "+++ actual\n"
@@ -102,85 +101,79 @@ namespace prover
                 "-47\n"
                 "+47\n";
 
-            runAssertionTest(
-                [](const std::string& message){Assert::areNotEqual(47, 42, message);},
-                [](const std::string& message){Assert::areNotEqual(47, 47, message);},
-                expectedWhat,
-                "Assert::areNotEqual(47, 42, message)",
-                "Assert::areNotEqual(47, 47, message)"
-            );
-        }
-    );
+        runAssertionTest(
+            [](const std::string& message){Assert::areNotEqual(47, 42, message);},
+            [](const std::string& message){Assert::areNotEqual(47, 47, message);},
+            expectedWhat,
+            "Assert::areNotEqual(47, 42, message)",
+            "Assert::areNotEqual(47, 47, message)"
+        );
+    }
 
-    [[maybe_unused]] const static Test<void> areSame(
-        "Assert::areSame",
-        [] {
-            const auto object_1 = std::make_unique<int>(47);
-            const auto object_2 = object_1.get();
-            const auto object_3 = object_1.get();
+    static void testAreSame()
+    {
+        const auto object_1 = std::make_unique<int>(47);
+        const auto object_2 = object_1.get();
+        const auto object_3 = object_1.get();
 
-            const std::string expectedWhat =std::format(
-                "Assert::areSame Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:141:36\n"
-                "\n"
-                "Provided objects do not share the same memory address\n"
-                "\n"
-                "--- expected\n"
-                "+++ actual\n"
-                "@@\n"
-                "-{}\n"
-                "+{}\n",
-                static_cast<const void*>(std::addressof(object_2)),
-                static_cast<const void*>(std::addressof(object_3))
-            );
-            runAssertionTest(
-                [&object_2, &object_3](const std::string& message) {
-                    Assert::areSame(*object_2,  *object_3, message);
-                },
-                [&object_2, &object_3](const std::string& message) {
-                    Assert::areSame(object_2, object_3, message);
-                },
-                expectedWhat,
-                "Assert::areSame(*object_2,  *object_3, message)",
-                "Assert::areSame(object_2, object_3, message)"
-            );
-        }
-    );
+        const std::string expectedWhat =std::format(
+            "Assert::areSame Failed: custom message\n"
+            "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:138:32\n"
+            "\n"
+            "Provided objects do not share the same memory address\n"
+            "\n"
+            "--- expected\n"
+            "+++ actual\n"
+            "@@\n"
+            "-{}\n"
+            "+{}\n",
+            static_cast<const void*>(std::addressof(object_2)),
+            static_cast<const void*>(std::addressof(object_3))
+        );
+        runAssertionTest(
+            [&object_2, &object_3](const std::string& message) {
+                Assert::areSame(*object_2,  *object_3, message);
+            },
+            [&object_2, &object_3](const std::string& message) {
+                Assert::areSame(object_2, object_3, message);
+            },
+            expectedWhat,
+            "Assert::areSame(*object_2,  *object_3, message)",
+            "Assert::areSame(object_2, object_3, message)"
+        );
+    }
 
-    [[maybe_unused]] const static Test<void> areNotSame(
-        "Assert::areNotSame",
-        [] {
-            const auto object_1 = std::make_unique<int>(47);
-            const auto object_2 = object_1.get();
-            const auto object_3 = object_1.get();
+    static void testAreNotSame()
+    {
+        const auto object_1 = std::make_unique<int>(47);
+        const auto object_2 = object_1.get();
+        const auto object_3 = object_1.get();
 
-            const std::string expectedWhat =std::format(
-                "Assert::areNotSame Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:170:39\n"
-                "\n"
-                "Provided objects share the same memory address\n"
-                "Memory Address: {}\n",
-                static_cast<const void*>(std::to_address(object_2))
-            );
-            runAssertionTest(
-                [&object_2, &object_3](const std::string& message) {
-                    Assert::areNotSame(object_2, object_3, message);
-                },
-                [&object_2](const std::string& message) {
-                    Assert::areNotSame(*object_2,  *object_2, message);
-                },
-                expectedWhat,
-                "Assert::areNotSame(object_2, object_3, message)",
-                "Assert::areNotSame(*object_2,  *object_3, message)"
-            );
-        }
-    );
+        const std::string expectedWhat =std::format(
+            "Assert::areNotSame Failed: custom message\n"
+            "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:165:35\n"
+            "\n"
+            "Provided objects share the same memory address\n"
+            "Memory Address: {}\n",
+            static_cast<const void*>(std::to_address(object_2))
+        );
+        runAssertionTest(
+            [&object_2, &object_3](const std::string& message) {
+                Assert::areNotSame(object_2, object_3, message);
+            },
+            [&object_2](const std::string& message) {
+                Assert::areNotSame(*object_2,  *object_2, message);
+            },
+            expectedWhat,
+            "Assert::areNotSame(object_2, object_3, message)",
+            "Assert::areNotSame(*object_2,  *object_3, message)"
+        );
+    }
 
-    [[maybe_unused]] const static Test<void> isTrue(
-        "Assert::isTrue",
-        [] {
-            const std::string expectedWhat ="Assert::isTrue Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:198:35\n"
+    static void testIsTrue()
+    {
+        const std::string expectedWhat ="Assert::isTrue Failed: custom message\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:191:31\n"
                 "\n"
                 "Provided expression evaluated to false\n"
                 "\n"
@@ -190,25 +183,23 @@ namespace prover
                 "-true\n"
                 "+false\n";
 
-            runAssertionTest(
-                [](const std::string& message) {
-                    Assert::isTrue(true, message);
-                },
-                [](const std::string& message) {
-                    Assert::isTrue(false, message);
-                },
-                expectedWhat,
-                "Assert::isTrue(true, message)",
-                "Assert::isTrue(false, message)"
-            );
-        }
-    );
+        runAssertionTest(
+            [](const std::string& message) {
+                Assert::isTrue(true, message);
+            },
+            [](const std::string& message) {
+                Assert::isTrue(false, message);
+            },
+            expectedWhat,
+            "Assert::isTrue(true, message)",
+            "Assert::isTrue(false, message)"
+        );
+    }
 
-    [[maybe_unused]] const static Test<void> isFalse(
-        "Assert::isFalse",
-        [] {
-            const std::string expectedWhat ="Assert::isFalse Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:226:36\n"
+    static void testIsFalse()
+    {
+        const std::string expectedWhat ="Assert::isFalse Failed: custom message\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:217:32\n"
                 "\n"
                 "Provided expression evaluated to true\n"
                 "\n"
@@ -218,115 +209,119 @@ namespace prover
                 "-false\n"
                 "+true\n";
 
-            runAssertionTest(
-                [](const std::string& message) {
-                    Assert::isFalse(false, message);
-                },
-                [](const std::string& message) {
-                    Assert::isFalse(true, message);
-                },
-                expectedWhat,
-                "Assert::isFalse(false, message)",
-                "Assert::isFalse(true, message)"
-            );
-        }
-    );
+        runAssertionTest(
+            [](const std::string& message) {
+                Assert::isFalse(false, message);
+            },
+            [](const std::string& message) {
+                Assert::isFalse(true, message);
+            },
+            expectedWhat,
+            "Assert::isFalse(false, message)",
+            "Assert::isFalse(true, message)"
+        );
+    }
 
-    [[maybe_unused]] const static Test<void> isNullptr(
-        "Assert::isNullptr",
-        [] {
+    static void testIsNullptr()
+    {
+        const auto pointer = std::make_unique<int>(42);
 
-            const auto pointer = std::make_unique<int>(42);
+        const auto pointer1 = pointer.get();
 
-            const auto pointer1 = pointer.get();
+        const std::string expectedWhat = std::format(
+            "Assert::isNullptr Failed: custom message\n"
+            "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:250:34\n"
+            "\n"
+            "Provided pointer was not nullptr\n"
+            "\n"
+            "--- expected\n"
+            "+++ actual\n"
+            "@@\n"
+            "-0x0\n"
+            "+{}\n",
+            static_cast<void*>(pointer1)
+        );
 
-            const std::string expectedWhat = std::format(
-                "Assert::isNullptr Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:262:38\n"
-                "\n"
-                "Provided pointer was not nullptr\n"
-                "\n"
-                "--- expected\n"
-                "+++ actual\n"
-                "@@\n"
-                "-0x0\n"
-                "+{}\n",
-                static_cast<void*>(pointer1)
-            );
+        runAssertionTest(
+            [](const std::string& message) {
+                Assert::isNullptr(nullptr, message);
+            },
+            [&pointer1](const std::string& message) {
+                Assert::isNullptr(pointer1, message);
+            },
+            expectedWhat,
+            "Assert::isNullptr(nullptr, message)",
+            "Assert::isNullptr(pointer1, message)"
+        );
+    }
 
-            runAssertionTest(
-                [](const std::string& message) {
-                    Assert::isNullptr(nullptr, message);
-                },
-                [&pointer1](const std::string& message) {
-                    Assert::isNullptr(pointer1, message);
-                },
-                expectedWhat,
-                "Assert::isNullptr(nullptr, message)",
-                "Assert::isNullptr(pointer1, message)"
-            );
-        }
-    );
+    static void testIsNotNullptr()
+    {
+        const auto pointer = std::make_unique<int>(42);
+        const auto pointer1 = pointer.get();
 
-    [[maybe_unused]] const static Test<void> isNotNullptr(
-        "Assert::isNotNullptr",
-        [] {
+        const std::string expectedWhat =
+            "Assert::isNotNullptr Failed: custom message\n"
+            "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:280:37\n"
+            "\n"
+            "Provided pointer was nullptr\n"
+            "\n"
+            "--- expected\n"
+            "+++ actual\n"
+            "@@\n"
+            "-!0x0\n"
+            "+0x0\n";
 
-            const auto pointer = std::make_unique<int>(42);
-            const auto pointer1 = pointer.get();
+        runAssertionTest(
+            [&pointer1](const std::string& message) {
+                Assert::isNotNullptr(pointer1, message);
+            },
+            [](const std::string& message) {
+                Assert::isNotNullptr(nullptr, message);
+            },
+            expectedWhat,
+            "Assert::isNotNullptr(pointer1, message)",
+            "Assert::isNotNullptr(nullptr, message)"
+        );
+    }
 
-            const std::string expectedWhat =
-                "Assert::isNotNullptr Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:295:41\n"
-                "\n"
-                "Provided pointer was nullptr\n"
-                "\n"
-                "--- expected\n"
-                "+++ actual\n"
-                "@@\n"
-                "-!0x0\n"
-                "+0x0\n";
+    static void testThrowsException()
+    {
+        const std::string expectedWhat =
+            "Assert::throwsException Failed: custom message\n"
+            "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:304:59\n"
+            "\n"
+            "Assert::throws function did not throw\n";
 
-            runAssertionTest(
-                [&pointer1](const std::string& message) {
-                    Assert::isNotNullptr(pointer1, message);
-                },
-                [](const std::string& message) {
-                    Assert::isNotNullptr(nullptr, message);
-                },
-                expectedWhat,
-                "Assert::isNotNullptr(pointer1, message)",
-                "Assert::isNotNullptr(nullptr, message)"
-            );
-        }
-    );
+        runAssertionTest(
+           [](const std::string& message) {
+               Assert::throwsException<std::runtime_error>(
+                   [] { throw std::runtime_error("Test exception"); },
+                   message
+                );
+           },
+           [](const std::string& message) {
+               Assert::throwsException<std::runtime_error>(
+                   [] { /*noop*/ },
+                   message
+                );
+           },
+           expectedWhat,
+           "Assert::throwsException<std::exception>(throwingLambda, message)",
+           "Assert::throwsException<std::exception>(nonThrowingLambda, message)"
+       );
+    }
 
-    [[maybe_unused]] const static Test<void> throwsException(
-        "Assert::throwsException",
-        [] {
-            const std::string expectedWhat =
-                "Assert::throwsException Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:321:63\n"
-                "\n"
-                "Assert::throws function did not throw\n";
-
-            runAssertionTest(
-               [](const std::string& message) {
-                   Assert::throwsException<std::runtime_error>(
-                       [] { throw std::runtime_error("Test exception"); },
-                       message
-                    );
-               },
-               [](const std::string& message) {
-                   Assert::throwsException<std::runtime_error>(
-                       [] { /*noop*/ },
-                       message
-                    );
-               },
-               expectedWhat,
-               "Assert::throwsException<std::exception>(throwingLambda, message)",
-               "Assert::throwsException<std::exception>(nonThrowingLambda, message)"
-           );
-        }
-    );
+    struct Tests
+    {
+        inline const static Test<void> areEqual {"Assert::areEqual", testAreEqual };
+        inline const static Test<void> areNotEqual {"Assert::areNotEqual", testAreNotEqual };
+        inline const static Test<void> areSame {"Assert::areSame", testAreSame };
+        inline const static Test<void> areNotSame { "Assert::areNotSame", testAreNotSame };
+        inline const static Test<void> isTrue {"Assert::isTrue",testIsTrue };
+        inline const static Test<void> isFalse { "Assert::isFalse", testIsFalse };
+        inline const static Test<void> isNullptr {"Assert::isNullptr", testIsNullptr };
+        inline const static Test<void> isNotNullptr { "Assert::isNotNullptr", testIsNotNullptr };
+        inline const static Test<void> throwsException { "Assert::throwsException", testThrowsException };
+    };
 }

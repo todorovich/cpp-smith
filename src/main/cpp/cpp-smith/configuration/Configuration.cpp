@@ -7,6 +7,7 @@ namespace cpp_smith
     Configuration::Configuration(
         std::string name,
         const Triplet triplet,
+        const ProjectPaths& paths,
         std::vector<std::string> flags,
         std::vector<std::string> defines,
         std::vector<std::filesystem::path> user_includes,
@@ -16,6 +17,10 @@ namespace cpp_smith
         , _compiler(triplet.compiler)
         , _platform(triplet.platform)
         , _architecture(triplet.architecture)
+        , _project_directory(paths.project_directory)
+        , _build_directory(paths.build_directory)
+        , _binary_directory(paths.binary_directory)
+        , _library_directory(paths.library_directory)
         , _flags(std::move(flags))
         , _defines(std::move(defines))
         , _user_includes(std::move(user_includes))

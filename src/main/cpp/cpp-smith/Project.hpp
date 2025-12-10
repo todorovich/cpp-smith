@@ -5,7 +5,9 @@
 #include "artifacts/Artifact.hpp"
 #include "artifacts/ArtifactBuilder.hpp"
 
-// TODO: pull in all the artifacts? Or find a way to register artifacts, so user can write some too.
+#include "artifacts/Executable.hpp"
+#include "artifacts/SharedLibrary.hpp"
+#include "artifacts/StaticLibrary.hpp"
 
 #include <memory>
 #include <ranges>
@@ -18,7 +20,6 @@ namespace cpp_smith
         TransparentUnorderedMap<std::string, Configuration> _configurations;
         TransparentUnorderedMap<std::string, std::unique_ptr<Artifact>> _artifacts;
 
-        // TODO:: These should end up as the defaults in each configuration. and used from there.
         std::filesystem::path _project_directory;
         std::filesystem::path _build_directory;
         std::filesystem::path _binary_directory;
@@ -34,7 +35,11 @@ namespace cpp_smith
         // Configuration DSL
         ConfigurationBuilder define(const std::string& name, Configuration*)
         {
-            return ConfigurationBuilder{this, name};
+            return ConfigurationBuilder{this, name}
+                .withProjectDirectory(_project_directory)
+                .withBuildDirectory(_build_directory)
+                .withBinaryDirectory(_binary_directory)
+                .withLibraryDirectory(_library_directory);
         }
 
     public:

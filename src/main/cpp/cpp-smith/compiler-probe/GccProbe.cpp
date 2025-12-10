@@ -205,15 +205,15 @@ namespace cpp_smith
 
     bool GccProbe::exists()
     {
-        const auto [result, output] = ExecuteCommand("g++ --version 2>&1");
+        const auto [result, output] = ExecuteCommand("g++ -dumpfullversion 2>&1");
 
         return result == 0;
     }
 
     std::string GccProbe::version()
     {
-        const auto [result, output] = ExecuteCommand("g++ --version 2>&1");
-        if (result != 0)
+        const auto [result, output] = ExecuteCommand("g++ -dumpfullversion 2>&1");
+        if (result == 0)
         {
             return output;
         }

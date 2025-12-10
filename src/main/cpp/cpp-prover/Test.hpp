@@ -116,7 +116,7 @@ namespace prover
             TestRegistry::instance().add(this);
         }
 
-        std::pair<int, std::vector<TestResult>> test() override
+        std::pair<int, std::vector<TestResult>> test() noexcept override
         {
             if constexpr (sizeof...(Args) == 0)
             {

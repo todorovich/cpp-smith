@@ -27,7 +27,7 @@ namespace prover
 
         virtual ~TestInterface() = default;
 
-        virtual std::pair<int, std::vector<TestResult>> test() = 0;
+        virtual std::pair<int, std::vector<TestResult>> test() noexcept = 0;
 
         virtual std::string_view output() const = 0;
     };
