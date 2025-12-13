@@ -9,6 +9,8 @@
 #include <functional>
 #include <regex>
 #include <tuple>
+#include <concepts>
+#include <type_traits>
 
 namespace prover
 {
@@ -39,7 +41,9 @@ namespace prover
 
         }
 
-        TestResult _test(const std::function<void()>& testFunction)
+        template <typename F>
+            requires (std::invocable<F&> && std::same_as<void, std::invoke_result_t<F&>>)
+        TestResult _test(F&& testFunction)
         {
             try
             {
@@ -51,7 +55,8 @@ namespace prover
                     source_location.column()
                 );
 
-                testFunction();
+                // Call the provided test function (must be callable as void())
+                std::forward<F>(testFunction)();
 
                 logger.print(
                     "Result: {}\n",
@@ -120,7 +125,7 @@ namespace prover
         {
             if constexpr (sizeof...(Args) == 0)
             {
-                TestResult test_result = _test([&]{_test_function();});
+                TestResult test_result = _test([this] { _test_function(); });
 
                 return {
                     test_result.status == TestStatus::Failed,
@@ -134,7 +139,7 @@ namespace prover
 
                 for (auto& arg : _arguments)
                 {
-                    auto test_result = _test([&]{ std::apply(_test_function, arg); });
+                    auto test_result = _test([this, &arg]{ std::apply(_test_function, arg); });
 
                     failures += test_result.status == TestStatus::Failed;
                     results.push_back(std::move(test_result));

@@ -6,18 +6,30 @@
 #include <regex>
 #include <print>
 
+#include <concepts>
+#include <type_traits>
+
 using namespace prover;
 
 namespace assert_tests
 {
+    template <typename F>
+    concept AssertCallable = std::invocable<F, const std::string&>
+        && std::same_as<void, std::invoke_result_t<F, const std::string&>>;
+
+    template <AssertCallable AssertFn, AssertCallable AssertFailFn>
     static void runAssertionTest(
-        const std::function<void(const std::string&)>& assert,
-        const std::function<void(const std::string&)>& assertFail,
+        AssertFn&& assert,
+        AssertFailFn&& assertFail,
         const std::string& expectedWhat,
         const std::string& function_call,
         const std::string& fail_function_call
     )
     {
+        static_assert(AssertCallable<AssertFn>,
+            "runAssertionTest: first parameter must be callable with (const std::string&) and return void");
+        static_assert(AssertCallable<AssertFailFn>,
+            "runAssertionTest: second parameter must be callable with (const std::string&) and return void");
         const std::string message = "custom message";
 
         try
@@ -71,7 +83,7 @@ namespace assert_tests
     {
         const std::string expectedWhat =
                 "Assert::areEqual Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:85:60\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:96:60\n"
                 "\n"
                 "--- expected\n"
                 "+++ actual\n"
@@ -93,7 +105,7 @@ namespace assert_tests
     {
         const std::string expectedWhat =
                 "Assert::areNotEqual Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:106:63\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:117:63\n"
                 "\n"
                 "--- expected\n"
                 "+++ actual\n"
@@ -118,7 +130,7 @@ namespace assert_tests
 
         const std::string expectedWhat =std::format(
             "Assert::areSame Failed: custom message\n"
-            "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:138:32\n"
+            "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:149:32\n"
             "\n"
             "Provided objects do not share the same memory address\n"
             "\n"
@@ -151,7 +163,7 @@ namespace assert_tests
 
         const std::string expectedWhat =std::format(
             "Assert::areNotSame Failed: custom message\n"
-            "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:165:35\n"
+            "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:176:35\n"
             "\n"
             "Provided objects share the same memory address\n"
             "Memory Address: {}\n",
@@ -173,7 +185,7 @@ namespace assert_tests
     static void testIsTrue()
     {
         const std::string expectedWhat ="Assert::isTrue Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:191:31\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:202:31\n"
                 "\n"
                 "Provided expression evaluated to false\n"
                 "\n"
@@ -199,7 +211,7 @@ namespace assert_tests
     static void testIsFalse()
     {
         const std::string expectedWhat ="Assert::isFalse Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:217:32\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:228:32\n"
                 "\n"
                 "Provided expression evaluated to true\n"
                 "\n"
@@ -230,7 +242,7 @@ namespace assert_tests
 
         const std::string expectedWhat = std::format(
             "Assert::isNullptr Failed: custom message\n"
-            "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:250:34\n"
+            "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:261:34\n"
             "\n"
             "Provided pointer was not nullptr\n"
             "\n"
@@ -262,7 +274,7 @@ namespace assert_tests
 
         const std::string expectedWhat =
             "Assert::isNotNullptr Failed: custom message\n"
-            "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:280:37\n"
+            "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:291:37\n"
             "\n"
             "Provided pointer was nullptr\n"
             "\n"
@@ -289,26 +301,26 @@ namespace assert_tests
     {
         const std::string expectedWhat =
             "Assert::throwsException Failed: custom message\n"
-            "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:304:59\n"
+            "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:315:65\n"
             "\n"
             "Assert::throws function did not throw\n";
 
         runAssertionTest(
            [](const std::string& message) {
-               Assert::throwsException<std::runtime_error>(
-                   [] { throw std::runtime_error("Test exception"); },
+               Assert::throwsException<exceptions::InvalidInput>(
+                   [] { throw exceptions::InvalidInput("Test exception"); },
                    message
                 );
            },
            [](const std::string& message) {
-               Assert::throwsException<std::runtime_error>(
-                   [] { /*noop*/ },
+               Assert::throwsException<exceptions::InvalidInput>(
+                   [] { std::println("don't throw"); },
                    message
                 );
            },
            expectedWhat,
-           "Assert::throwsException<std::exception>(throwingLambda, message)",
-           "Assert::throwsException<std::exception>(nonThrowingLambda, message)"
+           "Assert::throwsException<exceptions::InvalidInput>(throwingLambda, message)",
+           "Assert::throwsException<exceptions::InvalidInput>(nonThrowingLambda, message)"
        );
     }
 
