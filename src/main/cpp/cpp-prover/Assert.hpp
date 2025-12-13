@@ -301,9 +301,7 @@ namespace prover
                         source_location.file_name(),
                         source_location.line(),
                         source_location.column(),
-                        exception.message,
-                        "",
-                        ""
+                        exception.message
                     ),
                     source_location
                 );
@@ -319,9 +317,7 @@ namespace prover
                         source_location.file_name(),
                         source_location.line(),
                         source_location.column(),
-                        exception.what(),
-                        "",
-                        ""
+                        exception.what()
                     ),
                     source_location
                 );

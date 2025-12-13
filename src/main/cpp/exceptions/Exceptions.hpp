@@ -46,6 +46,13 @@ namespace exceptions
         }
     };
 
+    struct UnsupportedCompilerVersion final : CppSmithException
+    {
+        using CppSmithException::CppSmithException;
+        inline static const std::string name = "exceptions::UnsupportedCompilerVersion";
+        const std::string& exceptionName() const override { return name; }
+    };
+
     struct InvalidInput final : CppSmithException
     {
         using CppSmithException::CppSmithException;

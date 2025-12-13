@@ -20,7 +20,7 @@ namespace cpp_smith
             current_version = version();
             if (current_version < minimal_version)
             {
-                throw std::runtime_error(
+                throw exceptions::UnsupportedCompilerVersion(
                     "GCC version must be 14.0.0 or higher. Current version: " + current_version
                 );
             }

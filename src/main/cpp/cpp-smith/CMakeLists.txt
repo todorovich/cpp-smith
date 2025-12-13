@@ -20,7 +20,6 @@ target_sources(cpp-smith
         compiler-probe/CompilerProbe.cpp
         compiler-probe/GccProbe.cpp
         source-graph/SourceFile.cpp
-        source-graph/SourceGraph.cpp
         source-graph/TranslationUnit.cpp
     PUBLIC
         Platform.hpp
