@@ -38,7 +38,9 @@ namespace cpp_smith
 
         [[nodiscard]] std::vector<std::filesystem::path> getSystemIncludes() const override
         {
-            return ParseSystemIncludeSearchPaths("g++ -std=gnu++23 -E -x c++ /dev/null -v");
+            return ParseSystemIncludeSearchPaths(
+                "g++ -std=gnu++23 -E -x c++ /dev/null -v"
+            );
         }
 
         [[nodiscard]] std::pair<std::vector<std::filesystem::path>, std::vector<std::filesystem::path>> getDependencies(
@@ -49,7 +51,7 @@ namespace cpp_smith
         [[nodiscard]] bool exists() override;
         [[nodiscard]] std::string version() override;
 
-        void build(TranslationUnit* translationUnit, const fs::path& build_directory) const override;
+        void build(TranslationUnit* translationUnit, const fs::path& build_directory, bool forceRebuild = false) const override;
         
         void link(
             const std::span<std::unique_ptr<TranslationUnit>>& translation_units,

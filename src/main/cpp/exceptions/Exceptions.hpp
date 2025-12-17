@@ -33,7 +33,7 @@ namespace exceptions
 
         CppSmithException(CppSmithException&& other) noexcept = default;
         CppSmithException(const CppSmithException& other) noexcept = default;
-        virtual ~CppSmithException() noexcept override = default;
+        ~CppSmithException() noexcept override = default;
 
         CppSmithException& operator=(CppSmithException&& other) noexcept      = delete;
         CppSmithException& operator=(const CppSmithException& other) noexcept = delete;
@@ -44,6 +44,13 @@ namespace exceptions
         {
             return this->exceptionName().c_str();
         }
+    };
+
+    struct FileSystemError final : CppSmithException
+    {
+        using CppSmithException::CppSmithException;
+        inline static const std::string name = "exceptions::FileSystemError";
+        const std::string& exceptionName() const override { return name; }
     };
 
     struct UnsupportedCompilerVersion final : CppSmithException

@@ -49,6 +49,6 @@ namespace cpp_smith
             translationUnits,
             install_directory,
             std::string { name() + ".exe" }
-            );
+        );
     }
 }

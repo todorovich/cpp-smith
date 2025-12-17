@@ -51,9 +51,18 @@ namespace cpp_smith
         return {std::move(project_only_deps), std::move(system_only) };
     }
 
-    void GccProbe::build(TranslationUnit* translationUnit, const fs::path& build_directory) const
+    void GccProbe::build(
+        TranslationUnit* translationUnit,
+        const fs::path& build_directory,
+        const bool skipRebuildIfUpToDate
+    ) const
     {
         namespace fs = std::filesystem;
+
+        if(skipRebuildIfUpToDate && translationUnit->isUpToDate())
+        {
+            return;
+        }
 
         const fs::path source = translationUnit->getSourceFile().path();
 
@@ -227,4 +236,4 @@ namespace cpp_smith
             );
         }
     }
-} // namespace cpp_smith
+}

@@ -19,7 +19,11 @@ namespace cpp_smith
         [[nodiscard]] virtual bool exists() = 0;
         [[nodiscard]] virtual std::string version() = 0;
 
-        virtual void build(TranslationUnit* translationUnit, const std::filesystem::path& build_directory) const = 0;
+        virtual void build(
+            TranslationUnit* translationUnit,
+            const std::filesystem::path& build_directory,
+            bool skipRebuildIfUpToDate = true
+        ) const = 0;
 
         virtual void link(
             const std::span<std::unique_ptr<TranslationUnit>>& translation_units,
