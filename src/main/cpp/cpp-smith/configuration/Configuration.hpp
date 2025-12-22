@@ -60,6 +60,11 @@ namespace cpp_smith
         [[nodiscard]] Architecture architecture() const;
         [[nodiscard]] CompilerType compiler() const;
 
+        [[nodiscard]] const std::filesystem::path& projectDirectory() const;
+        [[nodiscard]] const std::filesystem::path& buildDirectory() const;
+        [[nodiscard]] const std::filesystem::path& binaryDirectory() const;
+        [[nodiscard]] const std::filesystem::path& libraryDirectory() const;
+
         [[nodiscard]] const std::vector<std::string>& flags() const;
         [[nodiscard]] const std::vector<std::string>& defines() const;
         [[nodiscard]] const std::vector<std::filesystem::path>& userIncludes() const;

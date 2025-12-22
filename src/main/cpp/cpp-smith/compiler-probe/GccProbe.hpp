@@ -3,10 +3,9 @@
 #include "CompilerProbe.hpp"
 #include "ProbeUtils.hpp"
 
-
 namespace cpp_smith
 {
-    class TranslationUnit;
+    class CompilationUnit;
     class Configuration;
 
     class GccProbe final : public CompilerProbe
@@ -43,20 +42,32 @@ namespace cpp_smith
             );
         }
 
-        [[nodiscard]] std::pair<std::vector<std::filesystem::path>, std::vector<std::filesystem::path>> getDependencies(
+        [[nodiscard]] std::pair<std::vector<std::filesystem::path>, std::vector<std::filesystem::path>>
+        getDependencies(
             const std::vector<std::string>& compiler_arguments,
             const std::filesystem::path& translation_unit_path
         ) const override;
 
+        std::string buildCommandWithIncludes(
+            const fs::path& source,
+            const fs::path& objectFilepath,
+            const fs::path& dependencyFilepath,
+            const CompilationUnit* compilationUnit
+        ) const;
+
         [[nodiscard]] bool exists() override;
         [[nodiscard]] std::string version() override;
 
-        void build(TranslationUnit* translationUnit, const fs::path& build_directory, bool forceRebuild = false) const override;
+        std::unique_ptr<Linkable> compile(
+            CompilationUnit* compilationUnit,
+            const fs::path& build_directory,
+            bool skipRebuildIfUpToDate = true
+        ) const override;
         
         void link(
-            const std::span<std::unique_ptr<TranslationUnit>>& translation_units,
-            const std::filesystem::path& install_directory,
+            const std::span<std::unique_ptr<Linkable>>& linkables,
+            const std::filesystem::path& installDirectory,
             const std::string& filename
         ) const override;
     };
-} // namespace cpp_smith
+}

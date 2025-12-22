@@ -8,23 +8,30 @@
 #include <memory>
 #include <string>
 
+#include "artifacts/ArtifactBuilderBase.hpp"
+
 // ReSharper disable once CppRedundantNamespaceDefinition
 namespace cpp_smith
 {
-    // Builder specialization for Executable
     template <>
-    class ArtifactBuilder<Executable>
+    class ArtifactBuilder<Executable> : public ArtifactBuilderBase<Executable>
     {
-        Project& _parent;
         std::string _name;
         std::vector<std::filesystem::path> _sources;
 
-    public:
         ArtifactBuilder(Project& parent, std::string name)
-            : _parent(parent)
+            : ArtifactBuilderBase(parent)
             , _name(std::move(name))
         {}
 
+        [[nodiscard]] std::unique_ptr<Executable> _create() const override
+        {
+            return std::make_unique<Executable>(_name, _sources);
+        }
+
+    public:
+        friend Project;
+        
         ArtifactBuilder& addSource(std::filesystem::path source)
         {
             _sources.emplace_back(std::move(source));
@@ -41,12 +48,5 @@ namespace cpp_smith
 
             return *this;
         }
-
-        [[nodiscard]] std::unique_ptr<Executable> create() const
-        {
-            return std::make_unique<Executable>(_name, _sources);
-        }
-
-        [[maybe_unused]] Project& submit();
     };
 }

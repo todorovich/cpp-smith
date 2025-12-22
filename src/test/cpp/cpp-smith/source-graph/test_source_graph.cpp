@@ -14,16 +14,15 @@ const auto cpp_smith_source_directory = fs::path(CPP_SMITH_SOURCE_DIR);
     [] {
         Project buildSystem;
 
-    const auto configuration = buildSystem.define<Configuration>("default").create();
+        const auto configuration = buildSystem.define<Configuration>("default").create();
 
-    const fs::path entryPoint = cpp_smith_source_directory/ "src/test/data/main.cpp";
+        const fs::path entryPoint = cpp_smith_source_directory/ "src/test/data/main.cpp";
 
-    const auto artifact = buildSystem
-        .define<Executable>("executable")
-        .addSource(entryPoint)
-        .create();
+        const auto executable = buildSystem
+            .define<Executable>("executable")
+            .addSource(entryPoint)
+            .submit();
 
-    const Executable* executable = artifact.get();
-    const auto sourceGraph = SourceGraph(executable, configuration);
+        const auto sourceGraph = SourceGraph(executable, configuration);
     }
 );

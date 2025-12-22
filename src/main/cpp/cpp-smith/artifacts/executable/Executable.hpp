@@ -8,7 +8,6 @@
 namespace cpp_smith
 {
     class Configuration;
-    class CompilerProbe;
 
     class Executable final : public Artifact
     {
@@ -20,7 +19,6 @@ namespace cpp_smith
             , _sources(std::move(_sources))
         {}
 
-        // Implementation Files that define Translation Units
         [[nodiscard]] const std::vector<std::filesystem::path>& sources() const override
         {
             return _sources;

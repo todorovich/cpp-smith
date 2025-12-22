@@ -47,6 +47,26 @@ namespace cpp_smith
         return _compiler;
     }
 
+    const std::filesystem::path& Configuration::projectDirectory() const
+    {
+        return _project_directory;
+    }
+
+    const std::filesystem::path& Configuration::buildDirectory() const
+    {
+        return _build_directory;
+    }
+
+    const std::filesystem::path& Configuration::binaryDirectory() const
+    {
+        return _binary_directory;
+    }
+
+    const std::filesystem::path& Configuration::libraryDirectory() const
+    {
+        return _library_directory;
+    }
+
     const std::vector<std::string>& Configuration::flags() const
     {
         return _flags;

@@ -8,21 +8,33 @@
 #include <string>
 #include <vector>
 
+#include "artifacts/ArtifactBuilderBase.hpp"
+
 namespace cpp_smith
 {
+    class Project;
+
     // Builder specialization for StaticLibrary
     template <>
-    class ArtifactBuilder<StaticLibrary>
+    class ArtifactBuilder<StaticLibrary> : public ArtifactBuilderBase<StaticLibrary>
     {
         Project& _parent;
         std::string _name;
         std::vector<std::filesystem::path> _sources;
 
-    public:
         ArtifactBuilder(Project& parent, std::string name)
-            : _parent(parent)
+            : ArtifactBuilderBase(parent)
+            , _parent(parent)
             , _name(std::move(name))
         {}
+
+        [[nodiscard]] std::unique_ptr<StaticLibrary> _create() const override
+        {
+            return std::make_unique<StaticLibrary>(_name, _sources);
+        }
+
+    public:
+        friend Project;
 
         ArtifactBuilder& addSource(std::filesystem::path source)
         {
@@ -45,7 +57,5 @@ namespace cpp_smith
         {
             return std::make_unique<StaticLibrary>(_name, _sources);
         }
-
-        [[maybe_unused]] Project& submit();
     };
 }

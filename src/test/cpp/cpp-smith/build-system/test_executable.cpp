@@ -22,11 +22,11 @@ using namespace prover;
 
         const auto executable = build_system.define<cpp_smith::Executable>("app")
             .addSource("src/main.cpp")
-            .create();
+            .submit();
 
         Assert::areEqual(std::string("app"), executable->name());
 
-        const auto files = executable->sources();
+        const auto& files = executable->sources();
         Assert::areEqual(1, files.size());
         Assert::areEqual(std::string("src/main.cpp"), files[0].string());
     }

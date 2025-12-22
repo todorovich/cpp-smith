@@ -22,17 +22,22 @@ struct Tests
             .define<cpp_smith::Configuration>("standard")
             .withCompiler(cpp_smith::CompilerType::GCC)
             .withPlatform(cpp_smith::Platform::LINUX)
-            .submit()
-            .define<cpp_smith::Executable>(name)
+            .submit();
+
+        project.define<cpp_smith::Executable>(name)
             .addSource(entryPoint)
-            .submit()
-            .build();
+            .submit();
 
-        const fs::path executable = project.getInstallDirectory() / std::string { name + ".exe" };
+        project.build();
 
-        Assert::isTrue(fs::exists(executable));
+        const fs::path executable_path =  project.getConfiguration("standard")
+            .binaryDirectory() / std::string { name + ".exe" };
 
-        const std::string output = ExecuteCommandAndCaptureOutput('"'+ executable.string() + '"' + " 2>&1");
+        Assert::isTrue(fs::exists(executable_path));
+
+        const auto [exit_code, output] = System::ExecuteCommand(
+            '"'+ executable_path.string() + '"' + " 2>&1"
+        );
 
         Assert::areEqual(std::string("Hello, world!\n"), output);
     }

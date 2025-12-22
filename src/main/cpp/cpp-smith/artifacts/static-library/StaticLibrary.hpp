@@ -1,6 +1,7 @@
 #pragma once
 
-#include "../Artifact.hpp"
+#include "artifacts/Artifact.hpp"
+#include "source-graph/Linkable.hpp"
 
 #include <filesystem>
 #include <string>

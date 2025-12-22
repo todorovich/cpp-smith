@@ -5,10 +5,6 @@
 #include "artifacts/Artifact.hpp"
 #include "artifacts/ArtifactBuilder.hpp"
 
-#include "artifacts/Executable.hpp"
-#include "artifacts/SharedLibrary.hpp"
-#include "artifacts/StaticLibrary.hpp"
-
 #include <memory>
 #include <ranges>
 #include <string>
@@ -21,25 +17,21 @@ namespace cpp_smith
         TransparentUnorderedMap<std::string, std::unique_ptr<Artifact>> _artifacts;
 
         std::filesystem::path _project_directory;
-        std::filesystem::path _build_directory;
-        std::filesystem::path _binary_directory;
-        std::filesystem::path _library_directory;
 
-        // Artifact DSL
         template<typename T>
         ArtifactBuilder<T> define(const std::string& name, T*)
         {
             return ArtifactBuilder<T>(*this, name);
         }
 
-        // Configuration DSL
         ConfigurationBuilder define(const std::string& name, Configuration*)
         {
+            const std::filesystem::path namePath{name};
             return ConfigurationBuilder{this, name}
                 .withProjectDirectory(_project_directory)
-                .withBuildDirectory(_build_directory)
-                .withBinaryDirectory(_binary_directory)
-                .withLibraryDirectory(_library_directory);
+                .withBuildDirectory(_project_directory/"build"/namePath/"obj")
+                .withBinaryDirectory(_project_directory/"build"/namePath/"bin")
+                .withLibraryDirectory(_project_directory/"build"/namePath/"lib");
         }
 
     public:
@@ -50,15 +42,12 @@ namespace cpp_smith
             return define(name, static_cast<T*>(nullptr));
         }
 
-        // Store a finalized Artifact
         Project& accept(std::unique_ptr<Artifact> artifact);
 
-        // Store a finalized Configuration
         Project& accept(Configuration&& config);
 
         Project& withRootDirectory(const std::filesystem::path& project_directory);
 
-        // Accessors
         [[nodiscard]] const Artifact& getArtifact(const std::string& name) const
         {
             return *_artifacts.at(name);
@@ -71,9 +60,9 @@ namespace cpp_smith
 
         [[nodiscard]] const Configuration& getConfiguration(const std::string& name) const;
         [[nodiscard]] const std::filesystem::path& getProjectDirectory() const;
-        [[nodiscard]] const std::filesystem::path& getBuildDirectory() const;
-        [[nodiscard]] const std::filesystem::path& getInstallDirectory() const;
         [[nodiscard]] const TransparentUnorderedMap<std::string, Configuration>& getConfigurations() const;
+
+
 
         void build()
         {
@@ -81,7 +70,9 @@ namespace cpp_smith
             {
                 for (const auto& configuration : _configurations | std::views::values)
                 {
-                    artifact->build(&configuration, _build_directory, _binary_directory);
+                    artifact->build(
+                        &configuration, configuration.buildDirectory(), configuration.binaryDirectory()
+                    );
                 }
             }
         }

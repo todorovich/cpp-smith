@@ -12,19 +12,14 @@ target_sources(cpp-smith
         Project.cpp
         configuration/Configuration.cpp
         configuration/ConfigurationBuilder.cpp
-        artifacts/ArtifactBuilder.cpp
         artifacts/executable/Executable.cpp
-        artifacts/executable/ExecutableBuilder.cpp
-        artifacts/shared-library/SharedLibraryBuilder.cpp
-        artifacts/static-library/StaticLibraryBuilder.cpp
         compiler-probe/CompilerProbe.cpp
         compiler-probe/GccProbe.cpp
         source-graph/SourceFile.cpp
-        source-graph/TranslationUnit.cpp
     PUBLIC
+        Configuration.hpp
         Platform.hpp
         Project.hpp
-        Configuration.hpp
         configuration/Architecture.hpp
         configuration/CompilerType.hpp
         configuration/Configuration.hpp
@@ -32,6 +27,7 @@ target_sources(cpp-smith
         configuration/Platform.hpp
         artifacts/Artifact.hpp
         artifacts/ArtifactBuilder.hpp
+        artifacts/ArtifactBuilderBase.hpp
         artifacts/Executable.hpp
         artifacts/executable/Executable.hpp
         artifacts/executable/ExecutableBuilder.hpp
@@ -43,7 +39,11 @@ target_sources(cpp-smith
         artifacts/static-library/StaticLibraryBuilder.hpp
         compiler-probe/CompilerProbe.hpp
         compiler-probe/GccProbe.hpp
+        source-graph/Linkable.hpp
         source-graph/SourceFile.hpp
         source-graph/SourceGraph.hpp
-        source-graph/TranslationUnit.hpp
+        source-graph/CompilationUnit.hpp
+        system/System.hpp
+        system/PosixPipe.hpp
+        system/PosixSystem.hpp
 )

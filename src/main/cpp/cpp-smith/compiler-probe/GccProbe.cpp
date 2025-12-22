@@ -2,7 +2,7 @@
 
 #include "Exceptions.hpp"
 #include "TransparentContainers.hpp"
-#include "source-graph/TranslationUnit.hpp"
+#include "source-graph/CompilationUnit.hpp"
 
 #include <print>
 
@@ -22,16 +22,15 @@ namespace cpp_smith
             joined_arguments += argument;
         }
 
-        const std::string all_output  = ExecuteCommandAndCaptureOutput(
-            base + "D -MF - "  + joined_arguments + " -c " + translation_unit_path.string()
-            );
+        const auto [exit_code, output]  = System::ExecuteCommand(
+            std::string{base + "D -MF - "  + joined_arguments + " -c " + translation_unit_path.string()}
+        );
+        const auto all_dependencies = ParseMakeStyleDependencies(output);
 
-        const std::string proj_output = ExecuteCommandAndCaptureOutput(
-            base + "MD -MF - " + joined_arguments + " -c " + translation_unit_path.string()
-            );
-
-        const auto all_dependencies = ParseMakeStyleDependencies(all_output);
-        auto project_only_deps      = ParseMakeStyleDependencies(proj_output);
+        const auto [exit_code_2, output_2] = System::ExecuteCommand(
+            std::string{base + "MD -MF - " + joined_arguments + " -c " + translation_unit_path.string()}
+        );
+        auto project_only_deps= ParseMakeStyleDependencies(output_2);
 
         TransparentUnorderedSet<std::string> project_normalized;
         for (const auto& p : project_only_deps)
@@ -51,39 +50,16 @@ namespace cpp_smith
         return {std::move(project_only_deps), std::move(system_only) };
     }
 
-    void GccProbe::build(
-        TranslationUnit* translationUnit,
-        const fs::path& build_directory,
-        const bool skipRebuildIfUpToDate
+    std::string GccProbe::buildCommandWithIncludes(
+        const fs::path& source,
+        const fs::path& objectFilepath,
+        const fs::path& dependencyFilepath,
+        const CompilationUnit* compilationUnit
     ) const
     {
-        namespace fs = std::filesystem;
-
-        if(skipRebuildIfUpToDate && translationUnit->isUpToDate())
-        {
-            return;
-        }
-
-        const fs::path source = translationUnit->getSourceFile().path();
-
-        // Decide output directory and file
-        const fs::path object_filepath = build_directory / (source.stem().string() + ".o");
-        const fs::path dependency_filepath = build_directory / (source.stem().string() + ".d");
-
-        // Ensure output directory exists
-        std::error_code ec;
-        fs::create_directories(build_directory, ec);
-
-        auto quote = [](const fs::path& p)
-        {
-            // Basic quoting for paths with spaces (Linux/WSL)
-            const std::string s = p.string();
-            return "'" + s + "'";
-        };
-
         // Collect project include directories from direct header dependencies
         TransparentUnorderedSet<std::string> includeDirsSet;
-        for (const auto& dep : translationUnit->getSourceFile().directDependencies())
+        for (const auto& dep : compilationUnit->getSourceFile().directDependencies())
         {
             if (const auto dir = dep.parent_path().lexically_normal().string();
                 !dir.empty()
@@ -93,34 +69,72 @@ namespace cpp_smith
             }
         }
 
+        auto quote = [](const fs::path& p)
+        {
+            // Basic quoting for paths with spaces (Linux/WSL)
+            const std::string s = p.string();
+            return "'" + s + "'";
+        };
+
         // Build command
         std::string command = std::format(
             "{} -std=gnu++23 -x c++ -c {} -o {} -MMD -MP -MF {}",
             quote(findCompiler()),
             quote(source),
-            quote(object_filepath),
-            quote(dependency_filepath)
+            quote(objectFilepath),
+            quote(dependencyFilepath)
         );
 
         // Project include dirs (-I)
         for (const auto& dir : includeDirsSet)
         {
-            command = std::format(
-                "{} -I '{}'",
-                command, dir
-            );
+            command = std::format("{} -I '{}'", command, dir);
         }
 
         // System include dirs (-isystem)
         for (const auto& sysInc : getSystemIncludes())
         {
-            command = std::format(
-                "{} -isystem {}",
-                command, quote(sysInc)
-            );
+            command = std::format("{} -isystem {}",command, quote(sysInc));
         }
 
-        const std::string output = ExecuteCommandAndCaptureOutput(command + " 2>&1");
+        return command;
+    }
+
+    std::unique_ptr<Linkable> GccProbe::compile(
+        CompilationUnit* compilationUnit,
+        const fs::path& build_directory,
+        const bool skipRebuildIfUpToDate
+    ) const
+    {
+        const std::filesystem::path source = compilationUnit->getSourceFile().path();
+        const std::filesystem::path object_filepath = build_directory / (source.stem().string() + ".o");
+        const std::filesystem::path dependency_filepath = build_directory / (source.stem().string() + ".d");
+
+        if (skipRebuildIfUpToDate)
+        {
+            if (const auto last_write_time = System::getLastWriteTime(source);
+                std::filesystem::exists(object_filepath) &&
+                std::filesystem::exists(dependency_filepath) &&
+                last_write_time <= System::getLastWriteTime(object_filepath) &&
+                last_write_time <= System::getLastWriteTime(dependency_filepath)
+            )
+            {
+                return std::make_unique<Linkable>(object_filepath, dependency_filepath);
+            }
+        }
+
+        // Ensure output directory exists
+        std::error_code ec;
+        std::filesystem::create_directories(build_directory, ec);
+
+        std::string command = buildCommandWithIncludes(
+            source,
+            object_filepath,
+            dependency_filepath,
+            compilationUnit
+        );
+
+        const auto [exit_code, output] = System::ExecuteCommand(command + " 2>&1");
 
         // Since ExecuteCommandAndCaptureOutput doesn't give us the exit code here,
         // do a quick existence check for the object file to determine success.
@@ -154,43 +168,32 @@ namespace cpp_smith
             };
         }
 
-        translationUnit->setObjectFile(object_filepath);
-        translationUnit->setDependencyFile(dependency_filepath);
+        return std::make_unique<Linkable>(object_filepath, dependency_filepath);
     }
 
+
     void GccProbe::link(
-        const std::span<std::unique_ptr<TranslationUnit>>& translation_units,
-        const std::filesystem::path& install_directory,
+        const std::span<std::unique_ptr<Linkable>>& linkables,
+        const std::filesystem::path& installDirectory,
         const std::string& filename
     ) const
     {
-        if (translation_units.empty())
+        if (linkables.empty())
         {
             throw std::invalid_argument("No translation units to link");
         }
 
-        const auto firstConfiguration = translation_units.front()->getConfiguration();
-
-        for (const auto& translation_unit : translation_units)
-        {
-            if (translation_unit->getConfiguration() != firstConfiguration)
-            {
-                throw exceptions::InvalidInput("All translation units must share the same configuration");
-            }
-        }
-
-        // Ensure output directory exists
         std::error_code ec;
-        fs::create_directories(install_directory, ec);
+        fs::create_directories(installDirectory, ec);
 
         std::ostringstream cmd;
-        cmd << "g++ -o '" << install_directory.string() << '/' << filename << "'";
+        cmd << "g++ -o '" << installDirectory.string() << '/' << filename << "'";
 
-        for (const auto& unit : translation_units)
+        for (const auto& linkable : linkables)
         {
-            if (!unit->getObjectFile().empty())
+            if (!linkable->getObjectFile().empty())
             {
-                cmd << " '" << unit.get()->getObjectFile().string() << "'";
+                cmd << " '" << linkable->getObjectFile().string() << "'";
             }
         }
 
@@ -198,9 +201,9 @@ namespace cpp_smith
 
         std::println("{}", command);
 
-        const std::string output = ExecuteCommandAndCaptureOutput(command + " 2>&1");
+        const auto [exit_code, output] = System::ExecuteCommand(command + " 2>&1");
 
-        if (!std::filesystem::exists(install_directory/filename))
+        if (!std::filesystem::exists(installDirectory/filename))
         {
             throw exceptions::LinkingError(
                 std::format(
@@ -214,19 +217,16 @@ namespace cpp_smith
 
     bool GccProbe::exists()
     {
-        const auto [result, output] = ExecuteCommand("g++ -dumpfullversion 2>&1");
+        const auto [exit_code, output] = System::ExecuteCommand("g++ -dumpfullversion 2>&1");
 
-        return result == 0;
+        return exit_code == 0;
     }
 
     std::string GccProbe::version()
     {
-        const auto [result, output] = ExecuteCommand("g++ -dumpfullversion 2>&1");
-        if (result == 0)
-        {
-            return output;
-        }
-        else
+        const auto [result, output] = System::ExecuteCommand("g++ -dumpfullversion 2>&1");
+
+        if (result != 0)
         {
             throw exceptions::FailedToGetCompilerVersion(
                 std::format(
@@ -235,5 +235,7 @@ namespace cpp_smith
                 )
             );
         }
+
+        return output;
     }
 }

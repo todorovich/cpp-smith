@@ -1,15 +1,17 @@
 #include "Executable.hpp"
 
 #include "compiler-probe/GccProbe.hpp"
-#include "source-graph/TranslationUnit.hpp"
+#include "source-graph/CompilationUnit.hpp"
 
 #include <print>
 
 namespace cpp_smith
 {
-    void Executable::build(const Configuration* configuration,
-                           const std::filesystem::path& build_directory,
-                           const std::filesystem::path& install_directory) const
+    void Executable::build(
+        const Configuration* configuration,
+        const std::filesystem::path& build_directory,
+        const std::filesystem::path& install_directory
+    ) const
     {
         const auto& compiler = configuration->compiler();
 
@@ -32,21 +34,24 @@ namespace cpp_smith
                 static_assert(true, "Unknown compiler type");
         }
 
-        std::vector<std::unique_ptr<TranslationUnit>> translationUnits;
+        std::vector<std::unique_ptr<CompilationUnit>> compilationUnits;
         for (const auto& source : sources())
         {
-            translationUnits.emplace_back(
-                std::make_unique<TranslationUnit>(SourceFile::from(source, compiler_probe.get()), *configuration)
+            compilationUnits.emplace_back(
+                std::make_unique<CompilationUnit>(SourceFile::from(source, compiler_probe.get()), *configuration)
             );
         }
 
-        for (const auto& translationUnit : translationUnits)
+        std::vector<std::unique_ptr<Linkable>> linkableFiles;
+        for (const auto& compilationUnit : compilationUnits)
         {
-            compiler_probe->build(translationUnit.get(), build_directory);
+           linkableFiles.emplace_back(
+               compiler_probe->compile(compilationUnit.get(), build_directory)
+            );
         }
 
         compiler_probe->link(
-            translationUnits,
+            linkableFiles,
             install_directory,
             std::string { name() + ".exe" }
         );

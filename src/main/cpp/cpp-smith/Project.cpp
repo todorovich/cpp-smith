@@ -39,27 +39,15 @@ namespace cpp_smith
         return _project_directory;
     }
 
-    const std::filesystem::path& Project::getBuildDirectory() const
-    {
-        return _build_directory;
-    }
-
     const TransparentUnorderedMap<std::string, Configuration>& Project::getConfigurations() const
     {
         return _configurations;
     }
 
-    const std::filesystem::path& Project::getInstallDirectory() const
-    {
-        return _binary_directory;
-    }
-
     Project& Project::withRootDirectory(const std::filesystem::path& project_directory)
     {
         _project_directory = project_directory;
-        _build_directory = project_directory/"build/obj";
-        _binary_directory = project_directory/"build/bin";
-        _library_directory = project_directory/"build/bin";
+
         return *this;
     }
 }

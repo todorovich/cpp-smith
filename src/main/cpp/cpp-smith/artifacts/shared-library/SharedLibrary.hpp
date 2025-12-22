@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Artifact.hpp"
+#include "artifacts/Artifact.hpp"
 
 #include <filesystem>
 #include <string>
@@ -14,6 +14,7 @@ namespace cpp_smith
         // TODO: probably should be a map of configuration to filepath.
         std::filesystem::path _library_filepath;
     public:
+
         SharedLibrary(std::string name, std::vector<std::filesystem::path> sources)
             : Artifact(std::move(name))
             , _sources(std::move(sources))

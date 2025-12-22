@@ -3,29 +3,38 @@
 #include "Project.hpp"
 #include "artifacts/ArtifactBuilder.hpp"
 
-
 #include <filesystem>
 #include <iterator>
 #include <memory>
 #include <string>
 #include <vector>
 
+#include "artifacts/ArtifactBuilderBase.hpp"
+
 // ReSharper disable once CppRedundantNamespaceDefinition
 namespace cpp_smith
 {
     // Builder specialization for SharedLibrary
     template <>
-    class ArtifactBuilder<SharedLibrary>
+    class ArtifactBuilder<SharedLibrary> : public ArtifactBuilderBase<SharedLibrary>
     {
         Project& _parent;
         std::string _name;
         std::vector<std::filesystem::path> _sources;
 
-    public:
         ArtifactBuilder(Project& parent, std::string name)
-            : _parent(parent)
+            : ArtifactBuilderBase(parent)
+            , _parent(parent)
             , _name(std::move(name))
         {}
+
+        [[nodiscard]] std::unique_ptr<SharedLibrary> _create() const override
+        {
+            return std::make_unique<SharedLibrary>(_name, _sources);
+        }
+
+    public:
+        friend Project;
 
         ArtifactBuilder& addSource(std::filesystem::path source)
         {
@@ -48,7 +57,5 @@ namespace cpp_smith
         {
             return std::make_unique<SharedLibrary>(_name, _sources);
         }
-
-        [[maybe_unused]] Project& submit();
     };
 }
