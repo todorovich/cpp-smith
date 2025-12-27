@@ -20,6 +20,7 @@ target_sources(cpp-smith
         Configuration.hpp
         Platform.hpp
         Project.hpp
+        ProjectCoordinates.hpp
         configuration/Architecture.hpp
         configuration/CompilerType.hpp
         configuration/Configuration.hpp
@@ -28,6 +29,7 @@ target_sources(cpp-smith
         artifacts/Artifact.hpp
         artifacts/ArtifactBuilder.hpp
         artifacts/ArtifactBuilderBase.hpp
+        artifacts/ArtifactCoordinates.hpp
         artifacts/Executable.hpp
         artifacts/executable/Executable.hpp
         artifacts/executable/ExecutableBuilder.hpp

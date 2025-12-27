@@ -1,10 +1,10 @@
 #include "Project.hpp"
 
-#include "Exceptions.hpp"
+#include <format>
+
 #include "artifacts/ArtifactBuilder.hpp"
 #include "artifacts/executable/ExecutableBuilder.hpp"
-
-#include <format>
+#include "Exceptions.hpp"
 
 namespace cpp_smith
 {
@@ -16,7 +16,7 @@ namespace cpp_smith
 
     Project& Project::accept(std::unique_ptr<Artifact> artifact)
     {
-        _artifacts.try_emplace(artifact->name(), std::move(artifact));
+        _artifacts.try_emplace(artifact->getArtifactCoordinate(), std::move(artifact));
         return *this;
     }
 
@@ -42,6 +42,11 @@ namespace cpp_smith
     const TransparentUnorderedMap<std::string, Configuration>& Project::getConfigurations() const
     {
         return _configurations;
+    }
+
+    const ProjectCoordinates& Project::getProjectCoordinates() const
+    {
+        return _project_coordinate;
     }
 
     Project& Project::withRootDirectory(const std::filesystem::path& project_directory)

@@ -1,9 +1,9 @@
 #include "Executable.hpp"
 
+#include <print>
+
 #include "compiler-probe/GccProbe.hpp"
 #include "source-graph/CompilationUnit.hpp"
-
-#include <print>
 
 namespace cpp_smith
 {
@@ -16,8 +16,8 @@ namespace cpp_smith
         const auto& compiler = configuration->compiler();
 
         std::println(
-            "\nBuilding Executable\nName: {}\nCompiler: {}\nBuild Directory: {}\n",
-            name(), compiler, build_directory.c_str()
+            "\nBuilding Executable\nArtifact Coordinates: {}\nCompiler: {}\nBuild Directory: {}\n",
+            getArtifactCoordinate(), compiler, build_directory.c_str()
         );
 
         std::unique_ptr<CompilerProbe> compiler_probe;
@@ -53,7 +53,7 @@ namespace cpp_smith
         compiler_probe->link(
             linkableFiles,
             install_directory,
-            std::string { name() + ".exe" }
+            std::string { getArtifactCoordinate().artifact_name + ".exe" }
         );
     }
 }

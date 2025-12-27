@@ -1,28 +1,41 @@
+#include "cpp-prover/Test.hpp"
+
 #include "cpp-smith/artifacts/Executable.hpp"
 #include "cpp-smith/Project.hpp"
 #include "cpp-smith/source-graph/SourceGraph.hpp"
 
-#include "cpp-prover/Test.hpp"
+namespace test
+{
+	using namespace cpp_smith;
+	using namespace prover;
 
-using namespace cpp_smith;
-namespace fs = std::filesystem;
+	struct Tests
+	{
+		inline static const auto cpp_smith_source_directory = fs::path(CPP_SMITH_SOURCE_DIR);
 
-const auto cpp_smith_source_directory = fs::path(CPP_SMITH_SOURCE_DIR);
+		Tests() = delete;
 
-[[maybe_unused]] const static prover::Test<void> test(
-    "SourceGraph gets dependencies",
-    [] {
-        Project buildSystem;
+		static void testSourceGraph()
+		{
+			Project buildSystem {
+				ProjectCoordinates { "net.todorovich.test", "test", "test" }
+			};
 
-        const auto configuration = buildSystem.define<Configuration>("default").create();
+			const auto configuration = buildSystem.define<Configuration>("default").create();
 
-        const fs::path entryPoint = cpp_smith_source_directory/ "src/test/data/main.cpp";
+			const std::filesystem::path entryPoint = cpp_smith_source_directory/ "src/test/data/main.cpp";
 
-        const auto executable = buildSystem
-            .define<Executable>("executable")
-            .addSource(entryPoint)
-            .submit();
+			const auto executable = buildSystem
+				.define<Executable>("executable")
+				.addSource(entryPoint)
+				.submit();
 
-        const auto sourceGraph = SourceGraph(executable, configuration);
-    }
-);
+			const auto sourceGraph = SourceGraph(executable, configuration);
+		}
+
+		inline const static Test<void> test {
+			"SourceGraph gets dependencies", testSourceGraph
+		};
+	};
+}
+

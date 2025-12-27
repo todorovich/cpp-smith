@@ -3,7 +3,6 @@
 #include "artifacts/Artifact.hpp"
 
 #include <filesystem>
-#include <string>
 #include <vector>
 
 namespace cpp_smith
@@ -11,12 +10,13 @@ namespace cpp_smith
     class SharedLibrary final : public Artifact
     {
         std::vector<std::filesystem::path> _sources;
+
         // TODO: probably should be a map of configuration to filepath.
         std::filesystem::path _library_filepath;
     public:
 
-        SharedLibrary(std::string name, std::vector<std::filesystem::path> sources)
-            : Artifact(std::move(name))
+        SharedLibrary(ArtifactCoordinates artifactCoordinates, std::vector<std::filesystem::path> sources)
+            : Artifact(std::move(artifactCoordinates))
             , _sources(std::move(sources))
         {}
 

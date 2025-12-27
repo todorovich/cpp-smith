@@ -1,11 +1,9 @@
 #pragma once
 
-#include "artifacts/Artifact.hpp"
-#include "source-graph/Linkable.hpp"
-
 #include <filesystem>
-#include <string>
 #include <vector>
+
+#include "artifacts/Artifact.hpp"
 
 namespace cpp_smith
 {
@@ -14,8 +12,8 @@ namespace cpp_smith
         std::vector<std::filesystem::path> _sources;
 
     public:
-        StaticLibrary(std::string name, std::vector<std::filesystem::path> sources)
-            : Artifact(std::move(name))
+        StaticLibrary(ArtifactCoordinates artifactCoordinates, std::vector<std::filesystem::path> sources)
+            : Artifact(std::move(artifactCoordinates))
             , _sources(std::move(sources))
         {}
 

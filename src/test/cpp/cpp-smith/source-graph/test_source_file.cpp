@@ -1,24 +1,34 @@
-#include "Project.hpp"
-#include "Test.hpp"
-#include "../../../../main/cpp/cpp-smith/artifacts/executable/Executable.hpp"
-#include "source-graph/SourceFile.hpp"
-#include "source-graph/SourceGraph.hpp"
+#include "cpp-prover/Test.hpp"
 
-using namespace cpp_smith;
-namespace fs = std::filesystem;
+#include "cpp-smith/Project.hpp"
+#include "cpp-smith/source-graph/SourceFile.hpp"
+#include "cpp-smith/source-graph/SourceGraph.hpp"
 
-const auto cpp_smith_source_directory = fs::path(CPP_SMITH_SOURCE_DIR);
+namespace test
+{
+	using namespace cpp_smith;
+	using namespace prover;
 
-[[maybe_unused]] const static prover::Test<void> test(
-    "SourceFile gets dependencies",
-    [] {
-        fs::path testPath = cpp_smith_source_directory/ "src/test/data/nested/test.hpp";
-        testPath = fs::canonical(testPath);
+	const auto cpp_smith_source_directory = std::filesystem::path(CPP_SMITH_SOURCE_DIR);
 
-        const GccProbe gcc_probe{};
-        const SourceFile sourceFile = SourceFile::from(testPath, &gcc_probe);
+	struct Tests
+	{
+		Tests() = delete;
 
-        prover::Assert::isFalse(sourceFile.directDependencies().empty());
-        prover::Assert::isFalse(sourceFile.systemDependencies().empty());
-    }
-);
+		static void testSourcefileFrom()
+		{
+			std::filesystem::path testPath = cpp_smith_source_directory/ "src/test/data/nested/test.hpp";
+			testPath = std::filesystem::canonical(testPath);
+
+			const GccProbe gcc_probe{};
+			const SourceFile sourceFile = SourceFile::from(testPath, &gcc_probe);
+
+			Assert::isFalse(sourceFile.directDependencies().empty());
+			Assert::isFalse(sourceFile.systemDependencies().empty());
+		}
+
+		inline const static Test<void> test_sourcefile_from {
+			"SourceFile gets dependencies", testSourcefileFrom
+		};
+	};
+}

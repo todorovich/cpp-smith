@@ -1,30 +1,32 @@
 #pragma once
 
-#include "Configuration.hpp"
-#include "TransparentContainers.hpp"
-#include "artifacts/Artifact.hpp"
-#include "artifacts/ArtifactBuilder.hpp"
-
 #include <memory>
 #include <ranges>
 #include <string>
+
+#include "artifacts/Artifact.hpp"
+#include "artifacts/ArtifactBuilder.hpp"
+#include "Configuration.hpp"
+#include "ProjectCoordinates.hpp"
+#include "TransparentContainers.hpp"
 
 namespace cpp_smith
 {
     class Project
     {
         TransparentUnorderedMap<std::string, Configuration> _configurations;
-        TransparentUnorderedMap<std::string, std::unique_ptr<Artifact>> _artifacts;
+        std::unordered_map<ArtifactCoordinates, std::unique_ptr<Artifact>> _artifacts;
 
         std::filesystem::path _project_directory;
+        ProjectCoordinates _project_coordinate;
 
         template<typename T>
-        ArtifactBuilder<T> define(const std::string& name, T*)
+        ArtifactBuilder<T> _define(const std::string& name, T*)
         {
             return ArtifactBuilder<T>(*this, name);
         }
 
-        ConfigurationBuilder define(const std::string& name, Configuration*)
+        ConfigurationBuilder _define(const std::string& name, Configuration*)
         {
             const std::filesystem::path namePath{name};
             return ConfigurationBuilder{this, name}
@@ -35,11 +37,19 @@ namespace cpp_smith
         }
 
     public:
+        explicit Project(ProjectCoordinates&& projectCoordinate)
+            : _project_coordinate(std::move(projectCoordinate))
+        {}
+
+        explicit Project(const ProjectCoordinates& projectCoordinate)
+            : _project_coordinate(projectCoordinate)
+        {}
+
         template <typename T>
         auto define(const std::string& name)
         {
             // Pass a null pointer just to drive overload resolution
-            return define(name, static_cast<T*>(nullptr));
+            return _define(name, static_cast<T*>(nullptr));
         }
 
         Project& accept(std::unique_ptr<Artifact> artifact);
@@ -50,19 +60,19 @@ namespace cpp_smith
 
         [[nodiscard]] const Artifact& getArtifact(const std::string& name) const
         {
-            return *_artifacts.at(name);
+            return *_artifacts.at({_project_coordinate, name});
         };
 
-        [[nodiscard]] const TransparentUnorderedMap<std::string, std::unique_ptr<Artifact>>& getArtifacts() const
+        [[nodiscard]] const std::unordered_map<ArtifactCoordinates, std::unique_ptr<Artifact>>&
+            getArtifacts() const
         {
             return _artifacts;
         };
 
         [[nodiscard]] const Configuration& getConfiguration(const std::string& name) const;
-        [[nodiscard]] const std::filesystem::path& getProjectDirectory() const;
         [[nodiscard]] const TransparentUnorderedMap<std::string, Configuration>& getConfigurations() const;
-
-
+        [[nodiscard]] const ProjectCoordinates& getProjectCoordinates() const;
+        [[nodiscard]] const std::filesystem::path& getProjectDirectory() const;
 
         void build()
         {
@@ -78,4 +88,3 @@ namespace cpp_smith
         }
     };
 }
-

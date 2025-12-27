@@ -1,10 +1,11 @@
 #pragma once
 
 #include "Project.hpp"
+#include "ArtifactBuilder.hpp"
 
 namespace cpp_smith
 {
-	template<typename T>
+	template<ArtifactType T>
 	class ArtifactBuilderBase
 	{
 		Project& _project;

@@ -1,20 +1,30 @@
-#include "cpp-smith/compiler-probe/GccProbe.hpp"
+#include <print>
 
 #include "cpp-prover/Test.hpp"
 
-#include <print>
+#include "cpp-smith/compiler-probe/GccProbe.hpp"
 
-[[maybe_unused]] const static prover::Test<void> test(
-    "GccProbe returns system includes",
-    [] {
+namespace test
+{
+    using namespace cpp_smith;
 
-        const cpp_smith::GccProbe probe;
-        const auto includes = probe.getSystemIncludes();
+    struct Tests
+    {
+        Tests() = delete;
 
-        prover::Assert::isFalse(includes.empty());
+        inline const static prover::Test<void> test {
+        "GccProbe returns system includes",
+            [] {
 
-        for (const auto& path : includes) {
-            std::println("GCC include: {}", path.string());
-        }
-    }
-);
+                const cpp_smith::GccProbe probe;
+                const auto includes = probe.getSystemIncludes();
+
+                prover::Assert::isFalse(includes.empty());
+
+                for (const auto& path : includes) {
+                    std::println("GCC include: {}", path.string());
+                }
+            }
+        };
+    };
+}

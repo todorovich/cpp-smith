@@ -1,9 +1,9 @@
 #pragma once
 
-#include "artifacts/Artifact.hpp"
-
 #include <filesystem>
 #include <vector>
+
+#include "artifacts/Artifact.hpp"
 
 namespace cpp_smith
 {
@@ -14,8 +14,8 @@ namespace cpp_smith
         std::vector<std::filesystem::path> _sources;
 
     public:
-        Executable(std::string name, std::vector<std::filesystem::path> _sources)
-            : Artifact(std::move(name))
+        Executable(ArtifactCoordinates artifactCoordinate, std::vector<std::filesystem::path> _sources)
+            : Artifact(std::move(artifactCoordinate))
             , _sources(std::move(_sources))
         {}
 

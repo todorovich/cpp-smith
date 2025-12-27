@@ -1,8 +1,9 @@
 #pragma once
 
 #include <filesystem>
-#include <string>
 #include <vector>
+
+#include "ArtifactCoordinates.hpp"
 
 namespace cpp_smith
 {
@@ -11,17 +12,17 @@ namespace cpp_smith
 
     class Artifact
     {
-        std::string _name;
+        const ArtifactCoordinates _artifact_coordinate;
 
       protected:
-        explicit Artifact(std::string name)
-            : _name(std::move(name))
+        explicit Artifact(ArtifactCoordinates artifactCoordinate)
+            : _artifact_coordinate(std::move(artifactCoordinate))
         {}
 
       public:
         virtual ~Artifact() = default;
 
-        [[nodiscard]] const std::string& name() const { return _name; }
+        [[nodiscard]] const ArtifactCoordinates& getArtifactCoordinate() const { return _artifact_coordinate; }
 
         // Return the translation units that define this artifact.
         [[nodiscard]] virtual const std::vector<std::filesystem::path>& sources() const = 0;

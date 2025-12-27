@@ -1,13 +1,12 @@
 #pragma once
 
-#include "artifacts/ArtifactBuilder.hpp"
-
 #include <filesystem>
 #include <iterator>
 #include <memory>
 #include <string>
 #include <vector>
 
+#include "artifacts/ArtifactBuilder.hpp"
 #include "artifacts/ArtifactBuilderBase.hpp"
 
 namespace cpp_smith
@@ -30,7 +29,10 @@ namespace cpp_smith
 
         [[nodiscard]] std::unique_ptr<StaticLibrary> _create() const override
         {
-            return std::make_unique<StaticLibrary>(_name, _sources);
+            return std::make_unique<StaticLibrary>(
+                ArtifactCoordinates{_parent.getProjectCoordinates(), _name},
+                _sources
+            );
         }
 
     public:
@@ -51,11 +53,6 @@ namespace cpp_smith
             );
 
             return *this;
-        }
-
-        [[nodiscard]] std::unique_ptr<Artifact> create() const
-        {
-            return std::make_unique<StaticLibrary>(_name, _sources);
         }
     };
 }

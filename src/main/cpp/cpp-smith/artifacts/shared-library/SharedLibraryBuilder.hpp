@@ -1,15 +1,14 @@
 #pragma once
 
-#include "Project.hpp"
-#include "artifacts/ArtifactBuilder.hpp"
-
 #include <filesystem>
 #include <iterator>
 #include <memory>
 #include <string>
 #include <vector>
 
+#include "artifacts/ArtifactBuilder.hpp"
 #include "artifacts/ArtifactBuilderBase.hpp"
+#include "Project.hpp"
 
 // ReSharper disable once CppRedundantNamespaceDefinition
 namespace cpp_smith
@@ -30,7 +29,10 @@ namespace cpp_smith
 
         [[nodiscard]] std::unique_ptr<SharedLibrary> _create() const override
         {
-            return std::make_unique<SharedLibrary>(_name, _sources);
+            return std::make_unique<SharedLibrary>(
+                ArtifactCoordinates{_parent.getProjectCoordinates(), _name},
+                _sources
+            );
         }
 
     public:
@@ -51,11 +53,6 @@ namespace cpp_smith
             );
 
             return *this;
-        }
-
-        [[nodiscard]] std::unique_ptr<SharedLibrary> create() const
-        {
-            return std::make_unique<SharedLibrary>(_name, _sources);
         }
     };
 }
