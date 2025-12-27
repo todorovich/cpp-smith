@@ -4,7 +4,7 @@
 #include "test/Assert.hpp"
 #include "test/Test.hpp"
 
-#include "logging/Logger.hpp"
+#include "log/Logger.hpp"
 
 namespace test
 {

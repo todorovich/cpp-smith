@@ -1,5 +1,5 @@
 add_subdirectory(exceptions)
-add_subdirectory(logging)
+add_subdirectory(log)
 add_subdirectory(cpp-smith)
 add_subdirectory(test)
 

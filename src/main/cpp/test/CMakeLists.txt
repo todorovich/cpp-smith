@@ -19,7 +19,7 @@ target_sources(cpp-test
 target_link_libraries(cpp-test
     PUBLIC
         exceptions
-        logging
+        cpp-log
 )
 
 add_library(cpp-test-main STATIC)

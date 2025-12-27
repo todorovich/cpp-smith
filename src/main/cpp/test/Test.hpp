@@ -4,7 +4,7 @@
 #include "TestRegistry.hpp"
 #include "Assert.hpp"
 #include "TestResult.hpp"
-#include "logging/Logger.hpp"
+#include "log/Logger.hpp"
 
 #include <functional>
 #include <regex>
