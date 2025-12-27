@@ -8,9 +8,9 @@ namespace cpp_smith
 {
 	struct ProjectCoordinates final
 	{
-		const std::string group;
-		const std::string project;
-		const std::string version;
+		std::string group;
+		std::string project;
+		std::string version;
 
 		ProjectCoordinates(
 			const std::string_view group,

@@ -2,12 +2,13 @@
 
 #include <print>
 
+#include "Project.hpp"
 #include "compiler-probe/GccProbe.hpp"
 #include "source-graph/CompilationUnit.hpp"
 
 namespace cpp_smith
 {
-    void Executable::build(
+    void Executable::create(
         const Configuration* configuration,
         const std::filesystem::path& build_directory,
         const std::filesystem::path& install_directory
@@ -15,9 +16,10 @@ namespace cpp_smith
     {
         const auto& compiler = configuration->compiler();
 
+        // TODO: logger
         std::println(
             "\nBuilding Executable\nArtifact Coordinates: {}\nCompiler: {}\nBuild Directory: {}\n",
-            getArtifactCoordinate(), compiler, build_directory.c_str()
+            getCoordinates(), compiler, build_directory.c_str()
         );
 
         std::unique_ptr<CompilerProbe> compiler_probe;
@@ -35,7 +37,7 @@ namespace cpp_smith
         }
 
         std::vector<std::unique_ptr<CompilationUnit>> compilationUnits;
-        for (const auto& source : sources())
+        for (const auto& source : _sources)
         {
             compilationUnits.emplace_back(
                 std::make_unique<CompilationUnit>(SourceFile::from(source, compiler_probe.get()), *configuration)
@@ -50,10 +52,18 @@ namespace cpp_smith
             );
         }
 
+        for (const auto dependency : getDependencies())
+        {
+            // TODO:
+            const auto& artifact = _parent.getArtifact(dependency);
+
+            std::println("Dependency: {}", artifact.getCoordinates());
+        }
+
         compiler_probe->link(
             linkableFiles,
             install_directory,
-            std::string { getArtifactCoordinate().artifact_name + ".exe" }
+            std::string { getCoordinates() .artifact_name + ".exe" }
         );
     }
 }

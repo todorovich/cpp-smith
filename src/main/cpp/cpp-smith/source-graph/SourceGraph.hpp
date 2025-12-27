@@ -14,7 +14,8 @@ namespace cpp_smith
     public:
         SourceGraph(const Artifact* artifact, const Configuration& configuration)
         {
-            const GccProbe probe{};
+            // TODO: implement me or replace me with whatever dag
+            /*const GccProbe probe{};
             for (const auto& path : artifact->sources())
             {
                 SourceFile sourceFile = SourceFile::from(path, &probe);
@@ -30,7 +31,7 @@ namespace cpp_smith
                 {
                     std::println("System Dependency: {}", dependency.string());
                 }
-            }
+            }*/
         }
     };
 } // namespace cpp_smith

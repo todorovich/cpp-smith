@@ -13,22 +13,24 @@ namespace cpp_smith
     {
         std::vector<std::filesystem::path> _sources;
 
-    public:
-        Executable(ArtifactCoordinates artifactCoordinate, std::vector<std::filesystem::path> _sources)
-            : Artifact(std::move(artifactCoordinate))
-            , _sources(std::move(_sources))
+      public:
+        Executable(
+            Project& project,
+            const ArtifactCoordinates& artifactCoordinate,
+            const std::vector<ArtifactCoordinates>& dependencies,
+            const std::vector<std::filesystem::path>& sources
+        )
+            : Artifact(project, artifactCoordinate, dependencies, ArtifactType::of<Executable>())
+            , _sources(sources)
         {}
 
-        [[nodiscard]] const std::vector<std::filesystem::path>& sources() const override
-        {
-            return _sources;
-        }
-
-        void build(
+        void create(
             const Configuration* configuration,
             const std::filesystem::path& build_directory,
             const std::filesystem::path& install_directory
         ) const override;
+
+        [[nodiscard]] const std::vector<std::filesystem::path>& sources() const { return _sources; }
     };
 }
 

@@ -6,7 +6,6 @@
 
 #include "logging/Logger.hpp"
 
-
 namespace test
 {
     using namespace prover;

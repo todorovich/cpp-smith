@@ -63,6 +63,11 @@ namespace cpp_smith
             return *_artifacts.at({_project_coordinate, name});
         };
 
+        [[nodiscard]] const Artifact& getArtifact(const ArtifactCoordinates& artifactCoordinates) const
+        {
+            return *_artifacts.at(artifactCoordinates);
+        };
+
         [[nodiscard]] const std::unordered_map<ArtifactCoordinates, std::unique_ptr<Artifact>>&
             getArtifacts() const
         {
@@ -80,7 +85,7 @@ namespace cpp_smith
             {
                 for (const auto& configuration : _configurations | std::views::values)
                 {
-                    artifact->build(
+                    artifact->create(
                         &configuration, configuration.buildDirectory(), configuration.binaryDirectory()
                     );
                 }

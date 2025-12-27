@@ -31,7 +31,7 @@ namespace test
 				.addSource("src/main.cpp")
 				.submit();
 
-			Assert::areEqual(std::string("app"), executable->getArtifactCoordinate().artifact_name);
+			Assert::areEqual(std::string("app"), executable->getCoordinates().artifact_name);
 
 			const auto& files = executable->sources();
 			Assert::areEqual(1, files.size());

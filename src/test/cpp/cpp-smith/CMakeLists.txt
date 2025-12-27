@@ -17,4 +17,6 @@ target_sources(test_cpp_smith
     PRIVATE
         test_cpp_smith.cpp
         test_project.cpp
+        test_artifact_type.cpp
+        test_artifact_types.cpp
 )

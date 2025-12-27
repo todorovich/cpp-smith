@@ -5,7 +5,7 @@
 
 namespace cpp_smith
 {
-	template<ArtifactType T>
+	template<ArtifactTypeConcept T>
 	class ArtifactBuilderBase
 	{
 		Project& _project;
@@ -19,6 +19,7 @@ namespace cpp_smith
 
 	public:
 		virtual ~ArtifactBuilderBase() = default;
+
 		T* submit()
 		{
 			auto unique_ptr = _create();

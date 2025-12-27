@@ -10,11 +10,12 @@ target_include_directories(cpp-smith PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_sources(cpp-smith
     PRIVATE
         Project.cpp
-        configuration/Configuration.cpp
-        configuration/ConfigurationBuilder.cpp
+        artifacts/Artifact.cpp
         artifacts/executable/Executable.cpp
         compiler-probe/CompilerProbe.cpp
         compiler-probe/GccProbe.cpp
+        configuration/Configuration.cpp
+        configuration/ConfigurationBuilder.cpp
         source-graph/SourceFile.cpp
     PUBLIC
         Configuration.hpp
@@ -30,6 +31,8 @@ target_sources(cpp-smith
         artifacts/ArtifactBuilder.hpp
         artifacts/ArtifactBuilderBase.hpp
         artifacts/ArtifactCoordinates.hpp
+        artifacts/ArtifactType.hpp
+        artifacts/ArtifactTypes.hpp
         artifacts/Executable.hpp
         artifacts/executable/Executable.hpp
         artifacts/executable/ExecutableBuilder.hpp
@@ -41,10 +44,10 @@ target_sources(cpp-smith
         artifacts/static-library/StaticLibraryBuilder.hpp
         compiler-probe/CompilerProbe.hpp
         compiler-probe/GccProbe.hpp
+        source-graph/CompilationUnit.hpp
         source-graph/Linkable.hpp
         source-graph/SourceFile.hpp
         source-graph/SourceGraph.hpp
-        source-graph/CompilationUnit.hpp
         system/System.hpp
         system/PosixPipe.hpp
         system/PosixSystem.hpp

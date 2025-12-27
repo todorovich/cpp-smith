@@ -89,26 +89,25 @@ namespace test
 
         static void testStaticLibraryBuild()
         {
-            Project build_system  {
+            Project project  {
                 ProjectCoordinates { "net.todorovich", "test static library build", "1.0.0" }
             };
 
-            build_system
+            project
                 .define<Configuration>("debug")
                 .withPlatform(Platform::LINUX)
                 .addFlag("-g")
                 .submit();
 
-            build_system
+            const auto core = project
                 .define<StaticLibrary>("core")
                 .addSource("src/core/math.cpp")
                 .addSource("src/core/io.cpp")
                 .submit();
 
-            const auto& lib = build_system.getArtifact("core");
-            Assert::areEqual(std::string{"core"}, lib.getArtifactCoordinate().artifact_name);
+            Assert::areEqual(std::string{"core"}, core->getCoordinates().artifact_name);
 
-            const auto& files = lib.sources();
+            const auto& files = core->sources();
             Assert::areEqual(files.size(), 2);
             Assert::areEqual(files[0].string(), std::string{"src/core/math.cpp"});
             Assert::areEqual(files[1].string(), std::string{"src/core/io.cpp"});
@@ -120,27 +119,27 @@ namespace test
 
         static void testSharedLibraryBuild()
         {
-            Project build_system  {
+            Project project  {
                 ProjectCoordinates { "net.todorovich", "test shared library builder", "1.0.0" }
             };
 
-            build_system
+            project
                 .define<Configuration>("release")
                 .withPlatform(Platform::MAC_OS)
                 .withArchitecture(Architecture::ARM_64)
                 .addFlag("-O2")
                 .submit();
 
-            build_system
+            const auto plugin = project
                 .define<SharedLibrary>("plugin")
                 .addSource("src/plugin/entry.cpp")
                 .addSource("src/plugin/helper.cpp")
                 .submit();
 
-            const auto& lib = build_system.getArtifact("plugin");
-            Assert::areEqual(std::string{"plugin"}, lib.getArtifactCoordinate().artifact_name);
+            const auto& lib = project.getArtifact("plugin");
+            Assert::areEqual(std::string{"plugin"}, lib.getCoordinates().artifact_name);
 
-            const auto& files = lib.sources();
+            const auto& files = plugin->sources();
             Assert::areEqual(files.size(), 2);
             Assert::areEqual(files[0].string(), std::string{"src/plugin/entry.cpp"});
             Assert::areEqual(files[1].string(), std::string{"src/plugin/helper.cpp"});

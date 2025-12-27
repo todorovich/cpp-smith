@@ -13,13 +13,13 @@ namespace cpp_smith
 {
     class Project;
 
-    // Builder specialization for StaticLibrary
     template <>
     class ArtifactBuilder<StaticLibrary> : public ArtifactBuilderBase<StaticLibrary>
     {
         Project& _parent;
         std::string _name;
         std::vector<std::filesystem::path> _sources;
+        std::vector<ArtifactCoordinates> _dependencies;
 
         ArtifactBuilder(Project& parent, std::string name)
             : ArtifactBuilderBase(parent)
@@ -30,7 +30,9 @@ namespace cpp_smith
         [[nodiscard]] std::unique_ptr<StaticLibrary> _create() const override
         {
             return std::make_unique<StaticLibrary>(
+                _parent,
                 ArtifactCoordinates{_parent.getProjectCoordinates(), _name},
+                _dependencies,
                 _sources
             );
         }
@@ -50,6 +52,24 @@ namespace cpp_smith
                 _sources.end(),
                 std::make_move_iterator(sources.begin()),
                 std::make_move_iterator(sources.end())
+            );
+
+            return *this;
+        }
+
+        ArtifactBuilder& addDependency(ArtifactCoordinates coordinates)
+        {
+            _dependencies.emplace_back(std::move(coordinates));
+
+            return *this;
+        }
+
+        ArtifactBuilder& addDependencies(std::vector<ArtifactCoordinates> coordinates)
+        {
+            _dependencies.insert(
+                _dependencies.end(),
+                std::make_move_iterator(coordinates.begin()),
+                std::make_move_iterator(coordinates.end())
             );
 
             return *this;

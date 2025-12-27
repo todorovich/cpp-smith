@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Artifact.hpp"
-
 #include <concepts>
+
+#include "Artifact.hpp"
 
 namespace cpp_smith
 {
     template <typename T>
-    concept ArtifactType = std::derived_from<T, Artifact>;
+    concept ArtifactTypeConcept = std::derived_from<T, ::cpp_smith::Artifact>;
 
-    template <ArtifactType T> class ArtifactBuilder;
+    template <ArtifactTypeConcept T> class ArtifactBuilder;
 }

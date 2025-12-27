@@ -16,7 +16,7 @@ namespace cpp_smith
 
     Project& Project::accept(std::unique_ptr<Artifact> artifact)
     {
-        _artifacts.try_emplace(artifact->getArtifactCoordinate(), std::move(artifact));
+        _artifacts.try_emplace(artifact->getCoordinates(), std::move(artifact));
         return *this;
     }
 
