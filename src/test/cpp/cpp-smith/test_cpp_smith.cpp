@@ -3,9 +3,9 @@
 
 #include "test/Test.hpp"
 
-#include "cpp-smith/Project.hpp"
-#include "cpp-smith/artifacts/Executable.hpp"
-#include "cpp-smith/compiler-probe/ProbeUtils.hpp"
+#include "build/Project.hpp"
+#include "build/artifacts/Executable.hpp"
+#include "build/compiler-probe/ProbeUtils.hpp"
 
 namespace test
 {

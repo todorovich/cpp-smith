@@ -6,7 +6,7 @@
 #include <exception>
 
 #include "Diff.hpp"
-#include "Exceptions.hpp"
+#include "faults.hpp"
 
 template <typename T>
 concept DerivedFromException = std::derived_from<T, std::exception> && !std::same_as<T, std::exception>;
@@ -287,7 +287,7 @@ namespace test
             {
                 /* this is the success case */
             }
-            catch (const exceptions::CppSmithException& exception) {
+            catch (const faults::CppSmithException& exception) {
                 fail(
                     std::format(
                         "Assert::throwsException Failed: {}\n"
@@ -328,7 +328,7 @@ namespace test
             const std::stacktrace& stacktrace = std::stacktrace::current()
         )
         {
-            throw exceptions::AssertionFailed(message, source_location, stacktrace);
+            throw faults::AssertionFailed(message, source_location, stacktrace);
         }
     };
 }

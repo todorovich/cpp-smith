@@ -1,6 +1,6 @@
 #include "GccProbe.hpp"
 
-#include "Exceptions.hpp"
+#include "faults.hpp"
 #include "TransparentContainers.hpp"
 #include "source-graph/CompilationUnit.hpp"
 
@@ -140,7 +140,7 @@ namespace cpp_smith
         // do a quick existence check for the object file to determine success.
         if (!fs::exists(object_filepath))
         {
-            throw exceptions::CompilationError{
+            throw faults::CompilationError{
                 std::format(
                     "Failed to compile translation unit:\n"
                     "Command:\n"
@@ -155,7 +155,7 @@ namespace cpp_smith
 
         if (!fs::exists(dependency_filepath))
         {
-            throw exceptions::CompilationError{
+            throw faults::CompilationError{
                 std::format(
                     "Failed to compile translation unit [no dependency file]:\n"
                     "Command:\n"
@@ -205,7 +205,7 @@ namespace cpp_smith
 
         if (!std::filesystem::exists(installDirectory/filename))
         {
-            throw exceptions::LinkingError(
+            throw faults::LinkingError(
                 std::format(
                     "Failed to link executable:\nCommand:\n{}\nOutput:\n{}\n",
                     command,
@@ -228,7 +228,7 @@ namespace cpp_smith
 
         if (result != 0)
         {
-            throw exceptions::FailedToGetCompilerVersion(
+            throw faults::FailedToGetCompilerVersion(
                 std::format(
                     "Command Execution Failed\nCommand: g++ --version 2>&1\nOutput: {}\n",
                     output

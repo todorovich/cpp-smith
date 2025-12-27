@@ -2,7 +2,7 @@
 
 #include "test/Test.hpp"
 
-#include "cpp-smith/compiler-probe/GccProbe.hpp"
+#include "build/compiler-probe/GccProbe.hpp"
 
 namespace test
 {

@@ -1,6 +1,8 @@
-add_subdirectory(exceptions)
+add_subdirectory(fault)
 add_subdirectory(log)
-add_subdirectory(cpp-smith)
+add_subdirectory(system)
+
+add_subdirectory(build)
 add_subdirectory(test)
 
 add_executable(c++smith)

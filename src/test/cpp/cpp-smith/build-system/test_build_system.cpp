@@ -5,11 +5,11 @@
 
 #include "test/Test.hpp"
 
-#include "cpp-smith/Project.hpp"
-#include "cpp-smith/artifacts/SharedLibrary.hpp"
-#include "cpp-smith/artifacts/StaticLibrary.hpp"
-#include "cpp-smith/configuration/Configuration.hpp"
-#include "cpp-smith/configuration/ConfigurationBuilder.hpp"
+#include "build/Project.hpp"
+#include "build/artifacts/SharedLibrary.hpp"
+#include "build/artifacts/StaticLibrary.hpp"
+#include "build/configuration/Configuration.hpp"
+#include "build/configuration/ConfigurationBuilder.hpp"
 
 namespace test
 {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Exceptions.hpp"
+#include "faults.hpp"
 
 #include <string>
 #include <vector>
@@ -9,7 +9,7 @@
 #include <sstream>
 #include <memory>
 
-#include "system/System.hpp"
+#include "System.hpp"
 
 namespace fs = std::filesystem;
 
@@ -49,7 +49,7 @@ inline std::vector<fs::path> ParseSystemIncludeSearchPaths(const std::string& dr
     }
     else
     {
-        throw exceptions::ParseSystemIncludesFailed(
+        throw faults::ParseSystemIncludesFailed(
             std::format("Command Execution Failed\nCommand: {} ", driver_command_for_verbose_includes)
         );
     }

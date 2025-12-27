@@ -1,9 +1,9 @@
 #include "test/Test.hpp"
 
-#include "cpp-smith/artifacts/ArtifactType.hpp"
-#include "cpp-smith/artifacts/Executable.hpp"
-#include "cpp-smith/artifacts/StaticLibrary.hpp"
-#include "cpp-smith/artifacts/SharedLibrary.hpp"
+#include "build/artifacts/ArtifactType.hpp"
+#include "build/artifacts/Executable.hpp"
+#include "build/artifacts/StaticLibrary.hpp"
+#include "build/artifacts/SharedLibrary.hpp"
 
 #include <string>
 

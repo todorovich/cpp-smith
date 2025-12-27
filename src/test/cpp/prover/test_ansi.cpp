@@ -4,7 +4,7 @@
 #include "test/Ansi.hpp"
 #include "test/Test.hpp"
 
-#include "cpp-smith/artifacts/Artifact.hpp"
+#include "build/artifacts/Artifact.hpp"
 
 namespace ansi_test
 {

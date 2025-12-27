@@ -1,7 +1,7 @@
 #include "test/Test.hpp"
 
-#include "cpp-smith/artifacts/ArtifactTypes.hpp"
-#include "cpp-smith/artifacts/ArtifactType.hpp"
+#include "build/artifacts/ArtifactTypes.hpp"
+#include "build/artifacts/ArtifactType.hpp"
 
 namespace test
 {

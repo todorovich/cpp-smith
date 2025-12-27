@@ -1,8 +1,8 @@
 #include "test/Test.hpp"
 
-#include "cpp-smith/Project.hpp"
-#include "cpp-smith/artifacts/Executable.hpp"
-#include "cpp-smith/configuration/Configuration.hpp"
+#include "build/Project.hpp"
+#include "build/artifacts/Executable.hpp"
+#include "build/configuration/Configuration.hpp"
 
 namespace test
 {

@@ -3,7 +3,7 @@
 #include <source_location>
 #include <stacktrace>
 
-namespace exceptions
+namespace faults
 {
     struct CppSmithException : std::exception
     {

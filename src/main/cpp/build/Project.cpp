@@ -4,7 +4,7 @@
 
 #include "artifacts/ArtifactBuilder.hpp"
 #include "artifacts/executable/ExecutableBuilder.hpp"
-#include "Exceptions.hpp"
+#include "faults.hpp"
 
 namespace cpp_smith
 {
@@ -28,7 +28,7 @@ namespace cpp_smith
         }
         catch (const std::out_of_range&)
         {
-            throw exceptions::NotFound(
+            throw faults::NotFound(
                 std::format("No configuration exist with the name: {}", name)
             );
         }

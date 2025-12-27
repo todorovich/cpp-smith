@@ -1,8 +1,8 @@
 #include "test/Test.hpp"
 
-#include "cpp-smith/artifacts/Executable.hpp"
-#include "cpp-smith/Project.hpp"
-#include "cpp-smith/source-graph/SourceGraph.hpp"
+#include "build/artifacts/Executable.hpp"
+#include "build/Project.hpp"
+#include "build/source-graph/SourceGraph.hpp"
 
 namespace test
 {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "TestResult.hpp"
-#include "../cpp-smith/TransparentContainers.hpp"
+#include "../build/TransparentContainers.hpp"
 
 #include <string>
 #include <vector>

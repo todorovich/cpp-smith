@@ -1,8 +1,8 @@
-#include "exceptions/Exceptions.hpp"
+#include "fault/faults.hpp"
 
 #include "test/Test.hpp"
 
-#include "cpp-smith/Project.hpp"
+#include "build/Project.hpp"
 
 namespace test
 {
@@ -14,7 +14,7 @@ namespace test
 
         static void testProject()
         {
-            Assert::throwsException<exceptions::NotFound>(
+            Assert::throwsException<faults::NotFound>(
                 []
                 {
                     const cpp_smith::Project project {

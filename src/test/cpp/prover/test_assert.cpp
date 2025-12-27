@@ -4,7 +4,7 @@
 #include <concepts>
 #include <type_traits>
 
-#include "exceptions/Exceptions.hpp"
+#include "fault/faults.hpp"
 
 #include "test/Diff.hpp"
 #include "test/Test.hpp"
@@ -43,7 +43,7 @@ namespace assert_tests
             }
             catch (const std::exception& exception)
             {
-                throw exceptions::AssertionFailed(
+                throw faults::AssertionFailed(
                     std::format("{} threw {}", function_call, exception.what())
                 );
             }
@@ -52,7 +52,7 @@ namespace assert_tests
             {
                 assertFail(message);
             }
-            catch (const exceptions::AssertionFailed& actual)
+            catch (const faults::AssertionFailed& actual)
             {
                 if (std::string{actual.message} == expectedWhat)
                 {
@@ -62,7 +62,7 @@ namespace assert_tests
                     return;
                 }
 
-                throw exceptions::AssertionFailed(
+                throw faults::AssertionFailed(
                     std::format("{} threw the wrong message\n\n{}",
                         function_call,
                         Diff(expectedWhat, actual.message))
@@ -70,7 +70,7 @@ namespace assert_tests
             }
             catch (const std::exception& exception)
             {
-                throw exceptions::AssertionFailed(
+                throw faults::AssertionFailed(
                     std::format(
                         "{} threw {} instead of prover::AssertionFailedException",
                         fail_function_call,
@@ -79,7 +79,7 @@ namespace assert_tests
                 );
             }
 
-            throw exceptions::AssertionFailed(
+            throw faults::AssertionFailed(
                std::format("{} did not throw prover::AssertionFailedException", fail_function_call)
             );
         }
@@ -322,19 +322,19 @@ namespace assert_tests
         {
             const std::string expectedWhat =
                 "Assert::throwsException Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:337:69\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:337:65\n"
                 "\n"
                 "Assert::throws function did not throw\n";
 
             runAssertionTest(
                [](const std::string& message) {
-                   Assert::throwsException<exceptions::InvalidInput>(
-                       [] { throw exceptions::InvalidInput("Test exception"); },
+                   Assert::throwsException<faults::InvalidInput>(
+                       [] { throw faults::InvalidInput("Test exception"); },
                        message
                     );
                },
                [](const std::string& message) {
-                   Assert::throwsException<exceptions::InvalidInput>(
+                   Assert::throwsException<faults::InvalidInput>(
                        [] { std::println("don't throw"); },
                        message
                     );

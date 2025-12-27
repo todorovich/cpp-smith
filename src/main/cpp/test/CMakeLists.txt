@@ -18,7 +18,7 @@ target_sources(cpp-test
 
 target_link_libraries(cpp-test
     PUBLIC
-        exceptions
+        cpp-fault
         cpp-log
 )
 

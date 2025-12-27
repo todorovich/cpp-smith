@@ -2,7 +2,8 @@ add_library(cpp-smith STATIC)
 
 target_link_libraries(cpp-smith
     PUBLIC
-        exceptions
+        cpp-fault
+        cpp-system
 )
 
 target_include_directories(cpp-smith PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
@@ -48,7 +49,7 @@ target_sources(cpp-smith
         source-graph/Linkable.hpp
         source-graph/SourceFile.hpp
         source-graph/SourceGraph.hpp
-        system/System.hpp
-        system/PosixPipe.hpp
-        system/PosixSystem.hpp
+        ../system/System.hpp
+        ../system/PosixPipe.hpp
+        ../system/PosixSystem.hpp
 )
