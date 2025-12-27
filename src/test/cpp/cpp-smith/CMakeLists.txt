@@ -9,7 +9,7 @@ add_test(NAME TestCppSmith COMMAND test_cpp_smith)
 target_link_libraries(test_cpp_smith
     PRIVATE
         cpp-smith
-        cpp-prover-main
+        cpp-test-main
         test_definitions
 )
 

@@ -5,7 +5,7 @@ add_test(NAME CompilerProbeTest COMMAND test_compiler_probe)
 target_link_libraries(test_compiler_probe
     PRIVATE
         cpp-smith
-        cpp-prover-main
+        cpp-test-main
         test_definitions
 )
 

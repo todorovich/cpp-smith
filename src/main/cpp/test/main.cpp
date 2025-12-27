@@ -1,9 +1,9 @@
-#include "Prover.hpp"
+#include "Tester.hpp"
 
 int main()
 {
     try {
-        const auto [failures, test_results] = prover::Prover::test();
+        const auto [failures, test_results] = test::Tester::test();
 
         return failures;
     }

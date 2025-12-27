@@ -2,7 +2,6 @@
 
 #include <string>
 #include <format>
-#include <utility>
 #include <memory>
 #include <exception>
 
@@ -10,10 +9,9 @@
 #include "Exceptions.hpp"
 
 template <typename T>
-concept DerivedFromException = std::derived_from<T, std::exception>
-                          && !std::same_as<T, std::exception>;
+concept DerivedFromException = std::derived_from<T, std::exception> && !std::same_as<T, std::exception>;
 
-namespace prover
+namespace test
 {
     template <typename T>
     concept Pointer = std::is_pointer_v<T> || std::is_null_pointer_v<T>;
@@ -22,7 +20,6 @@ namespace prover
     concept Function = requires(F f) {
         { f() };
     };
-    
 
     class Assert
     {

@@ -4,7 +4,7 @@
 
 #include <vector>
 
-namespace prover
+namespace test
 {
     class TestRegistry
     {

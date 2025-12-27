@@ -1,14 +1,14 @@
 #include <filesystem>
 #include <fstream>
 
-#include "cpp-prover/Assert.hpp"
-#include "cpp-prover/Test.hpp"
+#include "test/Assert.hpp"
+#include "test/Test.hpp"
 
 #include "logging/Logger.hpp"
 
 namespace test
 {
-    using namespace prover;
+    using namespace test;
     using namespace logging;
 
     class StdoutRedirect

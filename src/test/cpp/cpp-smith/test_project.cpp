@@ -1,12 +1,12 @@
 #include "exceptions/Exceptions.hpp"
 
-#include "cpp-prover/Test.hpp"
+#include "test/Test.hpp"
 
 #include "cpp-smith/Project.hpp"
 
 namespace test
 {
-    using namespace prover;
+    using namespace test;
 
     struct Tests
     {

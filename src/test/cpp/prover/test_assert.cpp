@@ -6,11 +6,11 @@
 
 #include "exceptions/Exceptions.hpp"
 
-#include "cpp-prover/Diff.hpp"
-#include "cpp-prover/Test.hpp"
+#include "test/Diff.hpp"
+#include "test/Test.hpp"
 
 
-using namespace prover;
+using namespace test;
 
 namespace assert_tests
 {

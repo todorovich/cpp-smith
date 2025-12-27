@@ -12,7 +12,7 @@
 #include <concepts>
 #include <type_traits>
 
-namespace prover
+namespace test
 {
     template <typename ReturnType, typename... Args>
     class Test final : public TestInterface

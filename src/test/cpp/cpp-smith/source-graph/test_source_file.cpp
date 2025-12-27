@@ -1,4 +1,4 @@
-#include "cpp-prover/Test.hpp"
+#include "test/Test.hpp"
 
 #include "cpp-smith/Project.hpp"
 #include "cpp-smith/source-graph/SourceFile.hpp"
@@ -7,7 +7,7 @@
 namespace test
 {
 	using namespace cpp_smith;
-	using namespace prover;
+	using namespace test;
 
 	const auto cpp_smith_source_directory = std::filesystem::path(CPP_SMITH_SOURCE_DIR);
 

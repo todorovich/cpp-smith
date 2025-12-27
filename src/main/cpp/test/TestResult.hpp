@@ -4,7 +4,7 @@
 
 #include "Ansi.hpp"
 
-namespace prover
+namespace test
 {
     enum class TestStatus { Skipped = -1, Passed = 0, Failed = 1 };
 
@@ -33,11 +33,11 @@ namespace prover
 }
 
 template<>
-struct std::hash<prover::TestResult> {
-    size_t operator()(prover::TestResult const& t) const noexcept {
+struct std::hash<test::TestResult> {
+    size_t operator()(test::TestResult const& t) const noexcept {
         size_t h1 = std::hash<std::string>{}(t.name);
         size_t h2 = std::hash<std::string>{}(t.output);
-        size_t h3 = std::hash<std::underlying_type_t<prover::TestStatus>>{}(std::to_underlying(t.status));
+        size_t h3 = std::hash<std::underlying_type_t<test::TestStatus>>{}(std::to_underlying(t.status));
         return h1 ^ (h2 << 1) ^ (h3 << 2);
     }
 };

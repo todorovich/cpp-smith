@@ -1,11 +1,11 @@
-#include "cpp-prover/Test.hpp"
+#include "test/Test.hpp"
 
 #include "cpp-smith/artifacts/ArtifactTypes.hpp"
 #include "cpp-smith/artifacts/ArtifactType.hpp"
 
 namespace test
 {
-    using namespace prover;
+    using namespace test;
     using namespace cpp_smith;
 
     struct Tests

@@ -6,7 +6,7 @@
 #include <string>
 #include <source_location>
 
-namespace prover
+namespace test
 {
     class TestInterface
     {

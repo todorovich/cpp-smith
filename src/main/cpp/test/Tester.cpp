@@ -1,4 +1,4 @@
-#include "Prover.hpp"
+#include "Tester.hpp"
 
 #include <vector>
 #include <regex>
@@ -12,9 +12,9 @@
 
 
 
-namespace prover
+namespace test
 {
-    std::pair<int, std::vector<TestResult>> Prover::test()
+    std::pair<int, std::vector<TestResult>> Tester::test()
     {
         int failures = 0;
         std::vector<TestResult> results;

@@ -3,7 +3,7 @@
 #include <utility>
 #include <vector>
 
-#include "cpp-prover/Test.hpp"
+#include "test/Test.hpp"
 
 #include "cpp-smith/Project.hpp"
 #include "cpp-smith/artifacts/SharedLibrary.hpp"
@@ -13,7 +13,7 @@
 
 namespace test
 {
-    using namespace prover;
+    using namespace test;
     using namespace cpp_smith;
 
     struct Tests

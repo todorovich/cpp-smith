@@ -1,14 +1,14 @@
 
 #include <print>
 
-#include "cpp-prover/Ansi.hpp"
-#include "cpp-prover/Test.hpp"
+#include "test/Ansi.hpp"
+#include "test/Test.hpp"
 
 #include "cpp-smith/artifacts/Artifact.hpp"
 
 namespace ansi_test
 {
-    using namespace prover;
+    using namespace test;
     struct Tests
     {
         Tests() = delete;

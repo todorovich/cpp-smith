@@ -5,7 +5,7 @@ add_test(NAME TestBuildSystem COMMAND test_build_system)
 target_link_libraries(test_build_system
     PRIVATE
         cpp-smith
-        cpp-prover-main
+        cpp-test-main
         test_definitions
 )
 

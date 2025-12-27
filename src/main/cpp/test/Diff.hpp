@@ -1,8 +1,8 @@
-#pragma once
+ #pragma once
 
 #include <format>
 
-namespace prover
+namespace test
 {
     class Diff
     {
@@ -62,10 +62,10 @@ namespace prover
 }
 
 template<>
-struct std::formatter<prover::Diff>
+struct std::formatter<test::Diff>
     : std::formatter<std::string_view>
 {
-    auto format(const prover::Diff& d,
+    auto format(const test::Diff& d,
                 std::format_context& ctx) const
     {
         // cast to string_view → use std::formatter<string_view>

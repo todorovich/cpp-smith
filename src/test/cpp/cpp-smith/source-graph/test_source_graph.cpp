@@ -1,4 +1,4 @@
-#include "cpp-prover/Test.hpp"
+#include "test/Test.hpp"
 
 #include "cpp-smith/artifacts/Executable.hpp"
 #include "cpp-smith/Project.hpp"
@@ -7,7 +7,7 @@
 namespace test
 {
 	using namespace cpp_smith;
-	using namespace prover;
+	using namespace test;
 
 	struct Tests
 	{

@@ -6,16 +6,17 @@
 #include <string>
 #include <vector>
 
-namespace prover
+namespace test
 {
     struct TestResults
     {
         int failures;
+
         // { Test Name, Test Output }
         TransparentUnorderedMap<std::string, std::string> results;
     };
 
-    struct Prover
+    struct Tester
     {
         static std::pair<int, std::vector<TestResult>> test();
     };

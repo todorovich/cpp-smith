@@ -5,7 +5,7 @@ add_test(NAME SourceGraphTest COMMAND test_source_graph)
 target_link_libraries(test_source_graph
     PRIVATE
         cpp-smith
-        cpp-prover-main
+        cpp-test-main
         test_definitions
 )
 

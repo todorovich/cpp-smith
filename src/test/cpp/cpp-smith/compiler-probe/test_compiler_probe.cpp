@@ -1,6 +1,6 @@
 #include <print>
 
-#include "cpp-prover/Test.hpp"
+#include "test/Test.hpp"
 
 #include "cpp-smith/compiler-probe/GccProbe.hpp"
 
@@ -12,14 +12,14 @@ namespace test
     {
         Tests() = delete;
 
-        inline const static prover::Test<void> test {
+        inline const static test::Test<void> test {
         "GccProbe returns system includes",
             [] {
 
                 const cpp_smith::GccProbe probe;
                 const auto includes = probe.getSystemIncludes();
 
-                prover::Assert::isFalse(includes.empty());
+                test::Assert::isFalse(includes.empty());
 
                 for (const auto& path : includes) {
                     std::println("GCC include: {}", path.string());
