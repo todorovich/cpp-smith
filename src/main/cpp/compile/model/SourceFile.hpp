@@ -1,7 +1,7 @@
 #pragma once
 
-#include "compiler-probe/CompilerProbe.hpp"
-#include "compiler-probe/GccProbe.hpp"
+#include "../compiler-probe/CompilerProbe.hpp"
+#include "../compiler-probe/GccProbe.hpp"
 
 #include <filesystem>
 #include <vector>

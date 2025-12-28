@@ -1,8 +1,8 @@
 #include "configuration/ConfigurationBuilder.hpp"
 #include "Project.hpp"
-#include "configuration/Configuration.hpp"
+#include "../../compile/model/Configuration.hpp"
 
-#include "CompilerType.hpp"
+#include "../../compile/model/CompilerType.hpp"
 
 namespace cpp_smith
 {

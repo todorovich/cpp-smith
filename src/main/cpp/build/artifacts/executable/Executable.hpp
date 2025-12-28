@@ -12,6 +12,9 @@ namespace cpp_smith
     class Executable final : public Artifact
     {
         std::vector<std::filesystem::path> _sources;
+        // TODO: compiling sources produces linkables. We need to think about indexing them.
+        //       we need to produce the linkables in the correct order and then link them.
+        //       either create should return them, or executable should store them. I lean towards the former
 
       public:
         Executable(

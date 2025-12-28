@@ -4,6 +4,8 @@ target_link_libraries(cpp-smith
     PUBLIC
         cpp-fault
         cpp-system
+        cpp-compile
+        cpp-log
 )
 
 target_include_directories(cpp-smith PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
@@ -13,21 +15,12 @@ target_sources(cpp-smith
         Project.cpp
         artifacts/Artifact.cpp
         artifacts/executable/Executable.cpp
-        compiler-probe/CompilerProbe.cpp
-        compiler-probe/GccProbe.cpp
-        configuration/Configuration.cpp
         configuration/ConfigurationBuilder.cpp
-        source-graph/SourceFile.cpp
     PUBLIC
         Configuration.hpp
-        Platform.hpp
         Project.hpp
         ProjectCoordinates.hpp
-        configuration/Architecture.hpp
-        configuration/CompilerType.hpp
-        configuration/Configuration.hpp
         configuration/ConfigurationBuilder.hpp
-        configuration/Platform.hpp
         artifacts/Artifact.hpp
         artifacts/ArtifactBuilder.hpp
         artifacts/ArtifactBuilderBase.hpp
@@ -43,13 +36,4 @@ target_sources(cpp-smith
         artifacts/StaticLibrary.hpp
         artifacts/static-library/StaticLibrary.hpp
         artifacts/static-library/StaticLibraryBuilder.hpp
-        compiler-probe/CompilerProbe.hpp
-        compiler-probe/GccProbe.hpp
-        source-graph/CompilationUnit.hpp
-        source-graph/Linkable.hpp
-        source-graph/SourceFile.hpp
-        source-graph/SourceGraph.hpp
-        ../system/System.hpp
-        ../system/PosixPipe.hpp
-        ../system/PosixSystem.hpp
 )

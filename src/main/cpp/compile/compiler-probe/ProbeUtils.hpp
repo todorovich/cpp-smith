@@ -1,7 +1,5 @@
 #pragma once
 
-#include "faults.hpp"
-
 #include <string>
 #include <vector>
 #include <filesystem>
@@ -9,6 +7,7 @@
 #include <sstream>
 #include <memory>
 
+#include "faults.hpp"
 #include "System.hpp"
 
 namespace fs = std::filesystem;

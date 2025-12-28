@@ -2,7 +2,7 @@
 
 #include "faults.hpp"
 #include "TransparentContainers.hpp"
-#include "source-graph/CompilationUnit.hpp"
+#include "../model/CompilationUnit.hpp"
 
 #include <print>
 

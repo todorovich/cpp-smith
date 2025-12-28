@@ -8,8 +8,8 @@
 #include "build/Project.hpp"
 #include "build/artifacts/SharedLibrary.hpp"
 #include "build/artifacts/StaticLibrary.hpp"
-#include "build/configuration/Configuration.hpp"
 #include "build/configuration/ConfigurationBuilder.hpp"
+#include "compile/model/Configuration.hpp"
 
 namespace test
 {

@@ -3,8 +3,10 @@
 #include <print>
 
 #include "Project.hpp"
+#include "artifacts/shared-library/SharedLibrary.hpp"
+#include "artifacts/static-library/StaticLibrary.hpp"
 #include "compiler-probe/GccProbe.hpp"
-#include "source-graph/CompilationUnit.hpp"
+#include "model/CompilationUnit.hpp"
 
 namespace cpp_smith
 {
@@ -54,8 +56,18 @@ namespace cpp_smith
 
         for (const auto dependency : getDependencies())
         {
-            // TODO:
             const auto& artifact = _parent.getArtifact(dependency);
+
+            if (artifact.is<SharedLibrary>())
+            {
+                const SharedLibrary& sharedLibrary = artifact.as<SharedLibrary>();
+                //Linkable linkable =
+
+            }
+            else if (artifact.is<StaticLibrary>())
+            {
+                const StaticLibrary& staticLibrary = artifact.as<StaticLibrary>();
+            }
 
             std::println("Dependency: {}", artifact.getCoordinates());
         }

@@ -8,7 +8,7 @@
 #include "artifacts/ArtifactBuilder.hpp"
 #include "Configuration.hpp"
 #include "ProjectCoordinates.hpp"
-#include "TransparentContainers.hpp"
+#include "../utility/containers/TransparentContainers.hpp"
 
 namespace cpp_smith
 {

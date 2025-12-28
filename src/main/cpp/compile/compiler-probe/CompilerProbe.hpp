@@ -4,7 +4,7 @@
 #include <vector>
 #include <filesystem>
 
-#include "source-graph/Linkable.hpp"
+#include "../model/Linkable.hpp"
 
 namespace cpp_smith
 {

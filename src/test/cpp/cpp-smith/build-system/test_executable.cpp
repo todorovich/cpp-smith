@@ -2,7 +2,7 @@
 
 #include "build/Project.hpp"
 #include "build/artifacts/Executable.hpp"
-#include "build/configuration/Configuration.hpp"
+#include "compile/model/Configuration.hpp"
 
 namespace test
 {

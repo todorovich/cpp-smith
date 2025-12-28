@@ -3,8 +3,8 @@
 #include <utility>
 #include <algorithm>
 
-#include "configuration/Configuration.hpp"
-#include "source-graph/SourceFile.hpp"
+#include "Configuration.hpp"
+#include "SourceFile.hpp"
 
 namespace cpp_smith
 {

@@ -32,8 +32,8 @@ namespace cpp_smith
                 std::format("No configuration exist with the name: {}", name)
             );
         }
-
     }
+
     const std::filesystem::path& Project::getProjectDirectory() const
     {
         return _project_directory;

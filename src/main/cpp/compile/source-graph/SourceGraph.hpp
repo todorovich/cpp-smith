@@ -1,11 +1,6 @@
-// src/main/cpp/cpp-smith/source-graph/SourceGraph.hpp
 #pragma once
 
-#include "SourceFile.hpp"
 #include "artifacts/Artifact.hpp"
-#include "compiler-probe/GccProbe.hpp"
-
-#include <print>
 
 namespace cpp_smith
 {

@@ -1,8 +1,7 @@
 #include "test/Test.hpp"
 
 #include "build/Project.hpp"
-#include "build/source-graph/SourceFile.hpp"
-#include "build/source-graph/SourceGraph.hpp"
+#include "compile/model/SourceFile.hpp"
 
 namespace test
 {

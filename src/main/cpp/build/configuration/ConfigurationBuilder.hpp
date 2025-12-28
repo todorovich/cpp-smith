@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Architecture.hpp"
-#include "CompilerType.hpp"
-#include "Platform.hpp"
-
 #include <filesystem>
 #include <string>
 #include <vector>
+
+#include "model/Architecture.hpp"
+#include "model/CompilerType.hpp"
+#include "model/Platform.hpp"
 
 namespace cpp_smith
 {

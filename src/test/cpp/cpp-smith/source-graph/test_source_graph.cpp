@@ -2,7 +2,7 @@
 
 #include "build/artifacts/Executable.hpp"
 #include "build/Project.hpp"
-#include "build/source-graph/SourceGraph.hpp"
+#include "compile/source-graph/SourceGraph.hpp"
 
 namespace test
 {
@@ -11,7 +11,7 @@ namespace test
 
 	struct Tests
 	{
-		inline static const auto cpp_smith_source_directory = fs::path(CPP_SMITH_SOURCE_DIR);
+		inline static const auto cpp_smith_source_directory = std::filesystem::path(CPP_SMITH_SOURCE_DIR);
 
 		Tests() = delete;
 
