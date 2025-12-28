@@ -1,4 +1,4 @@
-add_subdirectory(fault)
+add_subdirectory(faults)
 add_subdirectory(log)
 add_subdirectory(system)
 

@@ -287,7 +287,7 @@ namespace test
             {
                 /* this is the success case */
             }
-            catch (const faults::CppSmithException& exception) {
+            catch (const faults::Fault& exception) {
                 fail(
                     std::format(
                         "Assert::throwsException Failed: {}\n"
@@ -328,7 +328,7 @@ namespace test
             const std::stacktrace& stacktrace = std::stacktrace::current()
         )
         {
-            throw faults::AssertionFailed(message, source_location, stacktrace);
+            throw faults::violated::Assertion(message, source_location, stacktrace);
         }
     };
 }

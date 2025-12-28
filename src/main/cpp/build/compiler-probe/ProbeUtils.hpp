@@ -49,7 +49,7 @@ inline std::vector<fs::path> ParseSystemIncludeSearchPaths(const std::string& dr
     }
     else
     {
-        throw faults::ParseSystemIncludesFailed(
+        throw faults::failed::ParseSystemIncludes(
             std::format("Command Execution Failed\nCommand: {} ", driver_command_for_verbose_includes)
         );
     }

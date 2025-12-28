@@ -140,7 +140,7 @@ namespace cpp_smith
         // do a quick existence check for the object file to determine success.
         if (!fs::exists(object_filepath))
         {
-            throw faults::CompilationError{
+            throw faults::failed::Compilation{
                 std::format(
                     "Failed to compile translation unit:\n"
                     "Command:\n"
@@ -155,7 +155,7 @@ namespace cpp_smith
 
         if (!fs::exists(dependency_filepath))
         {
-            throw faults::CompilationError{
+            throw faults::failed::Compilation{
                 std::format(
                     "Failed to compile translation unit [no dependency file]:\n"
                     "Command:\n"
@@ -205,7 +205,7 @@ namespace cpp_smith
 
         if (!std::filesystem::exists(installDirectory/filename))
         {
-            throw faults::LinkingError(
+            throw faults::failed::Linking(
                 std::format(
                     "Failed to link executable:\nCommand:\n{}\nOutput:\n{}\n",
                     command,
@@ -228,7 +228,7 @@ namespace cpp_smith
 
         if (result != 0)
         {
-            throw faults::FailedToGetCompilerVersion(
+            throw faults::failed::CompilerVersionQuery(
                 std::format(
                     "Command Execution Failed\nCommand: g++ --version 2>&1\nOutput: {}\n",
                     output

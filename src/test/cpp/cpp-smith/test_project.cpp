@@ -1,4 +1,4 @@
-#include "fault/faults.hpp"
+#include "faults/faults.hpp"
 
 #include "test/Test.hpp"
 
@@ -14,7 +14,7 @@ namespace test
 
         static void testProject()
         {
-            Assert::throwsException<faults::NotFound>(
+            Assert::throwsException<faults::missing::Configuration>(
                 []
                 {
                     const cpp_smith::Project project {

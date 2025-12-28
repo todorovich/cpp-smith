@@ -66,7 +66,7 @@ namespace test
 
                 return TestResult(name, std::string{output()}, TestStatus::Passed);
             }
-            catch (const faults::AssertionFailed& exception)
+            catch (const faults::violated::Assertion& exception)
             {
                 logger.print(
                     "\nResult: {}\nAssertion Source Location: {}:{}:{}\nWhat: {}\nMessage:\n    {}\n\nStack Trace:\n{}\n",

@@ -28,7 +28,7 @@ namespace cpp_smith
         }
         catch (const std::out_of_range&)
         {
-            throw faults::NotFound(
+            throw faults::missing::Configuration(
                 std::format("No configuration exist with the name: {}", name)
             );
         }

@@ -4,11 +4,10 @@
 #include <concepts>
 #include <type_traits>
 
-#include "fault/faults.hpp"
+#include "faults/faults.hpp"
 
 #include "test/Diff.hpp"
 #include "test/Test.hpp"
-
 
 using namespace test;
 
@@ -43,7 +42,7 @@ namespace assert_tests
             }
             catch (const std::exception& exception)
             {
-                throw faults::AssertionFailed(
+                throw faults::violated::Assertion(
                     std::format("{} threw {}", function_call, exception.what())
                 );
             }
@@ -52,7 +51,7 @@ namespace assert_tests
             {
                 assertFail(message);
             }
-            catch (const faults::AssertionFailed& actual)
+            catch (const faults::violated::Assertion& actual)
             {
                 if (std::string{actual.message} == expectedWhat)
                 {
@@ -62,7 +61,7 @@ namespace assert_tests
                     return;
                 }
 
-                throw faults::AssertionFailed(
+                throw faults::violated::Assertion(
                     std::format("{} threw the wrong message\n\n{}",
                         function_call,
                         Diff(expectedWhat, actual.message))
@@ -70,7 +69,7 @@ namespace assert_tests
             }
             catch (const std::exception& exception)
             {
-                throw faults::AssertionFailed(
+                throw faults::violated::Assertion(
                     std::format(
                         "{} threw {} instead of prover::AssertionFailedException",
                         fail_function_call,
@@ -79,7 +78,7 @@ namespace assert_tests
                 );
             }
 
-            throw faults::AssertionFailed(
+            throw faults::violated::Assertion(
                std::format("{} did not throw prover::AssertionFailedException", fail_function_call)
             );
         }
@@ -88,7 +87,7 @@ namespace assert_tests
         {
             const std::string expectedWhat =
                 "Assert::areEqual Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:102:64\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:101:64\n"
                 "\n"
                 "--- expected\n"
                 "+++ actual\n"
@@ -111,14 +110,14 @@ namespace assert_tests
         static void testAreNotEqual()
         {
             const std::string expectedWhat =
-                    "Assert::areNotEqual Failed: custom message\n"
-                    "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:125:67\n"
-                    "\n"
-                    "--- expected\n"
-                    "+++ actual\n"
-                    "@@\n"
-                    "-47\n"
-                    "+47\n";
+                "Assert::areNotEqual Failed: custom message\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:124:67\n"
+                "\n"
+                "--- expected\n"
+                "+++ actual\n"
+                "@@\n"
+                "-47\n"
+                "+47\n";
 
             runAssertionTest(
                 [](const std::string& message){Assert::areNotEqual(47, 42, message);},
@@ -139,7 +138,7 @@ namespace assert_tests
 
             const std::string expectedWhat =std::format(
                 "Assert::areSame Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:159:36\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:158:36\n"
                 "\n"
                 "Provided objects do not share the same memory address\n"
                 "\n"
@@ -174,7 +173,7 @@ namespace assert_tests
 
             const std::string expectedWhat =std::format(
                 "Assert::areNotSame Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:188:39\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:187:39\n"
                 "\n"
                 "Provided objects share the same memory address\n"
                 "Memory Address: {}\n",
@@ -198,7 +197,7 @@ namespace assert_tests
         static void testIsTrue()
         {
             const std::string expectedWhat ="Assert::isTrue Failed: custom message\n"
-                    "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:216:35\n"
+                    "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:215:35\n"
                     "\n"
                     "Provided expression evaluated to false\n"
                     "\n"
@@ -226,7 +225,7 @@ namespace assert_tests
         static void testIsFalse()
         {
             const std::string expectedWhat ="Assert::isFalse Failed: custom message\n"
-                    "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:244:36\n"
+                    "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:243:36\n"
                     "\n"
                     "Provided expression evaluated to true\n"
                     "\n"
@@ -259,7 +258,7 @@ namespace assert_tests
 
             const std::string expectedWhat = std::format(
                 "Assert::isNullptr Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:279:38\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:278:38\n"
                 "\n"
                 "Provided pointer was not nullptr\n"
                 "\n"
@@ -293,7 +292,7 @@ namespace assert_tests
 
             const std::string expectedWhat =
                 "Assert::isNotNullptr Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:311:41\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:310:41\n"
                 "\n"
                 "Provided pointer was nullptr\n"
                 "\n"
@@ -322,19 +321,19 @@ namespace assert_tests
         {
             const std::string expectedWhat =
                 "Assert::throwsException Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:337:65\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/prover/test_assert.cpp:336:70\n"
                 "\n"
                 "Assert::throws function did not throw\n";
 
             runAssertionTest(
                [](const std::string& message) {
-                   Assert::throwsException<faults::InvalidInput>(
-                       [] { throw faults::InvalidInput("Test exception"); },
+                   Assert::throwsException<faults::invalid::Argument>(
+                       [] { throw faults::invalid::Argument("Test exception"); },
                        message
                     );
                },
                [](const std::string& message) {
-                   Assert::throwsException<faults::InvalidInput>(
+                   Assert::throwsException<faults::invalid::Argument>(
                        [] { std::println("don't throw"); },
                        message
                     );

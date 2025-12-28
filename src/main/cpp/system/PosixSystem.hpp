@@ -25,7 +25,7 @@ namespace cpp_smith
 			{
 				if (error_code.value())
 				{
-					throw faults::FileSystemError(
+					throw faults::failed::FileSystem(
 						std::format(
 							"Failed to check if file exists for file: {}, error code {}",
 							file.string(),
@@ -40,7 +40,7 @@ namespace cpp_smith
 			const auto time = std::filesystem::last_write_time(file, error_code);
 			if(error_code.value())
 			{
-				throw faults::FileSystemError(
+				throw faults::failed::FileSystem(
 					std::format(
 						"Failed to get last write time for file: {}, error code {}",
 						file.string(),
