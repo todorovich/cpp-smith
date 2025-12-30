@@ -4,7 +4,7 @@ target_link_libraries(cpp-fault INTERFACE :libstdc++exp.a)
 
 target_sources(cpp-fault
     PUBLIC
-        faults.hpp
+        faults/faults.hpp
         faults/Fault.hpp
         faults/failed/Compilation.hpp
         faults/failed/CompilerVersionQuery.hpp

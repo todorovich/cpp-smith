@@ -12,7 +12,8 @@
 #include "TestRegistry.hpp"
 #include "Assert.hpp"
 #include "TestResult.hpp"
-#include "log.hpp"
+#include "log/Logger.hpp"
+
 namespace test
 {
     template <typename ReturnType, typename... Args>

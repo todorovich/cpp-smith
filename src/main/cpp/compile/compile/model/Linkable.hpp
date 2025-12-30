@@ -2,7 +2,7 @@
 
 #include <filesystem>
 
-#include "System.hpp"
+#include "system/System.hpp"
 
 namespace cpp_smith
 {

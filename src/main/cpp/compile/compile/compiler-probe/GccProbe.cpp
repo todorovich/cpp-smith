@@ -1,7 +1,8 @@
 #include "GccProbe.hpp"
 
-#include "faults.hpp"
+#include "faults/faults.hpp"
 #include "containers/TransparentContainers.hpp"
+
 #include "../model/CompilationUnit.hpp"
 
 #include <print>

@@ -4,7 +4,7 @@
 
 #include "artifacts/ArtifactBuilder.hpp"
 #include "artifacts/executable/ExecutableBuilder.hpp"
-#include "faults.hpp"
+#include "faults/faults.hpp"
 
 namespace cpp_smith
 {

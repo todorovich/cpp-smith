@@ -1,6 +1,6 @@
 #pragma once
 
-#include "faults.hpp"
+#include "../../faults/faults/faults.hpp"
 #include "PosixPipe.hpp"
 
 #include <array>

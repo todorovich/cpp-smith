@@ -4,7 +4,7 @@
 #include <concepts>
 #include <type_traits>
 
-#include "faults/faults.hpp"
+#include "../../../main/cpp/faults/faults/faults.hpp"
 
 #include "../../../main/cpp/test/test/Diff.hpp"
 #include "test/Test.hpp"

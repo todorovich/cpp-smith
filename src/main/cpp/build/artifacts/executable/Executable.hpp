@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "artifacts/Artifact.hpp"
-#include "log.hpp"
+#include "log/Logger.hpp"
 
 namespace cpp_smith
 {

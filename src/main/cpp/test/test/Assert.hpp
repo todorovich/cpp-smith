@@ -6,7 +6,7 @@
 #include <exception>
 
 #include "Diff.hpp"
-#include "faults.hpp"
+#include "../../faults/faults/faults.hpp"
 
 template <typename T>
 concept DerivedFromException = std::derived_from<T, std::exception> && !std::same_as<T, std::exception>;

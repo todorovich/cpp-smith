@@ -7,8 +7,8 @@
 #include <sstream>
 #include <memory>
 
-#include "faults.hpp"
-#include "System.hpp"
+#include "faults/faults.hpp"
+#include "system/System.hpp"
 
 inline std::vector<std::filesystem::path> ParseSystemIncludeSearchPaths(const std::string& driver_command_for_verbose_includes)
 {

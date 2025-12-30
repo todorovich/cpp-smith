@@ -2,7 +2,7 @@
 
 #include "CompilerProbe.hpp"
 #include "ProbeUtils.hpp"
-#include "log.hpp"
+#include "log/Logger.hpp"
 
 namespace cpp_smith
 {

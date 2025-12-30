@@ -1,10 +1,10 @@
 #include <filesystem>
 #include <fstream>
 
-#include "../../../main/cpp/test/test/Assert.hpp"
-#include "../../../main/cpp/test/test/Test.hpp"
+#include "test/test/Assert.hpp"
+#include "test/test/Test.hpp"
 
-#include "../../../main/cpp/log/logger/Logger.hpp"
+#include "log/Logger.hpp"
 
 namespace test
 {

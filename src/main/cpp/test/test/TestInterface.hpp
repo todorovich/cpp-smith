@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../log/logger/Logger.hpp"
+#include "../../log/log/Logger.hpp"
 #include "TestResult.hpp"
 
 #include <string>
