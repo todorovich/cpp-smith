@@ -3,7 +3,7 @@
 #include <filesystem>
 #include <vector>
 
-#include "artifacts/Artifact.hpp"
+#include "build/artifacts/Artifact.hpp"
 #include "log/Logger.hpp"
 
 namespace cpp_smith

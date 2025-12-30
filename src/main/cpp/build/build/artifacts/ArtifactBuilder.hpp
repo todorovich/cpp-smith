@@ -2,7 +2,7 @@
 
 #include <concepts>
 
-#include "Artifact.hpp"
+#include "build/artifacts/Artifact.hpp"
 
 namespace cpp_smith
 {

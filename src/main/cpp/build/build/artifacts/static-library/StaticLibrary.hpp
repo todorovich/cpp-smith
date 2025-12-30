@@ -3,7 +3,7 @@
 #include <filesystem>
 #include <vector>
 
-#include "artifacts/Artifact.hpp"
+#include "build/artifacts/Artifact.hpp"
 
 namespace cpp_smith
 {

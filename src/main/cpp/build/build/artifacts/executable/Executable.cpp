@@ -1,8 +1,8 @@
 #include "Executable.hpp"
 
-#include "Project.hpp"
-#include "artifacts/shared-library/SharedLibrary.hpp"
-#include "artifacts/static-library/StaticLibrary.hpp"
+#include "build/Project.hpp"
+#include "build/artifacts/shared-library/SharedLibrary.hpp"
+#include "build/artifacts/static-library/StaticLibrary.hpp"
 
 #include "compile/compiler-probe/GccProbe.hpp"
 #include "compile/model/CompilationUnit.hpp"

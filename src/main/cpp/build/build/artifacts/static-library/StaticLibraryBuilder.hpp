@@ -6,8 +6,8 @@
 #include <string>
 #include <vector>
 
-#include "artifacts/ArtifactBuilder.hpp"
-#include "artifacts/ArtifactBuilderBase.hpp"
+#include "build/artifacts/ArtifactBuilder.hpp"
+#include "build/artifacts/ArtifactBuilderBase.hpp"
 
 namespace cpp_smith
 {

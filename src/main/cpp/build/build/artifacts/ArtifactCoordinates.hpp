@@ -4,7 +4,7 @@
 #include <functional>
 #include <string>
 
-#include "ProjectCoordinates.hpp"
+#include "../ProjectCoordinates.hpp"
 
 namespace cpp_smith
 {

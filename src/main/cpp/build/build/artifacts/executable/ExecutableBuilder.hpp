@@ -1,46 +1,44 @@
 #pragma once
 
 #include <filesystem>
-#include <iterator>
 #include <memory>
 #include <string>
-#include <vector>
 
-#include "artifacts/ArtifactBuilder.hpp"
-#include "artifacts/ArtifactBuilderBase.hpp"
-#include "Project.hpp"
+#include "build/artifacts/executable/Executable.hpp"
+#include "build/artifacts/ArtifactBuilder.hpp"
+#include "build/artifacts/ArtifactBuilderBase.hpp"
+#include "build/Project.hpp"
 
 // ReSharper disable once CppRedundantNamespaceDefinition
 namespace cpp_smith
 {
-    // Builder specialization for SharedLibrary
     template <>
-    class ArtifactBuilder<SharedLibrary> : public ArtifactBuilderBase<SharedLibrary>
+    class ArtifactBuilder<Executable> : public ArtifactBuilderBase<Executable>
     {
-        Project& _parent;
         std::string _name;
+        Project& _parent;
         std::vector<std::filesystem::path> _sources;
         std::vector<ArtifactCoordinates> _dependencies;
 
         ArtifactBuilder(Project& parent, std::string name)
             : ArtifactBuilderBase(parent)
-            , _parent(parent)
             , _name(std::move(name))
+            , _parent(parent)
         {}
 
-        [[nodiscard]] std::unique_ptr<SharedLibrary> _create() const override
+        [[nodiscard]] std::unique_ptr<Executable> _create() const override
         {
-            return std::make_unique<SharedLibrary>(
+            return std::make_unique<Executable>(
                 _parent,
-                ArtifactCoordinates{_parent.getProjectCoordinates(), _name},
-                _dependencies,
+                ArtifactCoordinates{ _parent.getProjectCoordinates(), _name },
+                std::vector<ArtifactCoordinates>{},
                 _sources
             );
         }
 
     public:
         friend Project;
-
+        
         ArtifactBuilder& addSource(std::filesystem::path source)
         {
             _sources.emplace_back(std::move(source));

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "artifacts/Artifact.hpp"
+#include "build/artifacts/Artifact.hpp"
 
 #include <filesystem>
 #include <vector>

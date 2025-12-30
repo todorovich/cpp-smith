@@ -5,7 +5,7 @@
 #include <unordered_set>
 #include <vector>
 
-#include "ArtifactType.hpp"
+#include "build/artifacts/ArtifactType.hpp"
 
 namespace cpp_smith
 {

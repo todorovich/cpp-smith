@@ -1,9 +1,8 @@
-#include "Project.hpp"
 
 #include <format>
 
-#include "artifacts/ArtifactBuilder.hpp"
-#include "artifacts/executable/ExecutableBuilder.hpp"
+#include "build/Project.hpp"
+#include "build/artifacts/executable/ExecutableBuilder.hpp"
 #include "faults/faults.hpp"
 
 namespace cpp_smith

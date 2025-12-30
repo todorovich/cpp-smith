@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Project.hpp"
-#include "ArtifactBuilder.hpp"
+#include "build/Project.hpp"
+#include "build/artifacts/ArtifactBuilder.hpp"
 
 namespace cpp_smith
 {

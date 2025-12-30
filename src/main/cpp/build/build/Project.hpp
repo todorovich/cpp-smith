@@ -4,10 +4,10 @@
 #include <ranges>
 #include <string>
 
-#include "artifacts/Artifact.hpp"
-#include "artifacts/ArtifactBuilder.hpp"
-#include "Configuration.hpp"
-#include "ProjectCoordinates.hpp"
+#include "build/artifacts/Artifact.hpp"
+#include "build/artifacts/ArtifactBuilder.hpp"
+#include "build/Configuration.hpp"
+#include "build/ProjectCoordinates.hpp"
 #include "containers/TransparentContainers.hpp"
 
 namespace cpp_smith

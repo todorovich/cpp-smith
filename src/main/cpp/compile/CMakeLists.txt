@@ -23,7 +23,6 @@ target_sources(cpp-compile
         compile/compiler-probe/CompilerProbe.hpp
         compile/compiler-probe/GccProbe.hpp
         compile/compiler-probe/ProbeUtils.hpp
-        compile/source-graph/SourceGraph.hpp
 )
 
 target_include_directories(cpp-compile INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})

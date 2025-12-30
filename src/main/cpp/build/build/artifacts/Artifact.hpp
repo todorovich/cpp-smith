@@ -2,12 +2,11 @@
 
 #include <filesystem>
 #include <vector>
-#include <span>
 #include <cassert>
 
-#include "ArtifactCoordinates.hpp"
-#include "ArtifactType.hpp"
-#include "ArtifactTypes.hpp"
+#include "build/artifacts/ArtifactCoordinates.hpp"
+#include "build/artifacts/ArtifactType.hpp"
+#include "build/artifacts/ArtifactTypes.hpp"
 
 namespace cpp_smith
 {

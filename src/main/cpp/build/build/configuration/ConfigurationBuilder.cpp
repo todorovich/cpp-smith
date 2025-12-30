@@ -1,6 +1,5 @@
-#include "configuration/ConfigurationBuilder.hpp"
-#include "Project.hpp"
-
+#include "build/configuration/ConfigurationBuilder.hpp"
+#include "build/Project.hpp"
 #include "compile/model/Configuration.hpp"
 #include "compile/model/CompilerType.hpp"
 

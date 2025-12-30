@@ -1,6 +1,6 @@
 #include "Artifact.hpp"
 
-#include "Project.hpp"
+#include "build/Project.hpp"
 
 cpp_smith::Artifact::Artifact(
 	Project& project,

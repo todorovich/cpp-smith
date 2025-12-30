@@ -1,5 +1,4 @@
 add_subdirectory(compiler-probe)
-add_subdirectory(source-graph)
 add_subdirectory(build-system)
 
 add_executable(test_cpp_smith)
