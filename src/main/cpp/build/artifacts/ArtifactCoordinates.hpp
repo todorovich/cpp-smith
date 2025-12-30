@@ -22,10 +22,7 @@ namespace cpp_smith
 
         [[nodiscard]] std::string toString(const char sep = ':') const
         {
-            return projectCoordinates.group + sep +
-                projectCoordinates.project + sep +
-                artifact_name + sep +
-                projectCoordinates.version;
+            return std::format("{}{}{}", projectCoordinates, sep, artifact_name);
         }
     };
 }

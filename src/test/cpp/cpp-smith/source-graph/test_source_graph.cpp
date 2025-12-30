@@ -18,7 +18,11 @@ namespace test
 		static void testSourceGraph()
 		{
 			Project buildSystem {
-				ProjectCoordinates { "net.todorovich.test", "test", "test" }
+				ProjectCoordinates {
+					"net.todorovich.test",
+					"test",
+					{ 1, 2, 3 }
+				}
 			};
 
 			const auto configuration = buildSystem.define<Configuration>("default").create();

@@ -51,9 +51,9 @@ namespace cpp_smith
     }
 
     std::string GccProbe::buildCommandWithIncludes(
-        const fs::path& source,
-        const fs::path& objectFilepath,
-        const fs::path& dependencyFilepath,
+        const std::filesystem::path& source,
+        const std::filesystem::path& objectFilepath,
+        const std::filesystem::path& dependencyFilepath,
         const CompilationUnit* compilationUnit
     ) const
     {
@@ -69,7 +69,7 @@ namespace cpp_smith
             }
         }
 
-        auto quote = [](const fs::path& p)
+        auto quote = [](const std::filesystem::path& p)
         {
             // Basic quoting for paths with spaces (Linux/WSL)
             const std::string s = p.string();
@@ -102,7 +102,7 @@ namespace cpp_smith
 
     std::unique_ptr<Linkable> GccProbe::compile(
         CompilationUnit* compilationUnit,
-        const fs::path& build_directory,
+        const std::filesystem::path& build_directory,
         const bool skipRebuildIfUpToDate
     ) const
     {
@@ -138,7 +138,7 @@ namespace cpp_smith
 
         // Since ExecuteCommandAndCaptureOutput doesn't give us the exit code here,
         // do a quick existence check for the object file to determine success.
-        if (!fs::exists(object_filepath))
+        if (!std::filesystem::exists(object_filepath))
         {
             throw faults::failed::Compilation{
                 std::format(
@@ -153,7 +153,7 @@ namespace cpp_smith
             };
         }
 
-        if (!fs::exists(dependency_filepath))
+        if (!std::filesystem::exists(dependency_filepath))
         {
             throw faults::failed::Compilation{
                 std::format(
@@ -184,7 +184,7 @@ namespace cpp_smith
         }
 
         std::error_code ec;
-        fs::create_directories(installDirectory, ec);
+        std::filesystem::create_directories(installDirectory, ec);
 
         std::ostringstream cmd;
         cmd << "g++ -o '" << installDirectory.string() << '/' << filename << "'";

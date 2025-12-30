@@ -16,14 +16,20 @@ namespace test
     {
         Tests() = delete;
 
-        inline static const auto cpp_smith_source_directory = fs::path(CPP_SMITH_SOURCE_DIR);
+        inline static const auto cpp_smith_source_directory = std::filesystem::path(CPP_SMITH_SOURCE_DIR);
 
         static void compileAndRunHelloWorld(const std::string& name, const std::filesystem::path& entryPoint)
         {
+            std::filesystem::current_path(cpp_smith_source_directory);
+
             std::println("CPP_SMITH_SOURCE_DIR: {}", CPP_SMITH_SOURCE_DIR);
 
             Project project {
-                ProjectCoordinates { "net.todorovich.test", "test", "test" }
+                ProjectCoordinates {
+                    "net.todorovich.test",
+                    "test",
+                    { 1, 2, 3 }
+                }
             };
 
             project.withRootDirectory(cpp_smith_source_directory)
@@ -38,10 +44,14 @@ namespace test
 
             project.build();
 
-            const fs::path executable_path =  project.getConfiguration("standard")
-                .binaryDirectory() / std::string { name + ".exe" };
+            const auto configuration = project.getConfiguration("standard");
+            const std::filesystem::path executable_path =  configuration.projectDirectory()
+                / configuration.buildDirectory()
+                / name
+                / configuration.name()
+                / configuration.binaryDirectory() / std::string { name + ".exe" };
 
-            Assert::isTrue(fs::exists(executable_path));
+            Assert::isTrue(std::filesystem::exists(executable_path));
 
             const auto [exit_code, output] = System::ExecuteCommand(
                 '"'+ executable_path.string() + '"' + " 2>&1"

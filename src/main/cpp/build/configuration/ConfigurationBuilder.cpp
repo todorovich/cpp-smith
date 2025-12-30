@@ -1,8 +1,7 @@
 #include "configuration/ConfigurationBuilder.hpp"
 #include "Project.hpp"
-#include "../../compile/model/Configuration.hpp"
-
-#include "../../compile/model/CompilerType.hpp"
+#include "model/Configuration.hpp"
+#include "model/CompilerType.hpp"
 
 namespace cpp_smith
 {
@@ -67,6 +66,14 @@ namespace cpp_smith
     )
     {
         _library_directory = library_directory;
+        return *this;
+    }
+
+    ConfigurationBuilder& ConfigurationBuilder::withObjectDirectory(
+        const std::filesystem::path& object_directory
+    )
+    {
+        _object_directory = object_directory;
         return *this;
     }
 
@@ -155,7 +162,13 @@ namespace cpp_smith
         return {
             _name,
             { _compiler, _platform, _architecture },
-            {_project_directory, _build_directory, _binary_directory, _library_directory},
+            {
+                _project_directory,
+                _build_directory,
+                _binary_directory,
+                _library_directory,
+                _object_directory
+            },
             _flags,
             _defines,
             _user_includes,

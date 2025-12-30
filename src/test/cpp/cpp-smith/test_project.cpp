@@ -18,7 +18,11 @@ namespace test
                 []
                 {
                     const cpp_smith::Project project {
-                        cpp_smith::ProjectCoordinates { "net.todorovich.test", "test", "test" }
+                        cpp_smith::ProjectCoordinates {
+                            "net.todorovich.test",
+                            "test",
+                            {1,2,3 }
+                        }
                     };
                     auto config = project.getConfiguration("doesn't exist");
                 }

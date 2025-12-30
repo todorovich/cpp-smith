@@ -10,18 +10,15 @@
 
 namespace cpp_smith
 {
-    void Executable::create(
-        const Configuration* configuration,
-        const std::filesystem::path& build_directory,
-        const std::filesystem::path& install_directory
-    ) const
+
+
+    void Executable::create(const Configuration* configuration) const
     {
         const auto& compiler = configuration->compiler();
 
-        // TODO: logger
-        std::println(
-            "\nBuilding Executable\nArtifact Coordinates: {}\nCompiler: {}\nBuild Directory: {}\n",
-            getCoordinates(), compiler, build_directory.c_str()
+        log.print(
+            "\nBuilding Executable\nArtifact Coordinates: {}\nCompiler: {}\nBuild Directory: {}\n\n",
+            getCoordinates(), compiler, configuration->buildDirectory().c_str()
         );
 
         std::unique_ptr<CompilerProbe> compiler_probe;
@@ -46,11 +43,19 @@ namespace cpp_smith
             );
         }
 
+        const auto configuration_directory = configuration->projectDirectory()
+            / configuration->buildDirectory()
+            / getCoordinates().artifact_name
+            / configuration->name();
+
         std::vector<std::unique_ptr<Linkable>> linkableFiles;
         for (const auto& compilationUnit : compilationUnits)
         {
-           linkableFiles.emplace_back(
-               compiler_probe->compile(compilationUnit.get(), build_directory)
+            linkableFiles.emplace_back(
+                compiler_probe->compile(
+                    compilationUnit.get(),
+                    configuration_directory / configuration->objectDirectory()
+                )
             );
         }
 
@@ -74,7 +79,7 @@ namespace cpp_smith
 
         compiler_probe->link(
             linkableFiles,
-            install_directory,
+            configuration_directory / configuration->binaryDirectory(),
             std::string { getCoordinates() .artifact_name + ".exe" }
         );
     }

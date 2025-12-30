@@ -10,11 +10,9 @@
 #include "faults.hpp"
 #include "System.hpp"
 
-namespace fs = std::filesystem;
-
-inline std::vector<fs::path> ParseSystemIncludeSearchPaths(const std::string& driver_command_for_verbose_includes)
+inline std::vector<std::filesystem::path> ParseSystemIncludeSearchPaths(const std::string& driver_command_for_verbose_includes)
 {
-    std::vector<fs::path> include_directories;
+    std::vector<std::filesystem::path> include_directories;
 
     if (auto result = System::ExecuteCommand(driver_command_for_verbose_includes); result.exit_code == 0)
     {
@@ -55,7 +53,7 @@ inline std::vector<fs::path> ParseSystemIncludeSearchPaths(const std::string& dr
 
 }
 
-inline std::vector<fs::path> ParseMakeStyleDependencies(const std::string& make_style_dependency_text)
+inline std::vector<std::filesystem::path> ParseMakeStyleDependencies(const std::string& make_style_dependency_text)
 {
     std::string s = make_style_dependency_text;
     s = std::regex_replace(s, std::regex("\\\\\n"), " ");
@@ -65,7 +63,7 @@ inline std::vector<fs::path> ParseMakeStyleDependencies(const std::string& make_
 
     const std::string rhs = s.substr(colon + 1);
 
-    std::vector<fs::path> dependencies;
+    std::vector<std::filesystem::path> dependencies;
     std::istringstream is(rhs);
     std::string token;
 

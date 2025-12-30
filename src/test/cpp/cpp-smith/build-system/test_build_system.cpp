@@ -23,7 +23,11 @@ namespace test
         static void testConfigurationBuilder()
         {
             Project project {
-                ProjectCoordinates { "net.todorovich.test", "test", "test" }
+                ProjectCoordinates {
+                    "net.todorovich.test",
+                    "test",
+                    { 1, 2, 3 }
+                }
             };
 
             project.define<Configuration>("debug")
@@ -41,7 +45,7 @@ namespace test
             Assert::areEqual(
                 std::to_underlying(config.compiler()),
                 std::to_underlying(CompilerType::GCC)
-                );
+            );
             Assert::areEqual(config.flags().size(), 1);
             Assert::areEqual(config.flags()[0], std::string{"-g"});
 
@@ -68,7 +72,11 @@ namespace test
                 );
 
             Project build_system {
-                ProjectCoordinates { "net.todorovich", "test configuration and retrieve", "1.0.0" }
+                ProjectCoordinates {
+                    "net.todorovich",
+                    "test configuration and retrieve",
+                    { 1, 0, 0 }
+                }
             };
 
             build_system.accept(std::move(config));
@@ -90,7 +98,11 @@ namespace test
         static void testStaticLibraryBuild()
         {
             Project project  {
-                ProjectCoordinates { "net.todorovich", "test static library build", "1.0.0" }
+                ProjectCoordinates {
+                    "net.todorovich",
+                    "test static library build",
+                    { 1, 0, 0 }
+                }
             };
 
             project
@@ -120,7 +132,11 @@ namespace test
         static void testSharedLibraryBuild()
         {
             Project project  {
-                ProjectCoordinates { "net.todorovich", "test shared library builder", "1.0.0" }
+                ProjectCoordinates {
+                    "net.todorovich",
+                    "test shared library builder",
+                    { 1, 0, 0 }
+                }
             };
 
             project

@@ -56,9 +56,7 @@ namespace cpp_smith
         virtual ~Artifact() = default;
 
         virtual void create(
-            const Configuration* configuration,
-            const std::filesystem::path& build_directory,
-            const std::filesystem::path& install_directory
+            const Configuration* configuration
         ) const = 0;
 
         [[nodiscard]] const ArtifactCoordinates& getCoordinates() const noexcept { return _artifact_coordinates; }

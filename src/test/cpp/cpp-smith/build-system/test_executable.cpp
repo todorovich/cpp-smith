@@ -16,7 +16,11 @@ namespace test
 		static void testExecutableBuilder()
 		{
 			Project build_system {
-				ProjectCoordinates { "net.todorovich.test", "test", "test" }
+				ProjectCoordinates {
+					"net.todorovich.test",
+					"test",
+					{ 1, 2, 3 }
+				}
 			};
 
 			auto configuration = build_system.define<Configuration>("debug")

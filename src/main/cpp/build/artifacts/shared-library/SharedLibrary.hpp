@@ -23,9 +23,7 @@ namespace cpp_smith
         {}
 
         void create(
-            const Configuration* configuration,
-            const std::filesystem::path& build_directory,
-            const std::filesystem::path& install_directory
+            const Configuration* configuration
         ) const override
         {
             // TODO: Implement Me

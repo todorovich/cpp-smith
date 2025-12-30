@@ -21,6 +21,7 @@ namespace cpp_smith
         , _build_directory(paths.build_directory)
         , _binary_directory(paths.binary_directory)
         , _library_directory(paths.library_directory)
+        , _object_directory(paths.object_directory)
         , _flags(std::move(flags))
         , _defines(std::move(defines))
         , _user_includes(std::move(user_includes))
@@ -65,6 +66,11 @@ namespace cpp_smith
     const std::filesystem::path& Configuration::libraryDirectory() const
     {
         return _library_directory;
+    }
+
+    const std::filesystem::path& Configuration::objectDirectory() const
+    {
+        return _object_directory;
     }
 
     const std::vector<std::string>& Configuration::flags() const

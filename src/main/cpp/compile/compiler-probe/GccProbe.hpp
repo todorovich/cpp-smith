@@ -49,9 +49,9 @@ namespace cpp_smith
         ) const override;
 
         std::string buildCommandWithIncludes(
-            const fs::path& source,
-            const fs::path& objectFilepath,
-            const fs::path& dependencyFilepath,
+            const std::filesystem::path& source,
+            const std::filesystem::path& objectFilepath,
+            const std::filesystem::path& dependencyFilepath,
             const CompilationUnit* compilationUnit
         ) const;
 
@@ -60,7 +60,7 @@ namespace cpp_smith
 
         std::unique_ptr<Linkable> compile(
             CompilationUnit* compilationUnit,
-            const fs::path& build_directory,
+            const std::filesystem::path& build_directory,
             bool skipRebuildIfUpToDate = true
         ) const override;
         

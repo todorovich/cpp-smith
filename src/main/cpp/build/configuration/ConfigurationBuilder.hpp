@@ -26,6 +26,7 @@ namespace cpp_smith
         std::filesystem::path _build_directory;
         std::filesystem::path _binary_directory;
         std::filesystem::path _library_directory;
+        std::filesystem::path _object_directory;
 
         std::vector<std::string> _flags;
         std::vector<std::string> _defines;
@@ -44,6 +45,7 @@ namespace cpp_smith
         ConfigurationBuilder& withBuildDirectory(const std::filesystem::path& build_directory);
         ConfigurationBuilder& withBinaryDirectory(const std::filesystem::path& binary_directory);
         ConfigurationBuilder& withLibraryDirectory(const std::filesystem::path& library_directory);
+        ConfigurationBuilder& withObjectDirectory(const std::filesystem::path& build_directory);
 
         ConfigurationBuilder& addFlag(std::string flag);
         ConfigurationBuilder& addFlags(std::vector<std::string> flags);

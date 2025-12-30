@@ -8,7 +8,7 @@
 #include "artifacts/ArtifactBuilder.hpp"
 #include "Configuration.hpp"
 #include "ProjectCoordinates.hpp"
-#include "../utility/containers/TransparentContainers.hpp"
+#include "TransparentContainers.hpp"
 
 namespace cpp_smith
 {
@@ -26,14 +26,21 @@ namespace cpp_smith
             return ArtifactBuilder<T>(*this, name);
         }
 
-        ConfigurationBuilder _define(const std::string& name, Configuration*)
+        ConfigurationBuilder _define(const std::string& configurationName, Configuration*)
         {
-            const std::filesystem::path namePath{name};
-            return ConfigurationBuilder{this, name}
+            const std::filesystem::path namePath{configurationName};
+
+            return ConfigurationBuilder{this, configurationName}
                 .withProjectDirectory(_project_directory)
-                .withBuildDirectory(_project_directory/"build"/namePath/"obj")
-                .withBinaryDirectory(_project_directory/"build"/namePath/"bin")
-                .withLibraryDirectory(_project_directory/"build"/namePath/"lib");
+                .withBuildDirectory(
+                    std::filesystem::path{"build"}
+                        / _project_coordinate.group
+                        / _project_coordinate.project
+                        / std::format("{}",_project_coordinate.version)
+                )
+                .withBinaryDirectory("bin")
+                .withLibraryDirectory("lib")
+                .withObjectDirectory("obj");
         }
 
     public:
@@ -85,9 +92,7 @@ namespace cpp_smith
             {
                 for (const auto& configuration : _configurations | std::views::values)
                 {
-                    artifact->create(
-                        &configuration, configuration.buildDirectory(), configuration.binaryDirectory()
-                    );
+                    artifact->create(&configuration);
                 }
             }
         }

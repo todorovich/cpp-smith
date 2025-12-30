@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <vector>
 
+#include "Logger.hpp"
 #include "artifacts/Artifact.hpp"
 
 namespace cpp_smith
@@ -11,6 +12,11 @@ namespace cpp_smith
 
     class Executable final : public Artifact
     {
+        inline static logging::Logger log {
+            "cpp_smith::Executable",
+            std::make_unique<logging::ConsoleSink>(std::make_unique<logging::MinimalFormatter>())
+        };
+
         std::vector<std::filesystem::path> _sources;
         // TODO: compiling sources produces linkables. We need to think about indexing them.
         //       we need to produce the linkables in the correct order and then link them.
@@ -28,9 +34,7 @@ namespace cpp_smith
         {}
 
         void create(
-            const Configuration* configuration,
-            const std::filesystem::path& build_directory,
-            const std::filesystem::path& install_directory
+            const Configuration* configuration
         ) const override;
 
         [[nodiscard]] const std::vector<std::filesystem::path>& sources() const { return _sources; }

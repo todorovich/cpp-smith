@@ -24,24 +24,26 @@ namespace cpp_smith
         std::filesystem::path build_directory;
         std::filesystem::path binary_directory;
         std::filesystem::path library_directory;
+        std::filesystem::path object_directory;
     };
 
     class Configuration
     {
-        const std::string _name;
-        const CompilerType _compiler;
-        const Platform _platform;
-        const Architecture _architecture;
+        std::string _name;
+        CompilerType _compiler;
+        Platform _platform;
+        Architecture _architecture;
 
-        const std::filesystem::path _project_directory;
-        const std::filesystem::path _build_directory;
-        const std::filesystem::path _binary_directory;
-        const std::filesystem::path _library_directory;
+        std::filesystem::path _project_directory;
+        std::filesystem::path _build_directory;
+        std::filesystem::path _binary_directory;
+        std::filesystem::path _library_directory;
+        std::filesystem::path _object_directory;
 
-        const std::vector<std::string> _flags;
-        const std::vector<std::string> _defines;
-        const std::vector<std::filesystem::path> _user_includes;
-        const std::vector<std::filesystem::path> _system_includes;
+        std::vector<std::string> _flags;
+        std::vector<std::string> _defines;
+        std::vector<std::filesystem::path> _user_includes;
+        std::vector<std::filesystem::path> _system_includes;
 
     public:
         Configuration(
@@ -64,6 +66,7 @@ namespace cpp_smith
         [[nodiscard]] const std::filesystem::path& buildDirectory() const;
         [[nodiscard]] const std::filesystem::path& binaryDirectory() const;
         [[nodiscard]] const std::filesystem::path& libraryDirectory() const;
+        [[nodiscard]] const std::filesystem::path& objectDirectory() const;
 
         [[nodiscard]] const std::vector<std::string>& flags() const;
         [[nodiscard]] const std::vector<std::string>& defines() const;
