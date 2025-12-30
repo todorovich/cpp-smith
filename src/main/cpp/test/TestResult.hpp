@@ -1,5 +1,6 @@
 #pragma once
 
+#include <chrono>
 #include <utility>
 
 #include "Ansi.hpp"
@@ -14,6 +15,7 @@ namespace test
         std::string output;
         std::string terminal_output;
         TestStatus status;
+        std::chrono::nanoseconds duration;
 
         TestResult() = delete;
         TestResult(TestResult&&) = default;
@@ -21,11 +23,17 @@ namespace test
         TestResult& operator=(TestResult&&) = default;
         TestResult& operator=(const TestResult&) = default;
 
-        TestResult(std::string name, std::string terminalOutput, const TestStatus status)
+        TestResult(
+            std::string name,
+            std::string terminalOutput,
+            const TestStatus status,
+            std::chrono::nanoseconds duration
+        )
             : name(std::move(name))
             , output(ansi::strip_ansi(terminalOutput))
             , terminal_output(std::move(terminalOutput))
             , status(status)
+            , duration(duration)
         {}
 
         bool operator==(TestResult const& other) const = default;

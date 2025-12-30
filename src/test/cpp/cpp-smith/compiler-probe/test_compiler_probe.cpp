@@ -12,17 +12,19 @@ namespace test
     {
         Tests() = delete;
 
+        inline static logging::Logger logger = logging::Logger::defaultLogger("test::Tests");
+
         inline const static test::Test<void> test {
         "GccProbe returns system includes",
             [] {
 
-                const cpp_smith::GccProbe probe;
+                const GccProbe probe;
                 const auto includes = probe.getSystemIncludes();
 
-                test::Assert::isFalse(includes.empty());
+                Assert::isFalse(includes.empty());
 
                 for (const auto& path : includes) {
-                    std::println("GCC include: {}", path.string());
+                    logger.print("GCC include: {}", path.string());
                 }
             }
         };

@@ -9,14 +9,14 @@ namespace logging
     struct LogMessageFormatter
     {
         virtual ~LogMessageFormatter() = default;
-        virtual std::string format(const LogMessage&) = 0;
+        virtual std::string_view format(const LogMessage&) = 0;
     };
 
     struct MinimalFormatter final : LogMessageFormatter
     {
         using LogMessageFormatter::LogMessageFormatter;
 
-        std::string format(const LogMessage& logMessage) override {
+        std::string_view format(const LogMessage& logMessage) override {
             return logMessage.message;
         }
     };

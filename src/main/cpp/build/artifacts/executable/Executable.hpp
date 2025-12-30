@@ -3,8 +3,8 @@
 #include <filesystem>
 #include <vector>
 
-#include "Logger.hpp"
 #include "artifacts/Artifact.hpp"
+#include "log.hpp"
 
 namespace cpp_smith
 {
@@ -12,10 +12,7 @@ namespace cpp_smith
 
     class Executable final : public Artifact
     {
-        inline static logging::Logger log {
-            "cpp_smith::Executable",
-            std::make_unique<logging::ConsoleSink>(std::make_unique<logging::MinimalFormatter>())
-        };
+        inline static logging::Logger logger = logging::Logger::defaultLogger("cpp_smith::Executable");
 
         std::vector<std::filesystem::path> _sources;
         // TODO: compiling sources produces linkables. We need to think about indexing them.

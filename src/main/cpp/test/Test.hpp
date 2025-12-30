@@ -1,16 +1,19 @@
 #pragma once
 
+#include <chrono>
+#include <concepts>
+#include <format>
+#include <functional>
+#include <regex>
+#include <tuple>
+#include <type_traits>
+
 #include "TestInterface.hpp"
 #include "TestRegistry.hpp"
 #include "Assert.hpp"
 #include "TestResult.hpp"
-#include "log/Logger.hpp"
+#include "../log/logger/Logger.hpp"
 
-#include <functional>
-#include <regex>
-#include <tuple>
-#include <concepts>
-#include <type_traits>
 
 namespace test
 {
@@ -38,6 +41,32 @@ namespace test
                     std::make_unique<logging::ConsoleSink>(std::make_unique<logging::MinimalFormatter>())
                 };
             }
+        }
+
+        static std::string formatDuration(const std::chrono::nanoseconds nanoseconds)
+        {
+            if(nanoseconds.count() < 1'000)
+            {
+                return std::format("{:.2f} ns", static_cast<double>(nanoseconds.count()));
+            }
+            if(nanoseconds.count() < 1'000'000)
+            {
+                return std::format("{:.2f} μs", nanoseconds.count() / 1'000.0);
+            }
+            if(nanoseconds.count() < 1'000'000'000)
+            {
+                return std::format("{:.2f} ms", nanoseconds.count() / 1'000'000.0);
+            }
+            if(nanoseconds.count() < 60'000'000'000)
+            {
+                return std::format("{:.2f} s", nanoseconds.count() / 1'000'000'000.0);
+            }
+            if(nanoseconds.count() < 3'600'000'000'000)
+            {
+                return std::format("{:.2f} m", nanoseconds.count() / 60'000'000'000.0);
+            }
+
+            return std::format("{:.2f} h", nanoseconds.count() / 3'600'000'000'000.0);
 
         }
 
@@ -45,8 +74,12 @@ namespace test
             requires (std::invocable<F&> && std::same_as<void, std::invoke_result_t<F&>>)
         TestResult _test(F&& testFunction)
         {
+            const std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+
+            std::chrono::nanoseconds duration;
             try
             {
+
                 logger.print(
                     "\n=====\n\nTest Name: {}\nTest Source Location: {}:{}:{}\n",
                     ansi::Style(ansi::bold, ansi::Color(ansi::bright_white, name)),
@@ -58,19 +91,29 @@ namespace test
                 // Call the provided test function (must be callable as void())
                 std::forward<F>(testFunction)();
 
+                duration = std::chrono::steady_clock::now() - start;
+
                 logger.print(
-                    "Result: {}\n",
+                    "Result: {}\nTest Duration: {}\n",
                     ansi::Style(ansi::bold, ansi::Color(ansi::green, "Passed")),
-                    name
+                    formatDuration(duration)
                 );
 
-                return TestResult(name, std::string{output()}, TestStatus::Passed);
+                return TestResult(
+                    name,
+                    std::string{output()},
+                    TestStatus::Passed,
+                    duration
+                );
             }
             catch (const faults::violated::Assertion& exception)
             {
+                duration = std::chrono::steady_clock::now() - start;
+
                 logger.print(
-                    "\nResult: {}\nAssertion Source Location: {}:{}:{}\nWhat: {}\nMessage:\n    {}\n\nStack Trace:\n{}\n",
+                    "\nResult: {}\nTest Duration: {}\nAssertion Source Location: {}:{}:{}\nWhat: {}\nMessage:\n    {}\n\nStack Trace:\n{}\n",
                     ansi::Style(ansi::bold, ansi::Color(ansi::red, "Assertion Failed")),
+                    formatDuration(duration),
                     exception.source_location.file_name(),
                     exception.source_location.line(),
                     exception.source_location.column(),
@@ -81,29 +124,39 @@ namespace test
             }
             catch (const std::exception& exception) //NOSONAR
             {
+                duration = std::chrono::steady_clock::now() - start;
+
                 logger.print(
-                    "Result: {}\nstd::exception::what():\n    {}\n",
+                    "Result: {}\nTest Duration: {}\nstd::exception::what():\n    {}\n",
                     ansi::Style(ansi::bold,
                         ansi::Background(ansi::bg_black,
                             ansi::Color(ansi::bright_red, "Test Failed")
                         )
                     ),
+                    formatDuration(duration),
                     std::regex_replace(exception.what(), std::regex("\n"), "\n    ")
                 );
             }
             catch (...)
             {
+                duration = std::chrono::steady_clock::now() - start;
                 logger.print(
-                    "Result: {}\n\n    An unknown type was thrown!\n",
+                    "Result: {}\nTest Duration: {}\n\n    An unknown type was thrown!\n",
                     ansi::Style(ansi::bold,
                         ansi::Background(ansi::bg_bright_red,
                             ansi::Color(ansi::black, "Test Failed")
                         )
-                    )
+                    ),
+                    formatDuration(duration)
                 );
             }
 
-            return TestResult(name, std::string{output()}, TestStatus::Failed);
+            return TestResult(
+                name,
+                std::string{output()},
+                TestStatus::Failed,
+                std::chrono::steady_clock::now() - start
+            );
         }
 
     public:

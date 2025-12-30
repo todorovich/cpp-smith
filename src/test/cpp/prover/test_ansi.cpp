@@ -13,6 +13,8 @@ namespace ansi_test
     {
         Tests() = delete;
 
+        inline static logging::Logger logger = logging::Logger::defaultLogger("test::Tests");
+
         static void testStandardColors()
         {
             // Standard colors
@@ -106,7 +108,7 @@ namespace ansi_test
                 multiple_colors_concatenated += " " + check(ansi::bright_cyan,    "bright_cyan");
                 multiple_colors_concatenated += " " + check(ansi::bright_white,   "bright_white");
 
-                std::println("{}", multiple_colors_concatenated);
+                logger.print("{}", multiple_colors_concatenated);
         }
 
         inline const static Test<void> test_color_function {
@@ -155,7 +157,7 @@ namespace ansi_test
                 multiple_bgs_concatenated += " " + check(ansi::bg_bright_cyan,    "bg_bright_cyan");
                 multiple_bgs_concatenated += " " + check(ansi::bg_bright_white,   "bg_bright_white");
 
-                std::println("{}", multiple_bgs_concatenated);
+                logger.print("{}", multiple_bgs_concatenated);
         }
 
         inline const static Test<void> test_background_function {
@@ -194,7 +196,7 @@ namespace ansi_test
             multiple_styles_concatenated += " " + check(ansi::hidden,        "hidden");
             multiple_styles_concatenated += " " + check(ansi::strikethrough, "strikethrough");
 
-            std::println("{}", multiple_styles_concatenated);
+            logger.print("{}", multiple_styles_concatenated);
         }
 
         inline const static Test<void> test_style_function {
@@ -247,7 +249,7 @@ namespace ansi_test
                 "Nested Style(...) composition mismatch"
             );
 
-            std::println("{}", actual);
+            logger.print("{}", actual);
         }
 
         inline const static Test<void> test_nested_composition {

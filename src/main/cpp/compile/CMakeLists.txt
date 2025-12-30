@@ -2,6 +2,7 @@ add_library(cpp-compile STATIC)
 
 target_link_libraries(cpp-compile
     PUBLIC
+        cpp-log
         cpp-system
         cpp-containers
 )

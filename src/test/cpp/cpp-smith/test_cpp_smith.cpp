@@ -16,13 +16,15 @@ namespace test
     {
         Tests() = delete;
 
+        inline static logging::Logger logger = logging::Logger::defaultLogger("test::Tests");
+
         inline static const auto cpp_smith_source_directory = std::filesystem::path(CPP_SMITH_SOURCE_DIR);
 
         static void compileAndRunHelloWorld(const std::string& name, const std::filesystem::path& entryPoint)
         {
             std::filesystem::current_path(cpp_smith_source_directory);
 
-            std::println("CPP_SMITH_SOURCE_DIR: {}", CPP_SMITH_SOURCE_DIR);
+            logger.print("CPP_SMITH_SOURCE_DIR: {}", CPP_SMITH_SOURCE_DIR);
 
             Project project {
                 ProjectCoordinates {

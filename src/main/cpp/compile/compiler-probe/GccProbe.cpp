@@ -199,7 +199,7 @@ namespace cpp_smith
 
         const std::string command = cmd.str();
 
-        std::println("{}", command);
+        logger.print("{}", command);
 
         const auto [exit_code, output] = System::ExecuteCommand(command + " 2>&1");
 

@@ -29,4 +29,4 @@ namespace cpp_smith
             }*/
         }
     };
-} // namespace cpp_smith
+}

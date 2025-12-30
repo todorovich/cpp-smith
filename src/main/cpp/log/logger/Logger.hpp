@@ -14,6 +14,14 @@ namespace logging
 
     public:
 
+        static Logger defaultLogger(std::string scope)
+        {
+            return Logger(
+                scope,
+                std::make_unique<ConsoleSink>(std::make_unique<MinimalFormatter>())
+            );
+        }
+
         Logger() = default;
 
         template<typename... Sinks>
@@ -60,5 +68,7 @@ namespace logging
 
         std::string_view getScope() const { return _scope; };
     };
+
+
 }
 

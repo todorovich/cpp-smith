@@ -1,6 +1,5 @@
 #include "Executable.hpp"
 
-#include <print>
 
 #include "Project.hpp"
 #include "artifacts/shared-library/SharedLibrary.hpp"
@@ -10,13 +9,11 @@
 
 namespace cpp_smith
 {
-
-
     void Executable::create(const Configuration* configuration) const
     {
         const auto& compiler = configuration->compiler();
 
-        log.print(
+        logger.print(
             "\nBuilding Executable\nArtifact Coordinates: {}\nCompiler: {}\nBuild Directory: {}\n\n",
             getCoordinates(), compiler, configuration->buildDirectory().c_str()
         );
@@ -74,7 +71,7 @@ namespace cpp_smith
                 const StaticLibrary& staticLibrary = artifact.as<StaticLibrary>();
             }
 
-            std::println("Dependency: {}", artifact.getCoordinates());
+            logger.print("Dependency: {}", artifact.getCoordinates());
         }
 
         compiler_probe->link(

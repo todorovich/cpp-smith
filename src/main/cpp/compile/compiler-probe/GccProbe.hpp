@@ -2,6 +2,7 @@
 
 #include "CompilerProbe.hpp"
 #include "ProbeUtils.hpp"
+#include "log.hpp"
 
 namespace cpp_smith
 {
@@ -11,7 +12,10 @@ namespace cpp_smith
     class GccProbe final : public CompilerProbe
     {
     public:
+        inline static logging::Logger logger = logging::Logger::defaultLogger("cpp_smith::GccProbe");
+
         static constexpr std::string_view minimal_version = "14.0.0";
+
         std::string current_version;
 
         GccProbe()
