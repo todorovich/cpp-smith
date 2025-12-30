@@ -4,9 +4,9 @@
 #include <string>
 #include <vector>
 
-#include "model/Architecture.hpp"
-#include "model/CompilerType.hpp"
-#include "model/Platform.hpp"
+#include "compile/model/Architecture.hpp"
+#include "compile/model/CompilerType.hpp"
+#include "compile/model/Platform.hpp"
 
 namespace cpp_smith
 {

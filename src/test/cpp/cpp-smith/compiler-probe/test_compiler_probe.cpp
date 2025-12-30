@@ -1,6 +1,6 @@
 #include "test/Test.hpp"
 
-#include "compiler-probe/GccProbe.hpp"
+#include "compile/compiler-probe/GccProbe.hpp"
 
 namespace test
 {

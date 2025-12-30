@@ -1,11 +1,11 @@
 #include "Executable.hpp"
 
-
 #include "Project.hpp"
 #include "artifacts/shared-library/SharedLibrary.hpp"
 #include "artifacts/static-library/StaticLibrary.hpp"
-#include "compiler-probe/GccProbe.hpp"
-#include "model/CompilationUnit.hpp"
+
+#include "compile/compiler-probe/GccProbe.hpp"
+#include "compile/model/CompilationUnit.hpp"
 
 namespace cpp_smith
 {

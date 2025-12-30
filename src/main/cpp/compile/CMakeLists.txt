@@ -9,21 +9,21 @@ target_link_libraries(cpp-compile
 
 target_sources(cpp-compile
     PRIVATE
-        model/Configuration.cpp
-        model/SourceFile.cpp
-        compiler-probe/GccProbe.cpp
+        compile/model/Configuration.cpp
+        compile/model/SourceFile.cpp
+        compile/compiler-probe/GccProbe.cpp
     PUBLIC
-        model/Architecture.hpp
-        model/CompilerType.hpp
-        model/CompilationUnit.hpp
-        model/Configuration.hpp
-        model/Linkable.hpp
-        model/SourceFile.hpp
-        model/Platform.hpp
-        compiler-probe/CompilerProbe.hpp
-        compiler-probe/GccProbe.hpp
-        compiler-probe/ProbeUtils.hpp
-        source-graph/SourceGraph.hpp
+        compile/model/Architecture.hpp
+        compile/model/CompilerType.hpp
+        compile/model/CompilationUnit.hpp
+        compile/model/Configuration.hpp
+        compile/model/Linkable.hpp
+        compile/model/SourceFile.hpp
+        compile/model/Platform.hpp
+        compile/compiler-probe/CompilerProbe.hpp
+        compile/compiler-probe/GccProbe.hpp
+        compile/compiler-probe/ProbeUtils.hpp
+        compile/source-graph/SourceGraph.hpp
 )
 
 target_include_directories(cpp-compile INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
