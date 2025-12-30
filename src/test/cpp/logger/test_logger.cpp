@@ -1,8 +1,8 @@
 #include <filesystem>
 #include <fstream>
 
-#include "test/Assert.hpp"
-#include "test/Test.hpp"
+#include "../../../main/cpp/test/test/Assert.hpp"
+#include "../../../main/cpp/test/test/Test.hpp"
 
 #include "../../../main/cpp/log/logger/Logger.hpp"
 

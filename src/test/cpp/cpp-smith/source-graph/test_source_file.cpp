@@ -1,4 +1,4 @@
-#include "test/Test.hpp"
+#include "../../../../main/cpp/test/test/Test.hpp"
 
 #include "build/Project.hpp"
 #include "compile/model/SourceFile.hpp"

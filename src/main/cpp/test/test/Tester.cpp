@@ -10,8 +10,6 @@
 
 #include "Ansi.hpp"
 
-
-
 namespace test
 {
     std::pair<int, std::vector<TestResult>> Tester::test()

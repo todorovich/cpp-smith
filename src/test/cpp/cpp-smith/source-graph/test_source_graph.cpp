@@ -1,4 +1,4 @@
-#include "test/Test.hpp"
+#include "../../../../main/cpp/test/test/Test.hpp"
 
 #include "build/artifacts/Executable.hpp"
 #include "build/Project.hpp"

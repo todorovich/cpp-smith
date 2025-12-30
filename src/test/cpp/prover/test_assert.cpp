@@ -6,7 +6,7 @@
 
 #include "faults/faults.hpp"
 
-#include "test/Diff.hpp"
+#include "../../../main/cpp/test/test/Diff.hpp"
 #include "test/Test.hpp"
 
 using namespace test;

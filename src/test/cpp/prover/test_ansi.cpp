@@ -1,8 +1,8 @@
 
 #include <print>
 
-#include "test/Ansi.hpp"
-#include "test/Test.hpp"
+#include "../../../main/cpp/test/test/Ansi.hpp"
+#include "../../../main/cpp/test/test/Test.hpp"
 
 #include "build/artifacts/Artifact.hpp"
 

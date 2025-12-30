@@ -1,5 +1,3 @@
-#include <print>
-
 #include "test/Test.hpp"
 
 #include "compiler-probe/GccProbe.hpp"
