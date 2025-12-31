@@ -4,13 +4,13 @@
 #include <vector>
 #include <cassert>
 
+#include "build/ProjectInterface.hpp"
 #include "build/artifacts/ArtifactCoordinates.hpp"
 #include "build/artifacts/ArtifactType.hpp"
 #include "build/artifacts/ArtifactTypes.hpp"
 
 namespace cpp_smith
 {
-    class Project;
     class Configuration;
     class CompilerProbe;
 
@@ -21,7 +21,7 @@ namespace cpp_smith
         ArtifactTypes _types;
 
       protected:
-        Project& _parent;
+        ProjectInterface& _parent;
 
         static std::vector<ArtifactType>& addType(ArtifactType&& type, std::vector<ArtifactType>& types)
         {
@@ -38,14 +38,14 @@ namespace cpp_smith
         }
 
         explicit Artifact(
-            Project& project,
+            ProjectInterface& project,
             const ArtifactCoordinates& artifactCoordinate,
             const std::vector<ArtifactCoordinates>& dependencies,
             const ArtifactType& type
         );
 
         explicit Artifact(
-            Project& project,
+            ProjectInterface& project,
             const ArtifactCoordinates& artifactCoordinate,
             const std::vector<ArtifactCoordinates>& dependencies,
             const ArtifactTypes& types

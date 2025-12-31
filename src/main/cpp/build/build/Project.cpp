@@ -2,7 +2,7 @@
 #include <format>
 
 #include "build/Project.hpp"
-#include "build/artifacts/executable/ExecutableBuilder.hpp"
+#include "build/builders/ExecutableBuilder.hpp"
 #include "faults/faults.hpp"
 
 namespace cpp_smith

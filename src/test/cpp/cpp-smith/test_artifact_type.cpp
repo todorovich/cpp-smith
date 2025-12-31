@@ -1,9 +1,9 @@
 #include "test/Test.hpp"
 
 #include "build/artifacts/ArtifactType.hpp"
-#include "build/artifacts/Executable.hpp"
-#include "build/artifacts/StaticLibrary.hpp"
-#include "build/artifacts/SharedLibrary.hpp"
+#include "build/artifacts/executable/Executable.hpp"
+#include "build/artifacts/static-library/StaticLibrary.hpp"
+#include "build/artifacts/shared-library/SharedLibrary.hpp"
 
 #include <string>
 

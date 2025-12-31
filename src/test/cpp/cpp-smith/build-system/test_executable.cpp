@@ -1,7 +1,7 @@
 #include "test/Test.hpp"
 
 #include "build/Project.hpp"
-#include "build/artifacts/Executable.hpp"
+#include "build/builders/ExecutableBuilder.hpp"
 #include "compile/model/Configuration.hpp"
 
 namespace test

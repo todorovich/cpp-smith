@@ -14,26 +14,26 @@ target_sources(cpp-smith
     PRIVATE
         build/Project.cpp
         build/artifacts/Artifact.cpp
+        build/builders/ConfigurationBuilder.cpp
+        build/builders/ExecutableBuilder.cpp
+        build/builders/SharedLibraryBuilder.cpp
+        build/builders/StaticLibraryBuilder.cpp
         build/artifacts/executable/Executable.cpp
-        build/configuration/ConfigurationBuilder.cpp
     PUBLIC
-        build/Configuration.hpp
         build/Project.hpp
         build/ProjectCoordinates.hpp
-        build/configuration/ConfigurationBuilder.hpp
+        build/ProjectInterface.hpp
+        build/builders/ConfigurationBuilder.hpp
         build/artifacts/Artifact.hpp
-        build/artifacts/ArtifactBuilder.hpp
-        build/artifacts/ArtifactBuilderBase.hpp
+        build/builders/ArtifactBuilder.hpp
+        build/builders/ArtifactBuilderBase.hpp
         build/artifacts/ArtifactCoordinates.hpp
         build/artifacts/ArtifactType.hpp
         build/artifacts/ArtifactTypes.hpp
-        build/artifacts/Executable.hpp
         build/artifacts/executable/Executable.hpp
-        build/artifacts/executable/ExecutableBuilder.hpp
-        build/artifacts/SharedLibrary.hpp
+        build/builders/ExecutableBuilder.hpp
         build/artifacts/shared-library/SharedLibrary.hpp
-        build/artifacts/shared-library/SharedLibraryBuilder.hpp
-        build/artifacts/StaticLibrary.hpp
+        build/builders/SharedLibraryBuilder.hpp
         build/artifacts/static-library/StaticLibrary.hpp
-        build/artifacts/static-library/StaticLibraryBuilder.hpp
+        build/builders/StaticLibraryBuilder.hpp
 )

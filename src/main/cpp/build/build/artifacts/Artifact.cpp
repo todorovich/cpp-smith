@@ -3,7 +3,7 @@
 #include "build/Project.hpp"
 
 cpp_smith::Artifact::Artifact(
-	Project& project,
+	ProjectInterface& project,
 	const ArtifactCoordinates& artifactCoordinate,
 	const std::vector<ArtifactCoordinates>& dependencies,
 	const ArtifactType& type
@@ -15,7 +15,7 @@ cpp_smith::Artifact::Artifact(
 {}
 
 cpp_smith::Artifact::Artifact(
-	Project& project,
+	ProjectInterface& project,
 	const ArtifactCoordinates& artifactCoordinate,
 	const std::vector<ArtifactCoordinates>& dependencies,
 	const ArtifactTypes& types

@@ -4,7 +4,7 @@
 #include "test/Test.hpp"
 
 #include "build/Project.hpp"
-#include "build/artifacts/Executable.hpp"
+#include "build/builders/ExecutableBuilder.hpp"
 #include "compile/compiler-probe/ProbeUtils.hpp"
 
 namespace test

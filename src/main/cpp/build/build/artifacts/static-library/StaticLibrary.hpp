@@ -13,7 +13,7 @@ namespace cpp_smith
 
       public:
         StaticLibrary(
-            Project& project,
+            ProjectInterface& project,
             const ArtifactCoordinates& artifactCoordinates,
             const std::vector<ArtifactCoordinates>& dependencies,
             const std::vector<std::filesystem::path>& sources

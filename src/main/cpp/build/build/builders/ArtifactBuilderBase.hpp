@@ -1,17 +1,17 @@
 #pragma once
 
-#include "build/Project.hpp"
-#include "build/artifacts/ArtifactBuilder.hpp"
+#include "ArtifactBuilder.hpp"
+#include "build/ProjectInterface.hpp"
 
 namespace cpp_smith
 {
 	template<ArtifactTypeConcept T>
 	class ArtifactBuilderBase
 	{
-		Project& _project;
+		ProjectInterface& _project;
 
 	protected:
-		explicit ArtifactBuilderBase(Project& project)
+		explicit ArtifactBuilderBase(ProjectInterface& project)
 			: _project(project)
 		{};
 

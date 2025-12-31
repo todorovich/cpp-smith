@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <vector>
 
+#include "build/ProjectInterface.hpp"
 #include "build/artifacts/Artifact.hpp"
 #include "log/Logger.hpp"
 
@@ -21,7 +22,7 @@ namespace cpp_smith
 
       public:
         Executable(
-            Project& project,
+            ProjectInterface& project,
             const ArtifactCoordinates& artifactCoordinate,
             const std::vector<ArtifactCoordinates>& dependencies,
             const std::vector<std::filesystem::path>& sources

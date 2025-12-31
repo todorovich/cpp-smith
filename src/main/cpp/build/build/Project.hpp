@@ -4,15 +4,19 @@
 #include <ranges>
 #include <string>
 
-#include "build/artifacts/Artifact.hpp"
-#include "build/artifacts/ArtifactBuilder.hpp"
-#include "build/Configuration.hpp"
+#include "build/ProjectInterface.hpp"
+#include "build/builders/ArtifactBuilder.hpp"
+#include "build/builders/ConfigurationBuilder.hpp"
+#include "build/builders/ExecutableBuilder.hpp"
+#include "build/builders/SharedLibraryBuilder.hpp"
+#include "build/builders/StaticLibraryBuilder.hpp"
+
 #include "build/ProjectCoordinates.hpp"
 #include "containers/TransparentContainers.hpp"
 
 namespace cpp_smith
 {
-    class Project
+    class Project : public ProjectInterface
     {
         TransparentUnorderedMap<std::string, Configuration> _configurations;
         std::unordered_map<ArtifactCoordinates, std::unique_ptr<Artifact>> _artifacts;
@@ -59,32 +63,32 @@ namespace cpp_smith
             return _define(name, static_cast<T*>(nullptr));
         }
 
-        Project& accept(std::unique_ptr<Artifact> artifact);
+        Project& accept(std::unique_ptr<Artifact> artifact) override;
 
-        Project& accept(Configuration&& config);
+        Project& accept(Configuration&& config) override;
 
         Project& withRootDirectory(const std::filesystem::path& project_directory);
 
-        [[nodiscard]] const Artifact& getArtifact(const std::string& name) const
+        [[nodiscard]] const Artifact& getArtifact(const std::string& name) const override
         {
             return *_artifacts.at({_project_coordinate, name});
         };
 
-        [[nodiscard]] const Artifact& getArtifact(const ArtifactCoordinates& artifactCoordinates) const
+        [[nodiscard]] const Artifact& getArtifact(const ArtifactCoordinates& artifactCoordinates) const override
         {
             return *_artifacts.at(artifactCoordinates);
         };
 
         [[nodiscard]] const std::unordered_map<ArtifactCoordinates, std::unique_ptr<Artifact>>&
-            getArtifacts() const
+            getArtifacts() const override
         {
             return _artifacts;
         };
 
         [[nodiscard]] const Configuration& getConfiguration(const std::string& name) const;
         [[nodiscard]] const TransparentUnorderedMap<std::string, Configuration>& getConfigurations() const;
-        [[nodiscard]] const ProjectCoordinates& getProjectCoordinates() const;
-        [[nodiscard]] const std::filesystem::path& getProjectDirectory() const;
+        [[nodiscard]] const ProjectCoordinates& getProjectCoordinates() const override;
+        [[nodiscard]] const std::filesystem::path& getProjectDirectory() const override;
 
         void build()
         {

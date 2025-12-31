@@ -6,9 +6,9 @@
 #include "test/Test.hpp"
 
 #include "build/Project.hpp"
-#include "build/artifacts/SharedLibrary.hpp"
-#include "build/artifacts/StaticLibrary.hpp"
-#include "build/configuration/ConfigurationBuilder.hpp"
+#include "build/artifacts/shared-library/SharedLibrary.hpp"
+#include "build/artifacts/static-library/StaticLibrary.hpp"
+#include "build/builders/ConfigurationBuilder.hpp"
 #include "compile/model/Configuration.hpp"
 
 namespace test

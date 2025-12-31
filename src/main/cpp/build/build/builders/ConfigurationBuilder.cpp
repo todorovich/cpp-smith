@@ -1,4 +1,4 @@
-#include "build/configuration/ConfigurationBuilder.hpp"
+#include "build/builders/ConfigurationBuilder.hpp"
 #include "build/Project.hpp"
 #include "compile/model/Configuration.hpp"
 #include "compile/model/CompilerType.hpp"
