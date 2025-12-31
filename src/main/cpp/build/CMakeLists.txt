@@ -19,6 +19,8 @@ target_sources(cpp-smith
         build/builders/SharedLibraryBuilder.cpp
         build/builders/StaticLibraryBuilder.cpp
         build/artifacts/executable/Executable.cpp
+        build/artifacts/shared-library/SharedLibrary.cpp
+        build/artifacts/static-library/StaticLibrary.cpp
     PUBLIC
         build/Project.hpp
         build/ProjectCoordinates.hpp
