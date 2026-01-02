@@ -11,6 +11,21 @@ namespace cpp_smith
 
     class GccProbe final : public CompilerProbe
     {
+        static std::string createExecutableLinkCommand(
+            const std::span<Linkable*>& linkables,
+            const std::filesystem::path& out_path
+        );
+
+        static std::string createSharedLibraryLinkCommand(
+           const std::span<Linkable*>& linkables,
+           const std::filesystem::path& out_path
+       );
+
+        static std::string createStaticLibraryLinkCommand(
+           const std::span<Linkable*>& linkables,
+           const std::filesystem::path& out_path
+        );
+
     public:
         inline static logging::Logger logger = logging::Logger::defaultLogger("cpp_smith::GccProbe");
 
@@ -60,18 +75,20 @@ namespace cpp_smith
         ) const;
 
         [[nodiscard]] bool exists() override;
+
         [[nodiscard]] std::string version() override;
 
-        std::unique_ptr<Linkable> compile(
+        ObjectFile compile(
             CompilationUnit* compilationUnit,
             const std::filesystem::path& build_directory,
             bool skipRebuildIfUpToDate = true
         ) const override;
         
         void link(
-            const std::span<std::unique_ptr<Linkable>>& linkables,
+            const std::span<Linkable*>& linkables,
             const std::filesystem::path& installDirectory,
-            const std::string& filename
+            const std::string& filename,
+            LinkingOutput linkType
         ) const override;
     };
 }

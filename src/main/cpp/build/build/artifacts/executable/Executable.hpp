@@ -11,14 +11,12 @@ namespace cpp_smith
 {
     class Configuration;
 
+    // TODO: This should be in compile not cpp_smith
     class Executable final : public Artifact
     {
         inline static logging::Logger logger = logging::Logger::defaultLogger("cpp_smith::Executable");
 
         std::vector<std::filesystem::path> _sources;
-        // TODO: compiling sources produces linkables. We need to think about indexing them.
-        //       we need to produce the linkables in the correct order and then link them.
-        //       either create should return them, or executable should store them. I lean towards the former
 
       public:
         Executable(
@@ -31,9 +29,9 @@ namespace cpp_smith
             , _sources(sources)
         {}
 
-        void create(
-            const Configuration* configuration
-        ) const override;
+        void create(const Configuration* configuration) const override;
+
+        std::filesystem::path getExecutablePath(const Configuration* configuration) const;
 
         [[nodiscard]] const std::vector<std::filesystem::path>& sources() const { return _sources; }
     };

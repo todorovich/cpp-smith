@@ -79,7 +79,7 @@ namespace cpp_smith
 
         // Build command
         std::string command = std::format(
-            "{} -std=gnu++23 -x c++ -c {} -o {} -MMD -MP -MF {}",
+            "{} -std=gnu++23 -x c++ -fPIC -c {} -o {} -MMD -MP -MF {}",
             quote(findCompiler()),
             quote(source),
             quote(objectFilepath),
@@ -101,7 +101,7 @@ namespace cpp_smith
         return command;
     }
 
-    std::unique_ptr<Linkable> GccProbe::compile(
+    ObjectFile GccProbe::compile(
         CompilationUnit* compilationUnit,
         const std::filesystem::path& build_directory,
         const bool skipRebuildIfUpToDate
@@ -120,7 +120,7 @@ namespace cpp_smith
                 last_write_time <= System::getLastWriteTime(dependency_filepath)
             )
             {
-                return std::make_unique<Linkable>(object_filepath, dependency_filepath);
+                return ObjectFile{object_filepath, dependency_filepath};
             }
         }
 
@@ -169,14 +169,75 @@ namespace cpp_smith
             };
         }
 
-        return std::make_unique<Linkable>(object_filepath, dependency_filepath);
+        return ObjectFile(object_filepath, dependency_filepath);
     }
 
 
+    std::string GccProbe::createExecutableLinkCommand(
+        const std::span<Linkable*>& linkables,
+        const std::filesystem::path& out_path
+    )
+    {
+        std::ostringstream cmd;
+
+        cmd << "g++ -o '" << out_path.string() << "'";
+
+        for (const auto& linkable : linkables)
+        {
+            if (!linkable->getLinkable().empty())
+            {
+                cmd << " '" << linkable->getLinkable().string() << "'";
+            }
+        }
+
+        return cmd.str();
+    }
+
+    std::string GccProbe::createSharedLibraryLinkCommand(
+        const std::span<Linkable*>& linkables,
+        const std::filesystem::path& out_path
+    )
+    {
+        std::ostringstream cmd;
+
+        cmd << "g++ -shared -o '" << out_path.string() << "'";
+
+        for (const auto& linkable : linkables)
+        {
+            if (!linkable->getLinkable().empty())
+            {
+                cmd << " '" << linkable->getLinkable().string() << "'";
+            }
+        }
+
+        return cmd.str();
+    }
+
+    std::string GccProbe::createStaticLibraryLinkCommand(
+        const std::span<Linkable*>& linkables,
+        const std::filesystem::path& out_path
+    )
+    {
+        std::ostringstream cmd;
+
+        cmd << "ar rcs '" << out_path.string() << "'";
+
+        for (const auto& linkable : linkables)
+        {
+            if (!linkable->getLinkable().empty())
+            {
+                cmd << " '" << linkable->getLinkable().string() << "'";
+            }
+        }
+
+        return cmd.str();
+    }
+
     void GccProbe::link(
-        const std::span<std::unique_ptr<Linkable>>& linkables,
+        const std::span<Linkable*>& linkables,
         const std::filesystem::path& installDirectory,
-        const std::string& filename
+        const std::string& filename,
+        LinkingOutput linkType
     ) const
     {
         if (linkables.empty())
@@ -187,28 +248,40 @@ namespace cpp_smith
         std::error_code ec;
         std::filesystem::create_directories(installDirectory, ec);
 
-        std::ostringstream cmd;
-        cmd << "g++ -o '" << installDirectory.string() << '/' << filename << "'";
+        const auto out_path = installDirectory / filename;
 
-        for (const auto& linkable : linkables)
+        std::string command;
+
+        switch (linkType)
         {
-            if (!linkable->getObjectFile().empty())
+            case LinkingOutput::Executable:
             {
-                cmd << " '" << linkable->getObjectFile().string() << "'";
+                command = createExecutableLinkCommand(linkables, out_path);
+                break;
             }
+            case LinkingOutput::SharedLibrary:
+            {
+                command = createSharedLibraryLinkCommand(linkables, out_path);
+                break;
+            }
+            case LinkingOutput::StaticLibrary:
+            {
+                command = createStaticLibraryLinkCommand(linkables, out_path);
+                break;
+            }
+            default:
+                throw std::invalid_argument("Unknown LinkType");
         }
-
-        const std::string command = cmd.str();
 
         logger.print("{}", command);
 
         const auto [exit_code, output] = System::ExecuteCommand(command + " 2>&1");
 
-        if (!std::filesystem::exists(installDirectory/filename))
+        if (!std::filesystem::exists(out_path))
         {
             throw faults::failed::Linking(
                 std::format(
-                    "Failed to link executable:\nCommand:\n{}\nOutput:\n{}\n",
+                    "Failed to produce output:\nCommand:\n{}\nOutput:\n{}\n",
                     command,
                     output
                 )

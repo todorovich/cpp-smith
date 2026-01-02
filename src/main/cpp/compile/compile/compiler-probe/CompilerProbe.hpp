@@ -11,6 +11,13 @@ namespace cpp_smith
     class CompilationUnit;
     class Configuration;
 
+    enum class LinkingOutput
+    {
+        Executable,
+        SharedLibrary,
+        StaticLibrary
+    };
+
     class CompilerProbe {
     public:
         virtual ~CompilerProbe() = default;
@@ -21,16 +28,17 @@ namespace cpp_smith
         [[nodiscard]] virtual bool exists() = 0;
         [[nodiscard]] virtual std::string version() = 0;
 
-        [[nodiscard]] virtual std::unique_ptr<Linkable> compile(
+        [[nodiscard]] virtual ObjectFile compile(
             CompilationUnit* compilationUnit,
             const std::filesystem::path& build_directory,
             bool skipRebuildIfUpToDate = true
         ) const = 0;
 
         virtual void link(
-            const std::span<std::unique_ptr<Linkable>>& translation_units,
+            const std::span<Linkable*>& linkables,
             const std::filesystem::path& install_directory,
-            const std::string& filename
+            const std::string& filename,
+            LinkingOutput linkingOutput
         ) const = 0;
 
         [[nodiscard]] virtual std::pair<std::vector<std::filesystem::path>, std::vector<std::filesystem::path>>

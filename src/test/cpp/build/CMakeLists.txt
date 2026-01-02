@@ -17,4 +17,6 @@ target_sources(test_cpp_smith
         test_cpp_smith.cpp
         test_executable.cpp
         test_project.cpp
+        test_shared_library.cpp
+        test_static_library.cpp
 )

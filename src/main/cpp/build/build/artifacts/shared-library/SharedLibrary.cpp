@@ -39,28 +39,30 @@ namespace cpp_smith
             );
         }
 
-        const auto configuration_directory = configuration->projectDirectory()
-            / configuration->buildDirectory()
-            / getCoordinates().artifact_name
-            / configuration->name();
+        const auto configuration_directory = configuration->getBaseOutputDirectory(getCoordinates().artifact_name);
 
-        std::vector<std::unique_ptr<Linkable>> linkableFiles;
+        std::vector<ObjectFile> objectFiles;
+        objectFiles.reserve(compilationUnits.size());
+
+        std::vector<Linkable*> linkables;
+        linkables.reserve(compilationUnits.size() + getDependencies().size());
+
         for (const auto& compilationUnit : compilationUnits)
         {
-            linkableFiles.emplace_back(
+            objectFiles.emplace_back(
                 compiler_probe->compile(
                     compilationUnit.get(),
                     configuration_directory / configuration->objectDirectory()
                 )
             );
+
+            linkables.push_back(&objectFiles.back());
         }
 
         for (const auto& dependency : getDependencies())
         {
             const auto& artifact = _parent.getArtifact(dependency);
 
-            // Note: for now we only log dependencies, mirroring Executable.cpp’s current state.
-            // Later: convert built library artifacts into additional link inputs for the final link step.
             if (artifact.is<StaticLibrary>())
             {
                 const auto& staticLibrary = artifact.as<StaticLibrary>();
@@ -70,12 +72,20 @@ namespace cpp_smith
             logger.print("Dependency: {}", artifact.getCoordinates());
         }
 
-        // On gcc-like toolchains, "lib<name>.so" is the conventional shared library name.
-        // If/when MSVC support is added, this likely becomes "<name>.dll" (+ import .lib).
         compiler_probe->link(
-            linkableFiles,
+            linkables,
             configuration_directory / configuration->libraryDirectory(),
-            std::string{ "lib" + getCoordinates().artifact_name + ".so" }
+            std::string{ "lib" + getCoordinates().artifact_name + ".so" },
+            LinkingOutput::SharedLibrary
         );
+    }
+
+    SharedLibraryFile SharedLibrary::getSharedLibraryFile(const Configuration* configuration) const
+    {
+        return SharedLibraryFile {
+            configuration->getBaseOutputDirectory(getCoordinates().artifact_name)
+                / configuration->libraryDirectory()
+                / std::string { "lib" + getCoordinates().artifact_name + ".so" }
+        };
     }
 }

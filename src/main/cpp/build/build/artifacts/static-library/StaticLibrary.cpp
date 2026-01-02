@@ -44,10 +44,10 @@ namespace cpp_smith
             / getCoordinates().artifact_name
             / configuration->name();
 
-        std::vector<std::unique_ptr<Linkable>> linkableFiles;
+        std::vector<ObjectFile> objectFiles;
         for (const auto& compilationUnit : compilationUnits)
         {
-            linkableFiles.emplace_back(
+            objectFiles.emplace_back(
                 compiler_probe->compile(
                     compilationUnit.get(),
                     configuration_directory / configuration->objectDirectory()
@@ -61,16 +61,24 @@ namespace cpp_smith
         const auto out_archive = lib_dir / std::string{ "lib" + getCoordinates().artifact_name + ".a" };
 
         std::string command = "ar rcs \"" + out_archive.string() + "\"";
-        for (const auto& linkable : linkableFiles)
+        for (const auto& objectFile : objectFiles)
         {
-            command += " \"" + linkable->getObjectFile().string() + "\"";
+            command += " \"" + objectFile.getLinkable().string() + "\"";
         }
 
         logger.print("Archiving: {}", out_archive.c_str());
-        const int rc = std::system(command.c_str());
-        if (rc != 0)
+        if (const int result_code = std::system(command.c_str()); result_code != 0)
         {
             throw std::runtime_error("Failed to create static library archive: " + out_archive.string());
         }
+    }
+
+    StaticLibraryFile StaticLibrary::getStaticLibraryFile(const Configuration* configuration) const
+    {
+        return StaticLibraryFile {
+            configuration->getBaseOutputDirectory(getCoordinates().artifact_name)
+                / configuration->libraryDirectory()
+                / std::string { "lib" + getCoordinates().artifact_name + ".a" }
+        };
     }
 }

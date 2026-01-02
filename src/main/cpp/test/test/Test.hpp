@@ -23,6 +23,7 @@ namespace test
         std::vector<std::tuple<Args...>> _arguments;
         std::source_location _source_location;
         std::string _output;
+        std::vector<TestInterface*> _dependencies;
 
         static logging::Logger _getOrDefaultLogger(
             logging::Logger&& logger, const std::string_view name, std::string& output
@@ -121,6 +122,22 @@ namespace test
                     exception.stacktrace
                 );
             }
+            catch (const faults::Fault& fault)
+            {
+                duration = std::chrono::steady_clock::now() - start;
+
+                logger.print(
+                    "\nResult: {}\nTest Duration: {}\nFault Source Location: {}:{}:{}\nWhat: {}\nMessage:\n    {}\n\nStack Trace:\n{}\n",
+                    ansi::Style(ansi::bold, ansi::Color(ansi::red, "Assertion Failed")),
+                    formatDuration(duration),
+                    fault.source_location.file_name(),
+                    fault.source_location.line(),
+                    fault.source_location.column(),
+                    fault.what(),
+                    std::regex_replace(fault.message, std::regex("\n"), "\n    "),
+                    fault.stacktrace
+                );
+            }
             catch (const std::exception& exception) //NOSONAR
             {
                 duration = std::chrono::steady_clock::now() - start;
@@ -162,6 +179,7 @@ namespace test
         Test(
             const std::string_view& name,
             std::function<ReturnType(Args...)> test_function,
+            std::vector<TestInterface*>&& dependencies = {},
             std::vector<std::tuple<Args...>> _args = {},
             logging::Logger logger = {},
             const std::source_location source_location = std::source_location::current()
@@ -169,6 +187,21 @@ namespace test
             : TestInterface(name, source_location, _getOrDefaultLogger(std::move(logger), name, _output))
             , _test_function(std::move(test_function))
             , _arguments(std::move(_args))
+            , _dependencies(dependencies)
+        {
+            TestRegistry::instance().add(this);
+        }
+
+        Test(
+            const std::string_view& name,
+            std::function<ReturnType(Args...)> test_function,
+            std::vector<std::tuple<Args...>> _args = {},
+            logging::Logger logger = {},
+            const std::source_location source_location = std::source_location::current()
+        )
+            : TestInterface(name, source_location, _getOrDefaultLogger(std::move(logger), name, _output))
+            , _test_function(std::move(test_function))
+            , _arguments{std::move(_args)}
         {
             TestRegistry::instance().add(this);
         }

@@ -61,6 +61,6 @@ namespace cpp_smith
         [[nodiscard]] Configuration create() const;
 
         // Registers into Build and returns Build&
-        [[maybe_unused]] Project& submit();
+        [[maybe_unused]] const Configuration& submit();
     };
 }

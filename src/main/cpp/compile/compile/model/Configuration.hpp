@@ -56,6 +56,11 @@ namespace cpp_smith
             std::vector<std::filesystem::path> system_includes
         );
 
+        [[nodiscard]] std::filesystem::path getBaseOutputDirectory(const std::string& artifactName) const
+        {
+            return _project_directory / _build_directory/ artifactName/ _name;
+        }
+
         [[nodiscard]] const std::string& name() const;
 
         [[nodiscard]] Platform platform() const;

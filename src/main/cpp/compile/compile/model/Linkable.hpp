@@ -6,38 +6,88 @@
 
 namespace cpp_smith
 {
-	// TODO: these should be associated with compilation unit somehow
-	class Linkable
+	class  Linkable
 	{
-		const std::filesystem::path _linkableFile {};
-		const std::filesystem::path _dependencyFile {};
+		// TODO: these should be associated with compilation unit somehow
+
+		std::filesystem::path _linkableFile {};
 		std::filesystem::file_time_type _lastWriteTimeBuild {};
 
-	public:
-		Linkable(
-			const std::filesystem::path& linkableFile,
-			const std::filesystem::path& dependencyFile
-		)
-			: _linkableFile(linkableFile)
-			, _dependencyFile(dependencyFile)
-		{
-			_lastWriteTimeBuild = getLastWriteTimeBuild();
-		}
+	  public:
+		virtual ~Linkable()                  = default;
+		Linkable(const Linkable&)            = default;
+		Linkable& operator=(const Linkable&) = default;
+		Linkable(Linkable&&)                 = default;
+		Linkable& operator=(Linkable&&)      = default;
 
-		[[nodiscard]] const std::filesystem::path& getDependencyFile() const { return _dependencyFile; }
-		[[nodiscard]] const std::filesystem::path& getObjectFile() const { return _linkableFile; }
+		explicit Linkable(const std::filesystem::path& path)
+			: _linkableFile(path)
+			, _lastWriteTimeBuild(System::getLastWriteTime(_linkableFile))
+		{}
 
 		[[nodiscard]] const std::filesystem::file_time_type& getLastWriteTimeBuild() const
 		{
 			return _lastWriteTimeBuild;
 		}
 
+		[[nodiscard]] virtual const std::filesystem::path& getLinkable() const
+		{
+			return _linkableFile;
+		};
+
 		void updateLastBuiltTime()
 		{
-			const auto obj_time = System::getLastWriteTime(_linkableFile);
-			const auto dep_time = System::getLastWriteTime(_dependencyFile);
-
-			_lastWriteTimeBuild = std::max(obj_time, dep_time);
+			_lastWriteTimeBuild = System::getLastWriteTime(_linkableFile);
 		}
+	};
+
+	class ObjectFile : public Linkable
+	{
+		std::filesystem::path _dependencyFile{};
+
+	public:
+		~ObjectFile() override                   = default;
+		ObjectFile(const ObjectFile&)            = default;
+		ObjectFile& operator=(const ObjectFile&) = default;
+		ObjectFile(ObjectFile&&)                 = default;
+		ObjectFile& operator=(ObjectFile&&)      = default;
+
+		ObjectFile(
+			const std::filesystem::path& objectFile,
+			const std::filesystem::path& dependencyFile
+		)
+			: Linkable(objectFile)
+			, _dependencyFile(dependencyFile)
+		{}
+
+		const std::filesystem::path& getDependencyFile() const { return _dependencyFile; }
+	};
+
+	class SharedLibraryFile : public Linkable
+	{
+	public:
+		~SharedLibraryFile() override                          = default;
+		SharedLibraryFile(const SharedLibraryFile&)            = default;
+		SharedLibraryFile& operator=(const SharedLibraryFile&) = default;
+		SharedLibraryFile(SharedLibraryFile&&)                 = default;
+		SharedLibraryFile& operator=(SharedLibraryFile&&)      = default;
+
+		explicit SharedLibraryFile(const std::filesystem::path& sharedLibraryFile)
+			: Linkable(sharedLibraryFile)
+		{}
+	};
+
+	class StaticLibraryFile : public Linkable
+	{
+	public:
+		~StaticLibraryFile() override                          = default;
+		StaticLibraryFile(const StaticLibraryFile&)            = default;
+		StaticLibraryFile& operator=(const StaticLibraryFile&) = default;
+		StaticLibraryFile(StaticLibraryFile&&)                 = default;
+		StaticLibraryFile& operator=(StaticLibraryFile&&)      = default;
+
+		explicit StaticLibraryFile(const std::filesystem::path& staticLibraryFile)
+			: Linkable(staticLibraryFile)
+		{}
 	};
 }

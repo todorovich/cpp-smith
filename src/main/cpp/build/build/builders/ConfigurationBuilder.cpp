@@ -177,8 +177,14 @@ namespace cpp_smith
     }
 
     // ReSharper disable once CppMemberFunctionMayBeConst
-    [[maybe_unused]] Project& ConfigurationBuilder::submit()
+    [[maybe_unused]] const Configuration& ConfigurationBuilder::submit()
     {
-        return _buildSystem->accept(create());
+        auto configuration = create();
+
+        const auto name = configuration.name();
+
+        _buildSystem->accept(std::move(configuration));
+
+        return _buildSystem->getConfiguration(name);
     }
 }
