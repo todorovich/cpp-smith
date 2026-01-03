@@ -77,15 +77,17 @@ namespace test
             const std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
 
             std::chrono::nanoseconds duration;
+            const auto finished = ansi::Style(ansi::bold, ansi::Color(ansi::bright_white, "Finished Executing Test..."));
             try
             {
 
                 logger.print(
-                    "\n=====\n\nTest Name: {}\nTest Source Location: {}:{}:{}\n",
+                    "\n=====\n\nTest Name: {}\nTest Source Location: {}:{}:{}\n{}\n",
                     ansi::Style(ansi::bold, ansi::Color(ansi::bright_white, name)),
                     source_location.file_name(),
                     source_location.line(),
-                    source_location.column()
+                    source_location.column(),
+                    ansi::Style(ansi::bold, ansi::Color(ansi::bright_white, "Executing Test..."))
                 );
 
                 // Call the provided test function (must be callable as void())
@@ -94,7 +96,8 @@ namespace test
                 duration = std::chrono::steady_clock::now() - start;
 
                 logger.print(
-                    "Result: {}\nTest Duration: {}\n",
+                    "\n{}\nResult: {}\nTest Duration: {}\n",
+                    finished,
                     ansi::Style(ansi::bold, ansi::Color(ansi::green, "Passed")),
                     formatDuration(duration)
                 );
@@ -111,7 +114,8 @@ namespace test
                 duration = std::chrono::steady_clock::now() - start;
 
                 logger.print(
-                    "\nResult: {}\nTest Duration: {}\nAssertion Source Location: {}:{}:{}\nWhat: {}\nMessage:\n    {}\n\nStack Trace:\n{}\n",
+                    "\n{}\nResult: {}\nTest Duration: {}\nAssertion Source Location: {}:{}:{}\nWhat: {}\nMessage:\n    {}\n\nStack Trace:\n{}\n",
+                    finished,
                     ansi::Style(ansi::bold, ansi::Color(ansi::red, "Assertion Failed")),
                     formatDuration(duration),
                     exception.source_location.file_name(),
@@ -127,7 +131,8 @@ namespace test
                 duration = std::chrono::steady_clock::now() - start;
 
                 logger.print(
-                    "\nResult: {}\nTest Duration: {}\nFault Source Location: {}:{}:{}\nWhat: {}\nMessage:\n    {}\n\nStack Trace:\n{}\n",
+                    "\n{}\nResult: {}\nTest Duration: {}\nFault Source Location: {}:{}:{}\nWhat: {}\nMessage:\n    {}\n\nStack Trace:\n{}\n",
+                    finished,
                     ansi::Style(ansi::bold, ansi::Color(ansi::red, "Assertion Failed")),
                     formatDuration(duration),
                     fault.source_location.file_name(),
@@ -143,7 +148,8 @@ namespace test
                 duration = std::chrono::steady_clock::now() - start;
 
                 logger.print(
-                    "Result: {}\nTest Duration: {}\nstd::exception::what():\n    {}\n",
+                    "\n{}\nResult: {}\nTest Duration: {}\nstd::exception::what():\n    {}\n",
+                    finished,
                     ansi::Style(ansi::bold,
                         ansi::Background(ansi::bg_black,
                             ansi::Color(ansi::bright_red, "Test Failed")
@@ -157,7 +163,8 @@ namespace test
             {
                 duration = std::chrono::steady_clock::now() - start;
                 logger.print(
-                    "Result: {}\nTest Duration: {}\n\n    An unknown type was thrown!\n",
+                    "\n{}\nResult: {}\nTest Duration: {}\n\n    An unknown type was thrown!\n",
+                    finished,
                     ansi::Style(ansi::bold,
                         ansi::Background(ansi::bg_bright_red,
                             ansi::Color(ansi::black, "Test Failed")
