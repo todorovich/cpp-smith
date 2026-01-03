@@ -2,13 +2,12 @@
 
 #include <filesystem>
 #include <vector>
-#include <cassert>
 
-#include "IdentifiedType.hpp"
 #include "build/ProjectInterface.hpp"
 #include "build/artifacts/ArtifactCoordinates.hpp"
-#include "build/artifacts/TypeId.hpp"
-#include "build/artifacts/TypeIdList.hpp"
+#include "typeid/IdentifiedType.hpp"
+#include "typeid/TypeId.hpp"
+#include "typeid/TypeIdList.hpp"
 
 namespace cpp_smith
 {

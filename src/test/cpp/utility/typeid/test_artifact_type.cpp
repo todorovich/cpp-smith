@@ -2,10 +2,10 @@
 
 #include <string>
 
-#include "build/artifacts/TypeId.hpp"
 #include "compile/model/Executable.hpp"
 #include "compile/model/StaticLibrary.hpp"
 #include "compile/model/SharedLibrary.hpp"
+#include "typeid/TypeId.hpp"
 
 namespace test
 {

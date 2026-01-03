@@ -5,7 +5,7 @@
 #include <initializer_list>
 #include <string_view>
 
-#include "build/artifacts/TypeId.hpp"
+#include "TypeId.hpp"
 
 namespace cpp_smith
 {

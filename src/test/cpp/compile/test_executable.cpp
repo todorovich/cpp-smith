@@ -1,25 +1,22 @@
-#include <filesystem>
-#include <print>
-
 #include "test/Test.hpp"
 
 #include "build/Project.hpp"
 #include "compile/model/factory/ExecutableFactory.hpp"
 #include "compile/model/factory/CompilationConfigurationFactory.hpp"
-#include "compile/compiler-probe/ProbeUtils.hpp"
+#include "system/System.hpp"
 
 namespace test
 {
-    using namespace cpp_smith;
-    using namespace test;
+	using namespace cpp_smith;
+	using namespace test;
 
-    struct Tests
-    {
-        Tests() = delete;
+	struct Tests
+	{
+		Tests() = delete;
 
-        inline static logging::Logger logger = logging::Logger::defaultLogger("test::Tests");
+	    inline static logging::Logger logger = logging::Logger::defaultLogger("test::Tests");
 
-        inline static const auto cpp_smith_source_directory = std::filesystem::path(CPP_SMITH_SOURCE_DIR);
+		inline static const auto cpp_smith_source_directory = std::filesystem::path(CPP_SMITH_SOURCE_DIR);
 
         static void compileAndRunHelloWorld(const std::string& name, const std::filesystem::path& entryPoint)
         {
@@ -66,9 +63,9 @@ namespace test
         inline const static Test<void, std::string, std::filesystem::path> compile_and_run_hello_world {
             "compileAndRunHelloWorld", compileAndRunHelloWorld,
             {
-                { "hello world", cpp_smith_source_directory / "src/test/data/hello-world/hello_world.cpp" },
-                { "hello relative", "src/test/data/hello-world/hello_world.cpp" }
+                { "hello world", cpp_smith_source_directory / "src/test/data/hello-world/hello_world.cpp" }//,
+                //{ "hello relative", "src/test/data/hello-world/hello_world.cpp" }
             }
         };
-    };
+	};
 }

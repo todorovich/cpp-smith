@@ -1,6 +1,6 @@
 #pragma once
 
-#include "artifacts/IdentifiedType.hpp"
+#include "typeid/IdentifiedType.hpp"
 
 namespace cpp_smith
 {

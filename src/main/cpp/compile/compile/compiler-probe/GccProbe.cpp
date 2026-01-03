@@ -1,7 +1,7 @@
 #include "GccProbe.hpp"
 
 #include "faults/faults.hpp"
-#include "containers/TransparentContainers.hpp"
+#include "../../../utility/containers/containers/TransparentContainers.hpp"
 
 #include "../model/CompilationUnit.hpp"
 
@@ -24,12 +24,12 @@ namespace cpp_smith
         }
 
         const auto [exit_code, output]  = System::ExecuteCommand(
-            std::string{base + "D -MF - "  + joined_arguments + " -c " + translation_unit_path.string()}
+            std::string{base + "D -MF - "  + joined_arguments + " -c -o /dev/null " + translation_unit_path.string()}
         );
         const auto all_dependencies = ParseMakeStyleDependencies(output);
 
         const auto [exit_code_2, output_2] = System::ExecuteCommand(
-            std::string{base + "MD -MF - " + joined_arguments + " -c " + translation_unit_path.string()}
+            std::string{base + "MD -MF - " + joined_arguments + " -c -o /dev/null " + translation_unit_path.string()}
         );
         auto project_only_deps= ParseMakeStyleDependencies(output_2);
 

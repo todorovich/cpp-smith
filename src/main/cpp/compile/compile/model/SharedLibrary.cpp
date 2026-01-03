@@ -36,7 +36,12 @@ namespace cpp_smith
         {
             compilationUnits.emplace_back(
                 std::make_unique<CompilationUnit>(
-                    SourceFile::from(source, compiler_probe.get()), compilation_configuration)
+                    SourceFile::from(
+                        compilation_configuration.projectDirectory() / source,
+                        compiler_probe.get()
+                    ),
+                    compilation_configuration
+                )
             );
         }
 

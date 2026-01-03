@@ -1,7 +1,7 @@
 #include "test/Test.hpp"
 
-#include "build/artifacts/TypeIdList.hpp"
-#include "build/artifacts/TypeId.hpp"
+#include "typeid/TypeIdList.hpp"
+#include "typeid/TypeId.hpp"
 
 namespace test
 {

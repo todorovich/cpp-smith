@@ -12,7 +12,6 @@
 #include "compile/model/factory/SharedLibraryFactory.hpp"
 #include "compile/model/factory/CompilationConfigurationFactory.hpp"
 
-
 namespace test
 {
     using namespace test;

@@ -5,7 +5,6 @@
 
 #include "TypeIdList.hpp"
 #include "faults/faults.hpp"
-#include "test/Assert.hpp"
 
 namespace cpp_smith
 {

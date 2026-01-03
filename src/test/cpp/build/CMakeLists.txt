@@ -1,23 +1,16 @@
-add_executable(test_cpp_smith)
+add_executable(test_build)
 
-add_test(NAME TestCppSmith COMMAND test_cpp_smith)
+add_test(NAME TestBuild COMMAND test_build)
 
-target_link_libraries(test_cpp_smith
+target_link_libraries(test_build
     PRIVATE
         cpp-build
-        cpp-compile
         cpp-test-main
         test_definitions
 )
 
-target_sources(test_cpp_smith
+target_sources(test_build
     PRIVATE
-        test_artifact_type.cpp
-        test_artifact_types.cpp
-        test_build_system.cpp
-        test_cpp_smith.cpp
-        test_executable.cpp
         test_project.cpp
-        test_shared_library.cpp
-        test_static_library.cpp
+
 )
