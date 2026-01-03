@@ -1,20 +1,20 @@
-#include "SharedLibrary.hpp"
-
-#include "build/Project.hpp"
-#include "build/artifacts/static-library/StaticLibrary.hpp"
-
 #include "compile/compiler-probe/GccProbe.hpp"
 #include "compile/model/CompilationUnit.hpp"
+#include "compile/model/StaticLibrary.hpp"
+#include "compile/model/SharedLibrary.hpp"
+#include "compile/model/CompilationConfiguration.hpp"
 
 namespace cpp_smith
 {
     void SharedLibrary::create(const Configuration* configuration) const
     {
-        const auto& compiler = configuration->compiler();
+        const auto& compilation_configuration = configuration->as<CompilationConfiguration>();
+
+        const auto& compiler = compilation_configuration.compiler();
 
         logger.print(
             "\nBuilding Shared Library\nArtifact Coordinates: {}\nCompiler: {}\nBuild Directory: {}\n\n",
-            getCoordinates(), compiler, configuration->buildDirectory().c_str()
+            getCoordinates(), compiler, compilation_configuration.buildDirectory().c_str()
         );
 
         std::unique_ptr<CompilerProbe> compiler_probe;
@@ -35,11 +35,12 @@ namespace cpp_smith
         for (const auto& source : _sources)
         {
             compilationUnits.emplace_back(
-                std::make_unique<CompilationUnit>(SourceFile::from(source, compiler_probe.get()), *configuration)
+                std::make_unique<CompilationUnit>(
+                    SourceFile::from(source, compiler_probe.get()), compilation_configuration)
             );
         }
 
-        const auto configuration_directory = configuration->getBaseOutputDirectory(getCoordinates().artifact_name);
+        const auto configuration_directory = compilation_configuration.getBaseOutputDirectory(getCoordinates().artifact_name);
 
         std::vector<ObjectFile> objectFiles;
         objectFiles.reserve(compilationUnits.size());
@@ -52,7 +53,7 @@ namespace cpp_smith
             objectFiles.emplace_back(
                 compiler_probe->compile(
                     compilationUnit.get(),
-                    configuration_directory / configuration->objectDirectory()
+                    configuration_directory / compilation_configuration.objectDirectory()
                 )
             );
 
@@ -74,7 +75,7 @@ namespace cpp_smith
 
         compiler_probe->link(
             linkables,
-            configuration_directory / configuration->libraryDirectory(),
+            configuration_directory / compilation_configuration.libraryDirectory(),
             std::string{ "lib" + getCoordinates().artifact_name + ".so" },
             LinkingOutput::SharedLibrary
         );
@@ -82,9 +83,11 @@ namespace cpp_smith
 
     SharedLibraryFile SharedLibrary::getSharedLibraryFile(const Configuration* configuration) const
     {
+        const auto& compilation_configuration = configuration->as<CompilationConfiguration>();
+
         return SharedLibraryFile {
-            configuration->getBaseOutputDirectory(getCoordinates().artifact_name)
-                / configuration->libraryDirectory()
+            compilation_configuration.getBaseOutputDirectory(getCoordinates().artifact_name)
+                / compilation_configuration.libraryDirectory()
                 / std::string { "lib" + getCoordinates().artifact_name + ".so" }
         };
     }

@@ -1,20 +1,22 @@
-#include "StaticLibrary.hpp"
 
 #include <cstdlib>
 #include <string>
 
 #include "compile/compiler-probe/GccProbe.hpp"
 #include "compile/model/CompilationUnit.hpp"
+#include "compile/model/StaticLibrary.hpp"
+#include "compile/model/CompilationConfiguration.hpp"
 
 namespace cpp_smith
 {
     void StaticLibrary::create(const Configuration* configuration) const
     {
-        const auto& compiler = configuration->compiler();
+        const auto& compiler_configuration = configuration->as<CompilationConfiguration>();
+        const auto& compiler = compiler_configuration.compiler();
 
         logger.print(
             "\nBuilding Static Library\nArtifact Coordinates: {}\nCompiler: {}\nBuild Directory: {}\n\n",
-            getCoordinates(), compiler, configuration->buildDirectory().c_str()
+            getCoordinates(), compiler, compiler_configuration.buildDirectory().c_str()
         );
 
         std::unique_ptr<CompilerProbe> compiler_probe;
@@ -35,14 +37,14 @@ namespace cpp_smith
         for (const auto& source : _sources)
         {
             compilationUnits.emplace_back(
-                std::make_unique<CompilationUnit>(SourceFile::from(source, compiler_probe.get()), *configuration)
+                std::make_unique<CompilationUnit>(
+                    SourceFile::from(source, compiler_probe.get()), compiler_configuration
+                )
             );
         }
 
-        const auto configuration_directory = configuration->projectDirectory()
-            / configuration->buildDirectory()
-            / getCoordinates().artifact_name
-            / configuration->name();
+        const auto configuration_directory =
+            compiler_configuration.getBaseOutputDirectory(getCoordinates().artifact_name);
 
         std::vector<ObjectFile> objectFiles;
         for (const auto& compilationUnit : compilationUnits)
@@ -50,12 +52,12 @@ namespace cpp_smith
             objectFiles.emplace_back(
                 compiler_probe->compile(
                     compilationUnit.get(),
-                    configuration_directory / configuration->objectDirectory()
+                    configuration_directory / compiler_configuration.objectDirectory()
                 )
             );
         }
 
-        const auto lib_dir = configuration_directory / configuration->libraryDirectory();
+        const auto lib_dir = configuration_directory / compiler_configuration.libraryDirectory();
         std::filesystem::create_directories(lib_dir);
 
         const auto out_archive = lib_dir / std::string{ "lib" + getCoordinates().artifact_name + ".a" };
@@ -66,7 +68,7 @@ namespace cpp_smith
             command += " \"" + objectFile.getLinkable().string() + "\"";
         }
 
-        logger.print("Archiving: {}", out_archive.c_str());
+        logger.print("Archiving: {}\n", out_archive.c_str());
         if (const int result_code = std::system(command.c_str()); result_code != 0)
         {
             throw std::runtime_error("Failed to create static library archive: " + out_archive.string());
@@ -75,9 +77,11 @@ namespace cpp_smith
 
     StaticLibraryFile StaticLibrary::getStaticLibraryFile(const Configuration* configuration) const
     {
+        const auto& compiler_configuration = configuration->as<CompilationConfiguration>();
+
         return StaticLibraryFile {
-            configuration->getBaseOutputDirectory(getCoordinates().artifact_name)
-                / configuration->libraryDirectory()
+            compiler_configuration.getBaseOutputDirectory(getCoordinates().artifact_name)
+                / compiler_configuration.libraryDirectory()
                 / std::string { "lib" + getCoordinates().artifact_name + ".a" }
         };
     }

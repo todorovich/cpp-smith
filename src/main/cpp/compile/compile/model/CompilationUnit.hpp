@@ -3,7 +3,7 @@
 #include <utility>
 #include <algorithm>
 
-#include "Configuration.hpp"
+#include "CompilationConfiguration.hpp"
 #include "SourceFile.hpp"
 
 namespace cpp_smith
@@ -11,16 +11,16 @@ namespace cpp_smith
     class CompilationUnit
     {
         SourceFile _source;
-        Configuration _configuration;
+        CompilationConfiguration _configuration;
 
     public:
-        CompilationUnit(SourceFile&& source, Configuration configuration)
+        CompilationUnit(SourceFile&& source, CompilationConfiguration configuration)
             : _source(source)
             , _configuration(std::move(configuration))
         {}
 
         [[nodiscard]] const SourceFile& getSourceFile() const { return _source; }
 
-        [[nodiscard]] const Configuration& getConfiguration() const { return _configuration; }
+        [[nodiscard]] const CompilationConfiguration& getConfiguration() const { return _configuration; }
     };
 }

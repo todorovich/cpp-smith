@@ -1,21 +1,19 @@
-#include "Executable.hpp"
-
-#include "build/Project.hpp"
-#include "build/artifacts/shared-library/SharedLibrary.hpp"
-#include "build/artifacts/static-library/StaticLibrary.hpp"
-
 #include "compile/compiler-probe/GccProbe.hpp"
 #include "compile/model/CompilationUnit.hpp"
+#include "compile/model/Executable.hpp"
+#include "compile/model/SharedLibrary.hpp"
+#include "compile/model/StaticLibrary.hpp"
 
 namespace cpp_smith
 {
     void Executable::create(const Configuration* configuration) const
     {
-        const auto& compiler = configuration->compiler();
+        const auto& compiler_configuration = configuration->as<CompilationConfiguration>();
+        const auto& compiler = compiler_configuration.compiler();
 
         logger.print(
             "\nBuilding Executable\nArtifact Coordinates: {}\nCompiler: {}\nBuild Directory: {}\n\n",
-            getCoordinates(), compiler, configuration->buildDirectory().c_str()
+            getCoordinates(), compiler, compiler_configuration.buildDirectory().c_str()
         );
 
         std::unique_ptr<CompilerProbe> compiler_probe;
@@ -36,11 +34,13 @@ namespace cpp_smith
         for (const auto& source : _sources)
         {
             compilationUnits.emplace_back(
-                std::make_unique<CompilationUnit>(SourceFile::from(source, compiler_probe.get()), *configuration)
+                std::make_unique<CompilationUnit>(
+                    SourceFile::from(source, compiler_probe.get()), compiler_configuration
+                )
             );
         }
 
-        const auto configuration_directory = configuration->getBaseOutputDirectory(getCoordinates().artifact_name);
+        const auto configuration_directory = compiler_configuration.getBaseOutputDirectory(getCoordinates().artifact_name);
 
         std::vector<ObjectFile> object_files;
         object_files.reserve(compilationUnits.size());
@@ -53,7 +53,7 @@ namespace cpp_smith
             object_files.emplace_back(
                 compiler_probe->compile(
                     compilationUnit.get(),
-                    configuration_directory / configuration->objectDirectory()
+                    configuration_directory / compiler_configuration.objectDirectory()
                 )
             );
 
@@ -89,13 +89,13 @@ namespace cpp_smith
 
         compiler_probe->link(
             linkables,
-            configuration_directory / configuration->binaryDirectory(),
+            configuration_directory / compiler_configuration.binaryDirectory(),
             std::string { getCoordinates().artifact_name + ".exe" },
             LinkingOutput::Executable
         );
     }
 
-    std::filesystem::path Executable::getExecutablePath(const Configuration* configuration) const
+    std::filesystem::path Executable::getExecutablePath(const CompilationConfiguration* configuration) const
     {
         return configuration->getBaseOutputDirectory(getCoordinates().artifact_name)
             / configuration->binaryDirectory()

@@ -6,11 +6,11 @@ cpp_smith::Artifact::Artifact(
 	ProjectInterface& project,
 	const ArtifactCoordinates& artifactCoordinate,
 	const std::vector<ArtifactCoordinates>& dependencies,
-	const ArtifactType& type
+	const TypeId& type
 )
-	: _artifact_coordinates{ artifactCoordinate }
+	: IdentifiedType(TypeId::of<Artifact>() && type)
+	, _artifact_coordinates{ artifactCoordinate }
  	, _dependencies{ dependencies }
- 	, _types{ ArtifactType::of<Artifact>() && type }
  	, _parent(project)
 {}
 
@@ -18,10 +18,10 @@ cpp_smith::Artifact::Artifact(
 	ProjectInterface& project,
 	const ArtifactCoordinates& artifactCoordinate,
 	const std::vector<ArtifactCoordinates>& dependencies,
-	const ArtifactTypes& types
+	const TypeIdList& types
 )
-	: _artifact_coordinates{ artifactCoordinate }
+	: IdentifiedType(TypeId::of<Artifact>() && types)
+	, _artifact_coordinates{ artifactCoordinate }
  	, _dependencies{ dependencies }
- 	, _types{ ArtifactType::of<Artifact>() && types }
  	, _parent(project)
 {}

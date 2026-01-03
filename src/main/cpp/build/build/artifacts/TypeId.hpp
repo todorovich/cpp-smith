@@ -5,26 +5,26 @@
 
 namespace cpp_smith
 {
-	class ArtifactType final
+	class TypeId final
 	{
 		template <class T>
 		inline static std::uint8_t type_anchor = 0;
 
 		const void* id { nullptr };
 
-		constexpr explicit ArtifactType(const void* p) noexcept
+		constexpr explicit TypeId(const void* p) noexcept
 			: id(p)
 		{}
 
 	  public:
-		friend constexpr bool operator==(ArtifactType, ArtifactType) noexcept = default;
+		friend constexpr bool operator==(TypeId, TypeId) noexcept = default;
 
 		constexpr const void* getId() const noexcept { return id; }
 
 		template <class T>
-		static constexpr ArtifactType of() noexcept
+		static constexpr TypeId of() noexcept
 		{
-			return ArtifactType{ &type_anchor<T> };
+			return TypeId{ &type_anchor<T> };
 		}
 	};
 }
@@ -32,9 +32,9 @@ namespace cpp_smith
 namespace std
 {
 	template <>
-	struct hash<cpp_smith::ArtifactType>
+	struct hash<cpp_smith::TypeId>
 	{
-		size_t operator()(const cpp_smith::ArtifactType artifactType) const noexcept
+		size_t operator()(const cpp_smith::TypeId artifactType) const noexcept
 		{
 			return std::hash<const void*>{}(artifactType.getId());
 		}

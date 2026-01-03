@@ -4,8 +4,8 @@
 #include "test/Test.hpp"
 
 #include "build/Project.hpp"
-#include "build/builders/SharedLibraryBuilder.hpp"
-#include "compile/model/Configuration.hpp"
+#include "compile/model/factory/SharedLibraryFactory.hpp"
+#include "compile/model/factory/CompilationConfigurationFactory.hpp"
 
 namespace test
 {
@@ -29,7 +29,7 @@ namespace test
             };
 
             const auto& configuration = project.withRootDirectory(cpp_smith_source_directory)
-                .define<Configuration>("standard")
+                .define<CompilationConfiguration>("standard")
                 .withCompiler(CompilerType::GCC)
                 .withPlatform(Platform::LINUX)
                 .withArchitecture(Architecture::X64)
@@ -39,11 +39,11 @@ namespace test
                 .addSource("src/test/data/hello-library/hello_library.cpp")
                 .submit();
 
-            Assert::areEqual(std::string("hello_library"), shared->getCoordinates().artifact_name);
+            Assert::areEqual(std::string("hello_library"), shared.getCoordinates().artifact_name);
 
             project.build();
 
-            const auto path = shared->getSharedLibraryFile(&configuration).getLinkable();
+            const auto path = shared.getSharedLibraryFile(&configuration).getLinkable();
             Assert::isTrue(
                 std::filesystem::exists(path),
                 std::string("Expected shared library output missing at: ") + path.string()

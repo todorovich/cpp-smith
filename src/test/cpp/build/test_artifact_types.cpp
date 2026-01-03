@@ -1,7 +1,7 @@
 #include "test/Test.hpp"
 
-#include "build/artifacts/ArtifactTypes.hpp"
-#include "build/artifacts/ArtifactType.hpp"
+#include "build/artifacts/TypeIdList.hpp"
+#include "build/artifacts/TypeId.hpp"
 
 namespace test
 {
@@ -14,11 +14,11 @@ namespace test
 
         static void testArtifactTypesEmptyByDefault()
         {
-            const ArtifactTypes types;
+            const TypeIdList types;
 
             Assert::isTrue(types.empty(), "default-constructed ArtifactTypes should be empty");
             Assert::areEqual(std::size_t{0}, types.size(), "default-constructed ArtifactTypes should have size 0");
-            Assert::isFalse(types.contains(ArtifactType::of<int>()), "empty ArtifactTypes should not contain any type");
+            Assert::isFalse(types.contains(TypeId::of<int>()), "empty ArtifactTypes should not contain any type");
         }
 
         inline const static Test<void> artifact_types_empty_by_default {
@@ -27,16 +27,16 @@ namespace test
 
         static void testArtifactTypesInitializerListDedupAndContains()
         {
-            const ArtifactType ti = ArtifactType::of<int>();
-            const ArtifactType td = ArtifactType::of<double>();
+            const TypeId ti = TypeId::of<int>();
+            const TypeId td = TypeId::of<double>();
 
-            const ArtifactTypes types { ti, ti, td };
+            const TypeIdList types { ti, ti, td };
 
             Assert::isFalse(types.empty(), "initializer_list ArtifactTypes should not be empty when given elements");
             Assert::areEqual(std::size_t{2}, types.size(), "initializer_list should deduplicate identical ArtifactType values");
             Assert::isTrue(types.contains(ti), "contains(int) should be true");
             Assert::isTrue(types.contains(td), "contains(double) should be true");
-            Assert::isFalse(types.contains(ArtifactType::of<char>()), "contains(char) should be false");
+            Assert::isFalse(types.contains(TypeId::of<char>()), "contains(char) should be false");
         }
 
         inline const static Test<void> artifact_types_initializer_list {
@@ -45,14 +45,14 @@ namespace test
 
         static void testArtifactTypesLogicalAndIsNonMutatingUnion()
         {
-            const auto ti = ArtifactType::of<int>();
-            const auto td = ArtifactType::of<double>();
-            const auto tc = ArtifactType::of<char>();
+            const auto ti = TypeId::of<int>();
+            const auto td = TypeId::of<double>();
+            const auto tc = TypeId::of<char>();
 
-            const ArtifactTypes left { ti, td };
-            const ArtifactTypes right { td, tc };
+            const TypeIdList left { ti, td };
+            const TypeIdList right { td, tc };
 
-            const ArtifactTypes combined = left && right;
+            const TypeIdList combined = left && right;
 
             Assert::areEqual(std::size_t{3}, combined.size());
             Assert::isTrue(combined.contains(ti));
@@ -76,10 +76,10 @@ namespace test
 
         static void testArtifactTypeLogicalAndBuildsArtifactTypes()
         {
-            const auto ti = ArtifactType::of<int>();
-            const auto td = ArtifactType::of<double>();
+            const auto ti = TypeId::of<int>();
+            const auto td = TypeId::of<double>();
 
-            const ArtifactTypes types = ti && td;
+            const TypeIdList types = ti && td;
 
             Assert::areEqual(std::size_t{2}, types.size());
             Assert::isTrue(types.contains(ti));

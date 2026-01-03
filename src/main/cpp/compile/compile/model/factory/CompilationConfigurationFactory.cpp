@@ -1,19 +1,19 @@
-#include "build/builders/ConfigurationBuilder.hpp"
-#include "build/Project.hpp"
-#include "compile/model/Configuration.hpp"
+#include "build/ProjectInterface.hpp"
+#include "compile/model/CompilationConfiguration.hpp"
 #include "compile/model/CompilerType.hpp"
+#include "compile/model/factory/CompilationConfigurationFactory.hpp"
 
 namespace cpp_smith
 {
-    ConfigurationBuilder::ConfigurationBuilder(Project* buildSystem, std::string name)
-        : _buildSystem(buildSystem)
+    CompilationConfigurationFactory::CompilationConfigurationFactory(ProjectInterface* buildSystem, std::string name)
+        : _project(buildSystem)
         , _name(std::move(name))
 
         , _compiler(CompilerType::GCC)
     {
     }
 
-    ConfigurationBuilder& ConfigurationBuilder::withCompiler(
+    CompilationConfigurationFactory& CompilationConfigurationFactory::withCompiler(
         const CompilerType compiler
     )
     {
@@ -21,7 +21,7 @@ namespace cpp_smith
         return *this;
     }
 
-    ConfigurationBuilder& ConfigurationBuilder::withPlatform(
+    CompilationConfigurationFactory& CompilationConfigurationFactory::withPlatform(
         const Platform platform
     )
     {
@@ -29,7 +29,7 @@ namespace cpp_smith
         return *this;
     }
 
-    ConfigurationBuilder& ConfigurationBuilder::withArchitecture(
+    CompilationConfigurationFactory& CompilationConfigurationFactory::withArchitecture(
         const Architecture architecture
     )
     {
@@ -37,7 +37,7 @@ namespace cpp_smith
         return *this;
     }
 
-    ConfigurationBuilder& ConfigurationBuilder::withProjectDirectory(
+    CompilationConfigurationFactory& CompilationConfigurationFactory::withProjectDirectory(
         const std::filesystem::path& project_directory
     )
     {
@@ -45,7 +45,7 @@ namespace cpp_smith
         return *this;
     }
 
-    ConfigurationBuilder& ConfigurationBuilder::withBuildDirectory(
+    CompilationConfigurationFactory& CompilationConfigurationFactory::withBuildDirectory(
         const std::filesystem::path& build_directory
     )
     {
@@ -53,7 +53,7 @@ namespace cpp_smith
         return *this;
     }
 
-    ConfigurationBuilder& ConfigurationBuilder::withBinaryDirectory(
+    CompilationConfigurationFactory& CompilationConfigurationFactory::withBinaryDirectory(
         const std::filesystem::path& binary_directory
     )
     {
@@ -61,7 +61,7 @@ namespace cpp_smith
         return *this;
     }
 
-    ConfigurationBuilder& ConfigurationBuilder::withLibraryDirectory(
+    CompilationConfigurationFactory& CompilationConfigurationFactory::withLibraryDirectory(
         const std::filesystem::path& library_directory
     )
     {
@@ -69,7 +69,7 @@ namespace cpp_smith
         return *this;
     }
 
-    ConfigurationBuilder& ConfigurationBuilder::withObjectDirectory(
+    CompilationConfigurationFactory& CompilationConfigurationFactory::withObjectDirectory(
         const std::filesystem::path& object_directory
     )
     {
@@ -77,7 +77,7 @@ namespace cpp_smith
         return *this;
     }
 
-    ConfigurationBuilder& ConfigurationBuilder::addFlag(
+    CompilationConfigurationFactory& CompilationConfigurationFactory::addFlag(
         std::string flag
     )
     {
@@ -85,7 +85,7 @@ namespace cpp_smith
         return *this;
     }
 
-    ConfigurationBuilder& ConfigurationBuilder::addFlags(
+    CompilationConfigurationFactory& CompilationConfigurationFactory::addFlags(
         std::vector<std::string> flags
     )
     {
@@ -97,7 +97,7 @@ namespace cpp_smith
         return *this;
     }
 
-    ConfigurationBuilder& ConfigurationBuilder::addDefine(
+    CompilationConfigurationFactory& CompilationConfigurationFactory::addDefine(
         std::string define
     )
     {
@@ -105,7 +105,7 @@ namespace cpp_smith
         return *this;
     }
 
-    ConfigurationBuilder& ConfigurationBuilder::addDefines(
+    CompilationConfigurationFactory& CompilationConfigurationFactory::addDefines(
         std::vector<std::string> defines
     )
     {
@@ -117,7 +117,7 @@ namespace cpp_smith
         return *this;
     }
 
-    ConfigurationBuilder& ConfigurationBuilder::addUserInclude(
+    CompilationConfigurationFactory& CompilationConfigurationFactory::addUserInclude(
         std::filesystem::path dir
     )
     {
@@ -125,7 +125,7 @@ namespace cpp_smith
         return *this;
     }
 
-    ConfigurationBuilder& ConfigurationBuilder::addUserIncludes(
+    CompilationConfigurationFactory& CompilationConfigurationFactory::addUserIncludes(
         std::vector<std::filesystem::path> dirs
     )
     {
@@ -137,7 +137,7 @@ namespace cpp_smith
         return *this;
     }
 
-    ConfigurationBuilder& ConfigurationBuilder::addSystemInclude(
+    CompilationConfigurationFactory& CompilationConfigurationFactory::addSystemInclude(
         std::filesystem::path dir
     )
     {
@@ -145,7 +145,7 @@ namespace cpp_smith
         return *this;
     }
 
-    ConfigurationBuilder& ConfigurationBuilder::addSystemIncludes(
+    CompilationConfigurationFactory& CompilationConfigurationFactory::addSystemIncludes(
         std::vector<std::filesystem::path> dirs
     )
     {
@@ -157,12 +157,12 @@ namespace cpp_smith
         return *this;
     }
 
-    Configuration ConfigurationBuilder::create() const
+    std::unique_ptr<CompilationConfiguration> CompilationConfigurationFactory::create() const
     {
-        return {
+        return std::make_unique<CompilationConfiguration>(
             _name,
-            { _compiler, _platform, _architecture },
-            {
+            Triplet{ _compiler, _platform, _architecture },
+            ProjectPaths{
                 _project_directory,
                 _build_directory,
                 _binary_directory,
@@ -173,18 +173,18 @@ namespace cpp_smith
             _defines,
             _user_includes,
             _system_includes
-        };
+        );
     }
 
     // ReSharper disable once CppMemberFunctionMayBeConst
-    [[maybe_unused]] const Configuration& ConfigurationBuilder::submit()
+    [[maybe_unused]] const CompilationConfiguration& CompilationConfigurationFactory::submit()
     {
         auto configuration = create();
 
-        const auto name = configuration.name();
+        const auto& compilation_configuration = *configuration.get();
 
-        _buildSystem->accept(std::move(configuration));
+        _project->accept(std::move(configuration));
 
-        return _buildSystem->getConfiguration(name);
+        return compilation_configuration;
     }
 }

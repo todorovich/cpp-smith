@@ -1,15 +1,16 @@
 
 #include <format>
 
+#include "build/Configuration.hpp"
 #include "build/Project.hpp"
-#include "build/builders/ExecutableBuilder.hpp"
+
 #include "faults/faults.hpp"
 
 namespace cpp_smith
 {
-    Project& Project::accept(Configuration&& config)
+    Project& Project::accept(std::unique_ptr<Configuration> config)
     {
-        _configurations.try_emplace(config.name(), std::move(config));
+        _configurations.try_emplace(config->getName(), std::move(config));
         return *this;
     }
 
@@ -23,7 +24,7 @@ namespace cpp_smith
     {
         try
         {
-            return _configurations.at(name);
+            return *_configurations.at(name).get();
         }
         catch (const std::out_of_range&)
         {
@@ -38,7 +39,7 @@ namespace cpp_smith
         return _project_directory;
     }
 
-    const TransparentUnorderedMap<std::string, Configuration>& Project::getConfigurations() const
+    const TransparentUnorderedMap<std::string, std::unique_ptr<Configuration>>& Project::getConfigurations() const
     {
         return _configurations;
     }

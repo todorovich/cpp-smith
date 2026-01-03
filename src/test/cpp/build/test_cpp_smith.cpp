@@ -4,7 +4,8 @@
 #include "test/Test.hpp"
 
 #include "build/Project.hpp"
-#include "build/builders/ExecutableBuilder.hpp"
+#include "compile/model/factory/ExecutableFactory.hpp"
+#include "compile/model/factory/CompilationConfigurationFactory.hpp"
 #include "compile/compiler-probe/ProbeUtils.hpp"
 
 namespace test
@@ -35,7 +36,7 @@ namespace test
             };
 
             project.withRootDirectory(cpp_smith_source_directory)
-                .define<Configuration>("standard")
+                .define<CompilationConfiguration>("standard")
                 .withCompiler(CompilerType::GCC)
                 .withPlatform(Platform::LINUX)
                 .submit();
@@ -46,7 +47,7 @@ namespace test
 
             project.build();
 
-            const auto configuration = project.getConfiguration("standard");
+            const auto& configuration = project.getConfiguration<CompilationConfiguration>("standard");
             const std::filesystem::path executable_path =  configuration.projectDirectory()
                 / configuration.buildDirectory()
                 / name

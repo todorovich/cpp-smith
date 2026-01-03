@@ -6,10 +6,12 @@
 #include "test/Test.hpp"
 
 #include "build/Project.hpp"
-#include "build/artifacts/shared-library/SharedLibrary.hpp"
-#include "build/artifacts/static-library/StaticLibrary.hpp"
-#include "build/builders/ConfigurationBuilder.hpp"
-#include "compile/model/Configuration.hpp"
+#include "compile/model/SharedLibrary.hpp"
+#include "compile/model/StaticLibrary.hpp"
+#include "compile/model/factory/StaticLibraryFactory.hpp"
+#include "compile/model/factory/SharedLibraryFactory.hpp"
+#include "compile/model/factory/CompilationConfigurationFactory.hpp"
+
 
 namespace test
 {
@@ -30,7 +32,7 @@ namespace test
                 }
             };
 
-            project.define<Configuration>("debug")
+             const auto& config = project.define<CompilationConfiguration>("debug")
                 .withCompiler(CompilerType::GCC)
                 .withPlatform(Platform::LINUX)
                 .withArchitecture(Architecture::X64)
@@ -38,7 +40,6 @@ namespace test
                 .addDefine("DEBUG")
                 .submit();
 
-            const auto& config = project.getConfiguration("debug");
             Assert::areEqual(config.name(), std::string{"debug"});
             Assert::areEqual(config.platform(), Platform::LINUX);
             Assert::areEqual(config.architecture(), Architecture::X64);
@@ -61,15 +62,15 @@ namespace test
         {
             std::filesystem::path path = std::filesystem::current_path();
 
-            Configuration config(
-                    "release",
-                    { CompilerType::CLANG, Platform::MAC_OS, Architecture::ARM_64 },
-                    {path,path ,path ,path},
-                    std::vector<std::string>{ "-O2" },
-                    std::vector<std::string>{ "NDEBUG" },
-                    std::vector<std::filesystem::path>{ "include/" },
-                    std::vector<std::filesystem::path>{ "/usr/include/" }
-                );
+            std::unique_ptr<CompilationConfiguration> config = std::make_unique<CompilationConfiguration>(
+                "release",
+                Triplet{ CompilerType::CLANG, Platform::MAC_OS, Architecture::ARM_64 },
+                ProjectPaths{path,path ,path ,path},
+                std::vector<std::string>{ "-O2" },
+                std::vector<std::string>{ "NDEBUG" },
+                std::vector<std::filesystem::path>{ "include/" },
+                std::vector<std::filesystem::path>{ "/usr/include/" }
+            );
 
             Project build_system {
                 ProjectCoordinates {
@@ -81,7 +82,7 @@ namespace test
 
             build_system.accept(std::move(config));
 
-            const auto& retrieved = build_system.getConfiguration("release");
+            const auto& retrieved = build_system.getConfiguration<CompilationConfiguration>("release");
             Assert::areEqual(retrieved.name(), std::string{"release"});
 
             Assert::areEqual(retrieved.flags().size(), 1);
@@ -106,7 +107,7 @@ namespace test
             };
 
             project
-                .define<Configuration>("debug")
+                .define<CompilationConfiguration>("debug")
                 .withPlatform(Platform::LINUX)
                 .addFlag("-g")
                 .submit();
@@ -117,9 +118,9 @@ namespace test
                 .addSource("src/core/io.cpp")
                 .submit();
 
-            Assert::areEqual(std::string{"core"}, core->getCoordinates().artifact_name);
+            Assert::areEqual(std::string{"core"}, core.getCoordinates().artifact_name);
 
-            const auto& files = core->sources();
+            const auto& files = core.sources();
             Assert::areEqual(files.size(), 2);
             Assert::areEqual(files[0].string(), std::string{"src/core/math.cpp"});
             Assert::areEqual(files[1].string(), std::string{"src/core/io.cpp"});
@@ -140,7 +141,7 @@ namespace test
             };
 
             project
-                .define<Configuration>("release")
+                .define<CompilationConfiguration>("release")
                 .withPlatform(Platform::MAC_OS)
                 .withArchitecture(Architecture::ARM_64)
                 .addFlag("-O2")
@@ -155,7 +156,7 @@ namespace test
             const auto& lib = project.getArtifact("plugin");
             Assert::areEqual(std::string{"plugin"}, lib.getCoordinates().artifact_name);
 
-            const auto& files = plugin->sources();
+            const auto& files = plugin.sources();
             Assert::areEqual(files.size(), 2);
             Assert::areEqual(files[0].string(), std::string{"src/plugin/entry.cpp"});
             Assert::areEqual(files[1].string(), std::string{"src/plugin/helper.cpp"});

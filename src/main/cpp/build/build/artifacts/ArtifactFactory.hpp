@@ -1,33 +1,40 @@
 #pragma once
 
-#include "ArtifactBuilder.hpp"
+#include <memory>
+
 #include "build/ProjectInterface.hpp"
 
 namespace cpp_smith
 {
+	class Artifact;
+
+	template <typename T>
+	concept ArtifactTypeConcept = std::derived_from<T, Artifact>;
+
 	template<ArtifactTypeConcept T>
-	class ArtifactBuilderBase
+	class ArtifactFactory
 	{
 		ProjectInterface& _project;
 
 	protected:
-		explicit ArtifactBuilderBase(ProjectInterface& project)
+		explicit ArtifactFactory(ProjectInterface& project)
 			: _project(project)
 		{};
 
 		[[nodiscard]] virtual std::unique_ptr<T> _create() const = 0;
 
 	public:
-		virtual ~ArtifactBuilderBase() = default;
+		virtual ~ArtifactFactory() = default;
 
-		T* submit()
+		const T& submit()
 		{
 			auto unique_ptr = _create();
-			auto* ptr = unique_ptr.get();
+
+			auto& artifact = *unique_ptr.get();
 
 			_project.accept(std::move(unique_ptr));
 
-			return ptr;
+			return artifact;
 		}
 	};
 }

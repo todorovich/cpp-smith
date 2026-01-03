@@ -4,7 +4,7 @@ add_test(NAME TestLogger COMMAND test_logger)
 
 target_link_libraries(test_logger
     PRIVATE
-        cpp-smith
+        cpp-build
         cpp-test-main
         test_definitions
 )

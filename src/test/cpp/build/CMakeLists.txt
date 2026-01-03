@@ -4,7 +4,8 @@ add_test(NAME TestCppSmith COMMAND test_cpp_smith)
 
 target_link_libraries(test_cpp_smith
     PRIVATE
-        cpp-smith
+        cpp-build
+        cpp-compile
         cpp-test-main
         test_definitions
 )

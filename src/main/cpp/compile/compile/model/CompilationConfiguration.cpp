@@ -1,10 +1,10 @@
-#include "Configuration.hpp"
+#include "CompilationConfiguration.hpp"
 
 #include <utility>
 
 namespace cpp_smith
 {
-    Configuration::Configuration(
+    CompilationConfiguration::CompilationConfiguration(
         std::string name,
         const Triplet triplet,
         const ProjectPaths& paths,
@@ -13,7 +13,8 @@ namespace cpp_smith
         std::vector<std::filesystem::path> user_includes,
         std::vector<std::filesystem::path> system_includes
     )
-        : _name(std::move(name))
+        // TODO: failing to provide the right type gives the dumbest error. Make it make sense.
+        : Configuration(std::move(name), TypeId::of<CompilationConfiguration>())
         , _compiler(triplet.compiler)
         , _platform(triplet.platform)
         , _architecture(triplet.architecture)
@@ -28,67 +29,67 @@ namespace cpp_smith
         , _system_includes(std::move(system_includes))
     {}
 
-    const std::string& Configuration::name() const
+    const std::string& CompilationConfiguration::name() const
     {
         return _name;
     }
 
-    Platform Configuration::platform() const
+    Platform CompilationConfiguration::platform() const
     {
         return _platform;
     }
 
-    Architecture Configuration::architecture() const
+    Architecture CompilationConfiguration::architecture() const
     {
         return _architecture;
     }
 
-    CompilerType Configuration::compiler() const
+    CompilerType CompilationConfiguration::compiler() const
     {
         return _compiler;
     }
 
-    const std::filesystem::path& Configuration::projectDirectory() const
+    const std::filesystem::path& CompilationConfiguration::projectDirectory() const
     {
         return _project_directory;
     }
 
-    const std::filesystem::path& Configuration::buildDirectory() const
+    const std::filesystem::path& CompilationConfiguration::buildDirectory() const
     {
         return _build_directory;
     }
 
-    const std::filesystem::path& Configuration::binaryDirectory() const
+    const std::filesystem::path& CompilationConfiguration::binaryDirectory() const
     {
         return _binary_directory;
     }
 
-    const std::filesystem::path& Configuration::libraryDirectory() const
+    const std::filesystem::path& CompilationConfiguration::libraryDirectory() const
     {
         return _library_directory;
     }
 
-    const std::filesystem::path& Configuration::objectDirectory() const
+    const std::filesystem::path& CompilationConfiguration::objectDirectory() const
     {
         return _object_directory;
     }
 
-    const std::vector<std::string>& Configuration::flags() const
+    const std::vector<std::string>& CompilationConfiguration::flags() const
     {
         return _flags;
     }
 
-    const std::vector<std::string>& Configuration::defines() const
+    const std::vector<std::string>& CompilationConfiguration::defines() const
     {
         return _defines;
     }
 
-    const std::vector<std::filesystem::path>& Configuration::userIncludes() const
+    const std::vector<std::filesystem::path>& CompilationConfiguration::userIncludes() const
     {
         return _user_includes;
     }
 
-    const std::vector<std::filesystem::path>& Configuration::systemIncludes() const
+    const std::vector<std::filesystem::path>& CompilationConfiguration::systemIncludes() const
     {
         return _system_includes;
     }

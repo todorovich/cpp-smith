@@ -7,7 +7,7 @@
 namespace cpp_smith
 {
     class CompilationUnit;
-    class Configuration;
+    class CompilationConfiguration;
 
     class GccProbe final : public CompilerProbe
     {

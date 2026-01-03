@@ -9,7 +9,7 @@
 
 namespace cpp_smith
 {
-    class Configuration;
+    class CompilationConfiguration;
 
     // TODO: This should be in compile not cpp_smith
     class Executable final : public Artifact
@@ -25,13 +25,13 @@ namespace cpp_smith
             const std::vector<ArtifactCoordinates>& dependencies,
             const std::vector<std::filesystem::path>& sources
         )
-            : Artifact(project, artifactCoordinate, dependencies, ArtifactType::of<Executable>())
+            : Artifact(project, artifactCoordinate, dependencies, TypeId::of<Executable>())
             , _sources(sources)
         {}
 
         void create(const Configuration* configuration) const override;
 
-        std::filesystem::path getExecutablePath(const Configuration* configuration) const;
+        std::filesystem::path getExecutablePath(const CompilationConfiguration* configuration) const;
 
         [[nodiscard]] const std::vector<std::filesystem::path>& sources() const { return _sources; }
     };

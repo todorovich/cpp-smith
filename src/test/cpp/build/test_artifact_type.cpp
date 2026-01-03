@@ -1,9 +1,9 @@
 #include "test/Test.hpp"
 
-#include "build/artifacts/ArtifactType.hpp"
-#include "build/artifacts/executable/Executable.hpp"
-#include "build/artifacts/static-library/StaticLibrary.hpp"
-#include "build/artifacts/shared-library/SharedLibrary.hpp"
+#include "build/artifacts/TypeId.hpp"
+#include "compile/model/Executable.hpp"
+#include "compile/model/StaticLibrary.hpp"
+#include "compile/model/SharedLibrary.hpp"
 
 #include <string>
 
@@ -23,9 +23,9 @@ namespace test
 
         static void testArtifactTypeEquality()
         {
-            const auto t1 = ArtifactType::of<int>();
-            const auto t2 = ArtifactType::of<int>();
-            const auto t3 = ArtifactType::of<double>();
+            const auto t1 = TypeId::of<int>();
+            const auto t2 = TypeId::of<int>();
+            const auto t3 = TypeId::of<double>();
 
             Assert::isTrue(t1 == t2, "same T should produce equal ArtifactType");
             Assert::isFalse(t1 == t3, "different T should produce different ArtifactType");
@@ -38,12 +38,12 @@ namespace test
         static void testArtifactTypeDistinctUserTypes()
         {
             Assert::isFalse(
-                ArtifactType::of<A>() == ArtifactType::of<B>(),
+                TypeId::of<A>() == TypeId::of<B>(),
                 "distinct user-defined types should be different ArtifactType values"
             );
 
             Assert::isFalse(
-                ArtifactType::of<Tag<1>>() == ArtifactType::of<Tag<2>>(),
+                TypeId::of<Tag<1>>() == TypeId::of<Tag<2>>(),
                 "different template specializations should be different ArtifactType values"
             );
         }
@@ -55,22 +55,22 @@ namespace test
         static void testArtifactTypeNonPrimitiveTypes()
         {
             Assert::isTrue(
-                ArtifactType::of<std::string>() == ArtifactType::of<std::string>(),
+                TypeId::of<std::string>() == TypeId::of<std::string>(),
                 "non-primitive (std::string) should be stable"
             );
 
             Assert::isTrue(
-                ArtifactType::of<Executable>() == ArtifactType::of<Executable>(),
+                TypeId::of<Executable>() == TypeId::of<Executable>(),
                 "Executable type id should be stable"
             );
 
             Assert::isFalse(
-                ArtifactType::of<Executable>() == ArtifactType::of<StaticLibrary>(),
+                TypeId::of<Executable>() == TypeId::of<StaticLibrary>(),
                 "Executable and StaticLibrary must have different type ids"
             );
 
             Assert::isFalse(
-                ArtifactType::of<SharedLibrary>() == ArtifactType::of<StaticLibrary>(),
+                TypeId::of<SharedLibrary>() == TypeId::of<StaticLibrary>(),
                 "SharedLibrary and StaticLibrary must have different type ids"
             );
         }
@@ -81,12 +81,12 @@ namespace test
 
         static void testArtifactTypeConstexpr()
         {
-            constexpr auto ti = ArtifactType::of<int>();
-            static_assert(ti == ArtifactType::of<int>());
-            static_assert(!(ti == ArtifactType::of<double>()));
+            constexpr auto ti = TypeId::of<int>();
+            static_assert(ti == TypeId::of<int>());
+            static_assert(!(ti == TypeId::of<double>()));
 
-            Assert::isTrue(ti == ArtifactType::of<int>());
-            Assert::isFalse(ti == ArtifactType::of<double>());
+            Assert::isTrue(ti == TypeId::of<int>());
+            Assert::isFalse(ti == TypeId::of<double>());
         }
 
         inline const static Test<void> artifact_type_constexpr {

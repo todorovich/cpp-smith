@@ -1,17 +1,18 @@
 #include <iterator>
 #include <utility>
 
-#include "build/builders/ExecutableBuilder.hpp"
+#include "compile/model/factory/ExecutableFactory.hpp"
+#include "build/artifacts/ArtifactCoordinates.hpp"
 
 namespace cpp_smith
 {
-	ArtifactBuilder<Executable>::ArtifactBuilder(ProjectInterface& parent, std::string name)
-		: ArtifactBuilderBase(parent)
+	ExecutableFactory::ExecutableFactory(ProjectInterface& parent, std::string name)
+		: ArtifactFactory(parent)
 		, _name(std::move(name))
 		, _parent(parent)
 	{}
 
-	std::unique_ptr<Executable> ArtifactBuilder<Executable>::_create() const
+	std::unique_ptr<Executable> ExecutableFactory::_create() const
 	{
 		return std::make_unique<Executable>(
 			_parent,
@@ -21,13 +22,13 @@ namespace cpp_smith
 		);
 	}
 
-	ArtifactBuilder<Executable>& ArtifactBuilder<Executable>::addSource(std::filesystem::path source)
+	ExecutableFactory& ExecutableFactory::addSource(std::filesystem::path source)
 	{
 		_sources.emplace_back(std::move(source));
 		return *this;
 	}
 
-	ArtifactBuilder<Executable>& ArtifactBuilder<Executable>::addSources(std::vector<std::filesystem::path> sources)
+	ExecutableFactory& ExecutableFactory::addSources(std::vector<std::filesystem::path> sources)
 	{
 		_sources.insert(
 			_sources.end(),
@@ -37,13 +38,13 @@ namespace cpp_smith
 		return *this;
 	}
 
-	ArtifactBuilder<Executable>& ArtifactBuilder<Executable>::addDependency(ArtifactCoordinates coordinates)
+	ExecutableFactory& ExecutableFactory::addDependency(ArtifactCoordinates coordinates)
 	{
 		_dependencies.emplace_back(std::move(coordinates));
 		return *this;
 	}
 
-	ArtifactBuilder<Executable>& ArtifactBuilder<Executable>::addDependencies(std::vector<ArtifactCoordinates> coordinates)
+	ExecutableFactory& ExecutableFactory::addDependencies(std::vector<ArtifactCoordinates> coordinates)
 	{
 		_dependencies.insert(
 			_dependencies.end(),

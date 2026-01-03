@@ -9,7 +9,7 @@
 namespace cpp_smith
 {
     class CompilationUnit;
-    class Configuration;
+    class CompilationConfiguration;
 
     enum class LinkingOutput
     {

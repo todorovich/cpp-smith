@@ -195,7 +195,7 @@ namespace test
         Test(
             const std::string_view& name,
             std::function<ReturnType(Args...)> test_function,
-            std::vector<std::tuple<Args...>> _args = {},
+            std::vector<std::tuple<Args...>> _args,
             logging::Logger logger = {},
             const std::source_location source_location = std::source_location::current()
         )

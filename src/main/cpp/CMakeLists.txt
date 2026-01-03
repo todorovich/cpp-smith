@@ -1,10 +1,10 @@
-add_subdirectory(build)
-add_subdirectory(compile)
 add_subdirectory(utility)
 add_subdirectory(faults)
 add_subdirectory(log)
 add_subdirectory(system)
 add_subdirectory(test)
+add_subdirectory(compile)
+add_subdirectory(build)
 
 add_executable(c++smith)
 

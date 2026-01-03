@@ -1,20 +1,18 @@
-
-#include "build/builders/SharedLibraryBuilder.hpp"
-
 #include <iterator>
 #include <utility>
 
 #include "build/ProjectInterface.hpp"
+#include "compile/model/factory/SharedLibraryFactory.hpp"
 
 namespace cpp_smith
 {
-	ArtifactBuilder<SharedLibrary>::ArtifactBuilder(ProjectInterface& parent, std::string name)
-		: ArtifactBuilderBase(parent)
+	SharedLibraryFactory::SharedLibraryFactory(ProjectInterface& parent, std::string name)
+		: ArtifactFactory(parent)
 		, _parent(parent)
 		, _name(std::move(name))
 	{}
 
-	std::unique_ptr<SharedLibrary> ArtifactBuilder<SharedLibrary>::_create() const
+	std::unique_ptr<SharedLibrary> SharedLibraryFactory::_create() const
 	{
 		return std::make_unique<SharedLibrary>(
 			_parent,
@@ -24,13 +22,13 @@ namespace cpp_smith
 		);
 	}
 
-	ArtifactBuilder<SharedLibrary>& ArtifactBuilder<SharedLibrary>::addSource(std::filesystem::path source)
+	SharedLibraryFactory& SharedLibraryFactory::addSource(std::filesystem::path source)
 	{
 		_sources.emplace_back(std::move(source));
 		return *this;
 	}
 
-	ArtifactBuilder<SharedLibrary>& ArtifactBuilder<SharedLibrary>::addSources(std::vector<std::filesystem::path> sources)
+	SharedLibraryFactory& SharedLibraryFactory::addSources(std::vector<std::filesystem::path> sources)
 	{
 		_sources.insert(
 			_sources.end(),
@@ -40,13 +38,13 @@ namespace cpp_smith
 		return *this;
 	}
 
-	ArtifactBuilder<SharedLibrary>& ArtifactBuilder<SharedLibrary>::addDependency(ArtifactCoordinates coordinates)
+	SharedLibraryFactory& SharedLibraryFactory::addDependency(ArtifactCoordinates coordinates)
 	{
 		_dependencies.emplace_back(std::move(coordinates));
 		return *this;
 	}
 
-	ArtifactBuilder<SharedLibrary>& ArtifactBuilder<SharedLibrary>::addDependencies(std::vector<ArtifactCoordinates> coordinates)
+	SharedLibraryFactory& SharedLibraryFactory::addDependencies(std::vector<ArtifactCoordinates> coordinates)
 	{
 		_dependencies.insert(
 			_dependencies.end(),

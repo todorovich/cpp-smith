@@ -4,7 +4,7 @@ add_test(NAME TestAssert COMMAND test_assert)
 
 target_link_libraries(test_assert
     PRIVATE
-        cpp-smith
+        cpp-build
         cpp-test-main
         test_definitions
 )
@@ -20,7 +20,7 @@ add_test(NAME TestAnsi COMMAND test_ansi)
 
 target_link_libraries(test_ansi
     PRIVATE
-        cpp-smith
+        cpp-build
         cpp-test-main
         test_definitions
 )

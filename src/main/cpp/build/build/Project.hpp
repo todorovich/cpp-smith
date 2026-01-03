@@ -4,48 +4,25 @@
 #include <ranges>
 #include <string>
 
+#include "build/artifacts/Artifact.hpp"
+#include "build/Configuration.hpp"
+#include "build/Factory.hpp"
 #include "build/ProjectInterface.hpp"
-#include "build/builders/ArtifactBuilder.hpp"
-#include "build/builders/ConfigurationBuilder.hpp"
-#include "build/builders/ExecutableBuilder.hpp"
-#include "build/builders/SharedLibraryBuilder.hpp"
-#include "build/builders/StaticLibraryBuilder.hpp"
-
 #include "build/ProjectCoordinates.hpp"
 #include "containers/TransparentContainers.hpp"
+#include "faults/faults.hpp"
 
 namespace cpp_smith
 {
+    class CompilationConfiguration;
+
     class Project : public ProjectInterface
     {
-        TransparentUnorderedMap<std::string, Configuration> _configurations;
+        TransparentUnorderedMap<std::string, std::unique_ptr<Configuration>> _configurations;
         std::unordered_map<ArtifactCoordinates, std::unique_ptr<Artifact>> _artifacts;
 
         std::filesystem::path _project_directory;
         ProjectCoordinates _project_coordinate;
-
-        template<typename T>
-        ArtifactBuilder<T> _define(const std::string& name, T*)
-        {
-            return ArtifactBuilder<T>(*this, name);
-        }
-
-        ConfigurationBuilder _define(const std::string& configurationName, Configuration*)
-        {
-            const std::filesystem::path namePath{configurationName};
-
-            return ConfigurationBuilder{this, configurationName}
-                .withProjectDirectory(_project_directory)
-                .withBuildDirectory(
-                    std::filesystem::path{"build"}
-                        / _project_coordinate.group
-                        / _project_coordinate.project
-                        / std::format("{}",_project_coordinate.version)
-                )
-                .withBinaryDirectory("bin")
-                .withLibraryDirectory("lib")
-                .withObjectDirectory("obj");
-        }
 
     public:
         explicit Project(ProjectCoordinates&& projectCoordinate)
@@ -56,16 +33,16 @@ namespace cpp_smith
             : _project_coordinate(projectCoordinate)
         {}
 
-        template <typename T>
-        auto define(const std::string& name)
+
+        template <typename T> requires HasFactory<T>
+        auto define(std::string name)
         {
-            // Pass a null pointer just to drive overload resolution
-            return _define(name, static_cast<T*>(nullptr));
+            return Factory<T>::create(*this, std::move(name));
         }
 
         Project& accept(std::unique_ptr<Artifact> artifact) override;
 
-        Project& accept(Configuration&& config) override;
+        Project& accept(std::unique_ptr<Configuration> config) override;
 
         Project& withRootDirectory(const std::filesystem::path& project_directory);
 
@@ -85,8 +62,29 @@ namespace cpp_smith
             return _artifacts;
         };
 
-        [[nodiscard]] const Configuration& getConfiguration(const std::string& name) const;
-        [[nodiscard]] const TransparentUnorderedMap<std::string, Configuration>& getConfigurations() const;
+        template<typename T>
+        const auto& getConfiguration(
+            const std::string& name,
+            const std::source_location sourceLocation = std::source_location::current()
+        ) const
+        {
+            try
+            {
+                const auto& configuration = *_configurations.at(name).get();
+
+                return configuration.as<T>(sourceLocation);
+            }
+            catch (const std::out_of_range&)
+            {
+                throw faults::missing::Configuration(
+                    std::format("No configuration exist with the name: {}", name)
+                );
+            }
+        }
+
+        [[nodiscard]] const Configuration& getConfiguration(const std::string& name) const override;
+        [[nodiscard]] const TransparentUnorderedMap<std::string, std::unique_ptr<Configuration>>&
+            getConfigurations() const;
         [[nodiscard]] const ProjectCoordinates& getProjectCoordinates() const override;
         [[nodiscard]] const std::filesystem::path& getProjectDirectory() const override;
 
@@ -96,7 +94,7 @@ namespace cpp_smith
             {
                 for (const auto& configuration : _configurations | std::views::values)
                 {
-                    artifact->create(&configuration);
+                    artifact->create(configuration.get());
                 }
             }
         }

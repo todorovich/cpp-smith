@@ -4,8 +4,8 @@
 #include "test/Test.hpp"
 
 #include "build/Project.hpp"
-#include "build/builders/StaticLibraryBuilder.hpp"
-#include "compile/model/Configuration.hpp"
+#include "compile/model/factory/StaticLibraryFactory.hpp"
+#include "compile/model/factory/CompilationConfigurationFactory.hpp"
 
 namespace test
 {
@@ -29,7 +29,7 @@ namespace test
             };
 
             project.withRootDirectory(cpp_smith_source_directory)
-                .define<Configuration>("standard")
+                .define<CompilationConfiguration>("standard")
                 .withCompiler(CompilerType::GCC)
                 .withPlatform(Platform::LINUX)
                 .withArchitecture(Architecture::X64)
@@ -39,11 +39,12 @@ namespace test
                 .addSource("src/test/data/hello-library/hello_library.cpp")
                 .submit();
 
-            Assert::areEqual(std::string("hello_library"), lib->getCoordinates().artifact_name);
+            Assert::areEqual(std::string("hello_library"), lib.getCoordinates().artifact_name);
 
             project.build();
 
-            const auto& configuration = project.getConfiguration("standard");
+            const auto& configuration = project.getConfiguration("standard")
+                .as<CompilationConfiguration>();
             const std::filesystem::path archive_path =
                 configuration.projectDirectory()
                 / configuration.buildDirectory()

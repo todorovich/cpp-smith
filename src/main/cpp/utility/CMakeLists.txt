@@ -1,7 +1,7 @@
 add_library(cpp-containers INTERFACE)
 
 target_sources(cpp-containers
-        INTERFACE
+    INTERFACE
         containers/TransparentContainers.hpp
 )
 

@@ -8,6 +8,7 @@
 
 #include "CompilerType.hpp"
 #include "Platform.hpp"
+#include "build/Configuration.hpp"
 
 namespace cpp_smith
 {
@@ -27,9 +28,8 @@ namespace cpp_smith
         std::filesystem::path object_directory;
     };
 
-    class Configuration
+    class CompilationConfiguration : public Configuration
     {
-        std::string _name;
         CompilerType _compiler;
         Platform _platform;
         Architecture _architecture;
@@ -46,7 +46,7 @@ namespace cpp_smith
         std::vector<std::filesystem::path> _system_includes;
 
     public:
-        Configuration(
+        CompilationConfiguration(
             std::string name,
             Triplet triplet,
             const ProjectPaths& paths,
@@ -78,6 +78,8 @@ namespace cpp_smith
         [[nodiscard]] const std::vector<std::filesystem::path>& userIncludes() const;
         [[nodiscard]] const std::vector<std::filesystem::path>& systemIncludes() const;
 
-        bool operator==(const Configuration& other) const = default;
+        bool operator==(const CompilationConfiguration& other) const = default;
     };
 }
+
+

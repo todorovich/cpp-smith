@@ -1,8 +1,8 @@
 #include "test/Test.hpp"
 
 #include "build/Project.hpp"
-#include "build/builders/ExecutableBuilder.hpp"
-#include "compile/model/Configuration.hpp"
+#include "compile/model/factory/ExecutableFactory.hpp"
+#include "compile/model/factory/CompilationConfigurationFactory.hpp"
 
 namespace test
 {
@@ -23,7 +23,7 @@ namespace test
 				}
 			};
 
-			auto configuration = build_system.define<Configuration>("debug")
+			auto configuration = build_system.define<CompilationConfiguration>("debug")
 				.withCompiler(CompilerType::GCC)
 				.withPlatform(Platform::LINUX)
 				.withArchitecture(Architecture::X64)
@@ -31,13 +31,13 @@ namespace test
 				.addDefine("DEBUG")
 				.create();
 
-			const auto executable = build_system.define<cpp_smith::Executable>("app")
+			const auto executable = build_system.define<Executable>("app")
 				.addSource("src/main.cpp")
 				.submit();
 
-			Assert::areEqual(std::string("app"), executable->getCoordinates().artifact_name);
+			Assert::areEqual(std::string("app"), executable.getCoordinates().artifact_name);
 
-			const auto& files = executable->sources();
+			const auto& files = executable.sources();
 			Assert::areEqual(1, files.size());
 			Assert::areEqual(std::string("src/main.cpp"), files[0].string());
 		}
