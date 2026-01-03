@@ -9,4 +9,5 @@
 #include "invalid/Argument.hpp"
 #include "missing/Configuration.hpp"
 #include "unsupported/CompilerVersion.hpp"
+#include "unsupported/Cast.hpp"
 #include "violated/Assertion.hpp"

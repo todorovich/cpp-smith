@@ -11,6 +11,14 @@ namespace cpp_smith
 {
     class CompilationConfiguration;
 
+    class Executable;
+
+    template <>
+    struct TypeKey<Executable>
+    {
+        static constexpr std::string_view value = "cpp_smith::Executable";
+    };
+
     // TODO: This should be in compile not cpp_smith
     class Executable final : public Artifact
     {

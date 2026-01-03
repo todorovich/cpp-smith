@@ -14,6 +14,13 @@ namespace cpp_smith
 {
     class Configuration;
     class CompilerProbe;
+    class Artifact;
+
+    template <>
+    struct TypeKey<Artifact>
+    {
+        static constexpr std::string_view value = "cpp_smith::Artifact";
+    };
 
     class Artifact : public IdentifiedType
     {

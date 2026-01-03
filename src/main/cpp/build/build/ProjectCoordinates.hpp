@@ -37,8 +37,6 @@ namespace cpp_smith
 
 		[[nodiscard]] std::string toString(const char sep = ':') const;
 	};
-
-
 }
 
 namespace std

@@ -21,6 +21,7 @@ target_sources(cpp-build
         build/artifacts/ArtifactFactory.hpp
         build/artifacts/ArtifactCoordinates.hpp
         build/artifacts/TypeId.hpp
+        build/artifacts/TypeKey.hpp
         build/artifacts/TypeIdList.hpp
         build/Project.hpp
         build/ProjectCoordinates.hpp

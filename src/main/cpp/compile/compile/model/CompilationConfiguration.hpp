@@ -28,6 +28,14 @@ namespace cpp_smith
         std::filesystem::path object_directory;
     };
 
+    class CompilationConfiguration;
+
+    template <>
+    struct TypeKey<CompilationConfiguration>
+    {
+        static constexpr std::string_view value = "cpp_smith::CompilationConfiguration";
+    };
+
     class CompilationConfiguration : public Configuration
     {
         CompilerType _compiler;

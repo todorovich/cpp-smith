@@ -33,7 +33,6 @@ namespace cpp_smith
             : _project_coordinate(projectCoordinate)
         {}
 
-
         template <typename T> requires HasFactory<T>
         auto define(std::string name)
         {
@@ -98,5 +97,11 @@ namespace cpp_smith
                 }
             }
         }
+    };
+
+    template <>
+    struct TypeKey<Project>
+    {
+        static constexpr std::string_view value = "cpp_smith::Project";
     };
 }

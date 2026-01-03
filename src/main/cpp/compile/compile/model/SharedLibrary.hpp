@@ -9,6 +9,14 @@
 
 namespace cpp_smith
 {
+    class SharedLibrary;
+
+    template <>
+    struct TypeKey<SharedLibrary>
+    {
+        static constexpr std::string_view value = "cpp_smith::SharedLibrary";
+    };
+
     // TODO: This should be in compile not cpp_smith
     class SharedLibrary final : public Artifact
     {

@@ -2,12 +2,12 @@
 
 #include "faults/Fault.hpp"
 
-namespace faults::failed
+namespace faults::unsupported
 {
-	struct Linking final : Fault
+	struct Cast final : Fault
 	{
 		using Fault::Fault;
-		inline static const std::string name = "faults::failed::LinkingFault";
+		inline static const std::string name = "faults::unsupported::Cast";
 		const std::string& exceptionName() const override { return name; }
 	};
 }

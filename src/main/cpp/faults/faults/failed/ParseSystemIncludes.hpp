@@ -7,7 +7,7 @@ namespace faults::failed
 	struct ParseSystemIncludes final : Fault
 	{
 		using Fault::Fault;
-		inline static const std::string name = "faults::ParseSystemIncludesFault";
+		inline static const std::string name = "faults::failed::ParseSystemIncludesFault";
 		const std::string& exceptionName() const override { return name; }
 	};
 }

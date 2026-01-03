@@ -15,6 +15,7 @@ target_sources(cpp-fault
         faults/invalid/Argument.hpp
         faults/missing/Configuration.hpp
         faults/unsupported/CompilerVersion.hpp
+        faults/unsupported/Cast.hpp
         faults/violated/Assertion.hpp
 )
 

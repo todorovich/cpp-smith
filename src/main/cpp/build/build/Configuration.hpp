@@ -1,8 +1,17 @@
 #pragma once
+
 #include "artifacts/IdentifiedType.hpp"
 
 namespace cpp_smith
 {
+	class Configuration;
+
+	template<>
+	struct TypeKey<Configuration>
+	{
+		static constexpr std::string_view value = "cpp_smith::Configuration";
+	};
+
 	class Configuration : public IdentifiedType
 	{
 	  protected:

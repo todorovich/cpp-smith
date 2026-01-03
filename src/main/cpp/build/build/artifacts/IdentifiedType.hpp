@@ -2,11 +2,10 @@
 
 #include <cassert>
 #include <source_location>
-#include <print>
 
 #include "TypeIdList.hpp"
+#include "faults/faults.hpp"
 #include "test/Assert.hpp"
-
 
 namespace cpp_smith
 {
@@ -14,16 +13,14 @@ namespace cpp_smith
 	{
 		TypeIdList _types;
 
-	  protected:
-		explicit IdentifiedType(const TypeId type)
-			: _types({type})
+	protected:
+		constexpr explicit IdentifiedType(const TypeId& type)
+			: _types(TypeIdList{type})
 		{}
 
-		explicit IdentifiedType(TypeIdList types)
+		constexpr explicit IdentifiedType(const TypeIdList& types)
 			: _types(types)
 		{}
-
-		explicit IdentifiedType(int _cpp_par_);
 
 	public:
 		[[nodiscard]] TypeIdList getTypes() const noexcept { return _types; }
@@ -39,18 +36,12 @@ namespace cpp_smith
 		template <class T>
 		[[nodiscard]] T& as(const std::source_location sourceLocation = std::source_location::current()) & noexcept
 		{
-			// TODO make this work?
-			if constexpr (is<T>())
+			if (is<T>())
 			{
-
-			}
-			else
-			{
-
+				return static_cast<T&>(*this);
 			}
 
-			assert(is<T>() && "IdentifiedType::as<T>() called with wrong type");
-			return static_cast<T&>(*this);
+			throw faults::unsupported::Cast("Unable to cast to type T.");
 		}
 
 		template <class T>

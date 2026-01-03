@@ -9,6 +9,14 @@
 
 namespace cpp_smith
 {
+    class StaticLibrary;
+
+    template <>
+    struct TypeKey<StaticLibrary>
+    {
+        static constexpr std::string_view value = "cpp_smith::StaticLibrary";
+    };
+
     // TODO: This should be in compile not cpp_smith
     class StaticLibrary final : public Artifact
     {

@@ -1,81 +1,99 @@
 #pragma once
 
+#include <array>
+#include <cstddef>
 #include <initializer_list>
-#include <span>
-#include <unordered_set>
-#include <vector>
+#include <string_view>
 
 #include "build/artifacts/TypeId.hpp"
 
 namespace cpp_smith
 {
-	class TypeIdList;
-
-	[[nodiscard]] TypeIdList operator&&(const TypeId left, const TypeId right);
-	[[nodiscard]] TypeIdList operator&&(const TypeIdList& types, const TypeId type);
-	[[nodiscard]] TypeIdList operator&&(const TypeId type, const TypeIdList& types);
-	[[nodiscard]] TypeIdList operator&&(const TypeIdList& left, const TypeIdList& right);
+	inline constexpr std::size_t TypeIdListMax = 7;
 
 	class TypeIdList final
 	{
-		std::unordered_set<TypeId> _artifact_types;
+		std::array<TypeId, TypeIdListMax> _ids{};
+		std::size_t _size{0};
 
-	public:
-		TypeIdList() = default;
-
-		explicit TypeIdList(const size_t size)
-			: _artifact_types{ size }
-		{}
-
-		explicit TypeIdList(const std::initializer_list<TypeId> artifactList)
-			: _artifact_types{ artifactList.begin(), artifactList.end() }
-		{}
-
-		explicit TypeIdList(const std::vector<TypeId>& types)
-			: _artifact_types{ types.begin(), types.end() }
-		{}
-
-		explicit TypeIdList(const std::span<const TypeId> types)
-			: _artifact_types{ types.begin(), types.end() }
-		{}
-
-		[[nodiscard]] bool contains(const TypeId keyArtifactType) const noexcept
+		constexpr void add_unique_unchecked(TypeId id) noexcept
 		{
-			return _artifact_types.contains(keyArtifactType);
+			for (std::size_t i = 0; i < _size; ++i)
+			{
+				if (_ids[i] == id) return;
+			}
+			_ids[_size++] = id;
 		}
 
-		[[nodiscard]] bool empty() const noexcept { return _artifact_types.empty(); }
-		[[nodiscard]] std::size_t size() const noexcept { return _artifact_types.size(); }
+	public:
+		constexpr TypeIdList() noexcept = default;
 
-		friend TypeIdList operator&&(const TypeId left, const TypeId right);
-		friend TypeIdList operator&&(const TypeIdList& types, const TypeId type);
-		friend TypeIdList operator&&(const TypeId type, const TypeIdList& types);
-		friend TypeIdList operator&&(const TypeIdList& left, const TypeIdList& right);
+		constexpr TypeIdList(std::initializer_list<TypeId> ids) noexcept
+		{
+			for (TypeId id : ids)
+			{
+				(void)try_add_unique(id);
+			}
+		}
+
+		constexpr bool try_add_unique(TypeId id) noexcept
+		{
+			for (std::size_t i = 0; i < _size; ++i)
+			{
+				if (_ids[i] == id) return true; // already present
+			}
+			if (_size >= TypeIdListMax) return false;
+			_ids[_size++] = id;
+			return true;
+		}
+
+		[[nodiscard]] constexpr bool contains(TypeId id) const noexcept
+		{
+			for (std::size_t i = 0; i < _size; ++i)
+			{
+				if (_ids[i] == id) return true;
+			}
+			return false;
+		}
+
+		[[nodiscard]] constexpr bool empty() const noexcept { return _size == 0; }
+		[[nodiscard]] constexpr std::size_t size() const noexcept { return _size; }
+
+		[[nodiscard]] constexpr TypeId at(std::size_t i) const noexcept { return _ids[i]; }
+
+		friend constexpr bool operator==(const TypeIdList&, const TypeIdList&) noexcept = default;
 	};
 
-	inline TypeIdList operator&&(const TypeId left, const TypeId right)
+	[[nodiscard]] constexpr TypeIdList operator&&(TypeId a, TypeId b) noexcept
 	{
-		return TypeIdList{ left, right };
+		TypeIdList out{};
+		(void)out.try_add_unique(a);
+		(void)out.try_add_unique(b);
+		return out;
 	}
 
-	inline TypeIdList operator&&(const TypeIdList& types, const TypeId type)
+	[[nodiscard]] constexpr TypeIdList operator&&(const TypeIdList& types, TypeId t) noexcept
 	{
-		TypeIdList result {types.size() + 1 };
-		result._artifact_types.emplace(type);
-		result._artifact_types.insert(types._artifact_types.begin(), types._artifact_types.end());
-		return result;
+		TypeIdList out = types;
+		(void)out.try_add_unique(t);
+		return out;
 	}
 
-	inline TypeIdList operator&&(const TypeId type, const TypeIdList& types)
+	[[nodiscard]] constexpr TypeIdList operator&&(TypeId t, const TypeIdList& types) noexcept
 	{
-		return types && type;
+		return types && t;
 	}
 
-	inline TypeIdList operator&&(const TypeIdList& left, const TypeIdList& right)
+	[[nodiscard]] constexpr TypeIdList operator&&(const TypeIdList& left, const TypeIdList& right) noexcept
 	{
-		TypeIdList result { left.size() + right.size() };
-		result._artifact_types.insert(left._artifact_types.begin(), left._artifact_types.end());
-		result._artifact_types.insert(right._artifact_types.begin(), right._artifact_types.end());
-		return result;
+		TypeIdList out = left;
+		for (std::size_t j = 0; j < right.size(); ++j) (void)out.try_add_unique(right.at(j));
+		return out;
 	}
+
+	template <>
+	struct TypeKey<TypeIdList>
+	{
+		static constexpr std::string_view value = "cpp_smith::TypeIdList";
+	};
 }
