@@ -194,7 +194,7 @@ namespace test
             : TestInterface(name, source_location, _getOrDefaultLogger(std::move(logger), name, _output))
             , _test_function(std::move(test_function))
             , _arguments(std::move(_args))
-            , _dependencies(dependencies)
+            , _dependencies(std::move(dependencies))
         {
             TestRegistry::instance().add(this);
         }
@@ -244,6 +244,11 @@ namespace test
         std::string_view output() const override
         {
             return _output;
+        }
+
+        std::span<TestInterface* const> dependencies() const noexcept override
+        {
+            return std::span(_dependencies.data(), _dependencies.size());
         }
     };
 }

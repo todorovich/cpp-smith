@@ -21,6 +21,7 @@ target_link_libraries(cpp-test
         cpp-fault
         cpp-log
         cpp-containers
+        cpp-algorithm
 )
 
 add_library(cpp-test-main STATIC)

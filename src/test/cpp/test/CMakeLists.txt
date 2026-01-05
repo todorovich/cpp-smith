@@ -29,3 +29,19 @@ target_sources(test_ansi
     PRIVATE
         test_ansi.cpp
 )
+
+add_executable(test_dependency_order)
+
+add_test(NAME TestDependencyOrder COMMAND test_dependency_order)
+
+target_link_libraries(test_dependency_order
+    PRIVATE
+        cpp-algorithm
+        cpp-test-main
+        test_definitions
+)
+
+target_sources(test_dependency_order
+    PRIVATE
+        test_dependency_order.cpp
+)

@@ -1,18 +1,18 @@
 #pragma once
 
-#include "../../log/log/Logger.hpp"
-#include "TestResult.hpp"
-
 #include <string>
 #include <source_location>
+
+#include "log/Logger.hpp"
+#include "TestResult.hpp"
 
 namespace test
 {
     class TestInterface
     {
     public:
-        const std::string name;
-        const std::source_location source_location;
+        std::string name;
+        std::source_location source_location;
         logging::Logger logger;
 
         explicit TestInterface(
@@ -30,5 +30,8 @@ namespace test
         virtual std::pair<int, std::vector<TestResult>> test() noexcept = 0;
 
         virtual std::string_view output() const = 0;
+
+        virtual std::span<TestInterface* const> dependencies() const noexcept = 0;
+
     };
 }

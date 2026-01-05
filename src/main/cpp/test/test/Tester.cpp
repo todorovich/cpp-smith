@@ -3,12 +3,12 @@
 #include <vector>
 #include <regex>
 
-#include "Assert.hpp"
+
 #include "TestInterface.hpp"
 #include "TestRegistry.hpp"
 #include "TestResult.hpp"
-
-#include "Ansi.hpp"
+#include "algorithm/DependencyGraph.hpp"
+#include "algorithm/TopologicalSort.hpp"
 
 namespace test
 {
@@ -17,7 +17,18 @@ namespace test
         int failures = 0;
         std::vector<TestResult> results;
 
-        for (auto* test : TestRegistry::instance().all())
+        auto all_tests = TestRegistry::instance().all();
+        std::vector<TestInterface*> tests_vec(all_tests.begin(), all_tests.end());
+
+        cpp_smith::algorithm::DependencyGraph<TestInterface, std::string> graph(
+            std::span<TestInterface*>(tests_vec),
+            [](const TestInterface * t) { return t->name; },
+            [](const TestInterface* t) { return t->dependencies(); }
+        );
+
+        const cpp_smith::algorithm::KahnsTopologicalSorter sorter(graph);
+
+        for(const auto sorted = sorter.sorted(); auto* test : sorted)
         {
             auto [testFailures, testResults] = test->test();
 

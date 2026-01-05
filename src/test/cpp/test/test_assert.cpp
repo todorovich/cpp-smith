@@ -17,10 +17,8 @@ namespace assert_tests
     concept AssertCallable = std::invocable<F, const std::string&>
         && std::same_as<void, std::invoke_result_t<F, const std::string&>>;
 
-    struct Tests
+    inline const static struct Tests
     {
-        Tests() = delete;
-
         inline static logging::Logger logger = logging::Logger::defaultLogger("test::Tests");
 
         template <AssertCallable AssertFn, AssertCallable AssertFailFn>
@@ -89,7 +87,7 @@ namespace assert_tests
         {
             const std::string expectedWhat =
                 "Assert::areEqual Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/test/test_assert.cpp:103:64\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/test/test_assert.cpp:101:64\n"
                 "\n"
                 "--- expected\n"
                 "+++ actual\n"
@@ -107,13 +105,11 @@ namespace assert_tests
             );
         }
 
-        inline const static Test<void> areEqual {"Assert::areEqual", testAreEqual };
-
         static void testAreNotEqual()
         {
             const std::string expectedWhat =
                 "Assert::areNotEqual Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/test/test_assert.cpp:126:67\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/test/test_assert.cpp:122:67\n"
                 "\n"
                 "--- expected\n"
                 "+++ actual\n"
@@ -130,8 +126,6 @@ namespace assert_tests
             );
         }
 
-        inline const static Test<void> areNotEqual {"Assert::areNotEqual", testAreNotEqual };
-
         static void testAreSame()
         {
             const auto object_1 = std::make_unique<int>(47);
@@ -140,7 +134,7 @@ namespace assert_tests
 
             const std::string expectedWhat =std::format(
                 "Assert::areSame Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/test/test_assert.cpp:160:36\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/test/test_assert.cpp:154:36\n"
                 "\n"
                 "Provided objects do not share the same memory address\n"
                 "\n"
@@ -165,8 +159,6 @@ namespace assert_tests
             );
         }
 
-        inline const static Test<void> areSame {"Assert::areSame", testAreSame };
-
         static void testAreNotSame()
         {
             const auto object_1 = std::make_unique<int>(47);
@@ -175,7 +167,7 @@ namespace assert_tests
 
             const std::string expectedWhat =std::format(
                 "Assert::areNotSame Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/test/test_assert.cpp:189:39\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/test/test_assert.cpp:181:39\n"
                 "\n"
                 "Provided objects share the same memory address\n"
                 "Memory Address: {}\n",
@@ -194,12 +186,10 @@ namespace assert_tests
             );
         }
 
-        inline const static Test<void> areNotSame { "Assert::areNotSame", testAreNotSame };
-
         static void testIsTrue()
         {
             const std::string expectedWhat ="Assert::isTrue Failed: custom message\n"
-                    "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/test/test_assert.cpp:217:35\n"
+                    "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/test/test_assert.cpp:207:35\n"
                     "\n"
                     "Provided expression evaluated to false\n"
                     "\n"
@@ -222,12 +212,10 @@ namespace assert_tests
             );
         }
 
-        inline const static Test<void> isTrue {"Assert::isTrue",testIsTrue };
-
         static void testIsFalse()
         {
             const std::string expectedWhat ="Assert::isFalse Failed: custom message\n"
-                    "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/test/test_assert.cpp:245:36\n"
+                    "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/test/test_assert.cpp:233:36\n"
                     "\n"
                     "Provided expression evaluated to true\n"
                     "\n"
@@ -250,8 +238,6 @@ namespace assert_tests
             );
         }
 
-        inline const static Test<void> isFalse { "Assert::isFalse", testIsFalse };
-
         static void testIsNullptr()
         {
             const auto pointer = std::make_unique<int>(42);
@@ -260,7 +246,7 @@ namespace assert_tests
 
             const std::string expectedWhat = std::format(
                 "Assert::isNullptr Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/test/test_assert.cpp:280:38\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/test/test_assert.cpp:266:38\n"
                 "\n"
                 "Provided pointer was not nullptr\n"
                 "\n"
@@ -285,8 +271,6 @@ namespace assert_tests
             );
         }
 
-        inline const static Test<void> isNullptr {"Assert::isNullptr", testIsNullptr };
-
         static void testIsNotNullptr()
         {
             const auto pointer = std::make_unique<int>(42);
@@ -294,7 +278,7 @@ namespace assert_tests
 
             const std::string expectedWhat =
                 "Assert::isNotNullptr Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/test/test_assert.cpp:312:41\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/test/test_assert.cpp:296:41\n"
                 "\n"
                 "Provided pointer was nullptr\n"
                 "\n"
@@ -317,13 +301,11 @@ namespace assert_tests
             );
         }
 
-        inline const static Test<void> isNotNullptr { "Assert::isNotNullptr", testIsNotNullptr };
-
         static void testThrowsException()
         {
             const std::string expectedWhat =
                 "Assert::throwsException Failed: custom message\n"
-                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/test/test_assert.cpp:338:70\n"
+                "Assertion Source Location: /home/micho/source/cpp-smith/src/test/cpp/test/test_assert.cpp:320:70\n"
                 "\n"
                 "Assert::throws function did not throw\n";
 
@@ -346,6 +328,16 @@ namespace assert_tests
            );
         }
 
-        inline const static Test<void> throwsException { "Assert::throwsException", testThrowsException };
-    };
+        Test<void> areEqual{"Assert::areEqual", testAreEqual};
+        Test<void> areNotEqual{"Assert::areNotEqual", testAreNotEqual};
+        Test<void> areSame{"Assert::areSame", testAreSame};
+        Test<void> areNotSame{"Assert::areNotSame", testAreNotSame};
+        Test<void> isTrue{"Assert::isTrue", testIsTrue};
+        Test<void> isFalse{"Assert::isFalse", testIsFalse};
+        Test<void> isNullptr{"Assert::isNullptr", testIsNullptr};
+        Test<void> isNotNullptr{"Assert::isNotNullptr", testIsNotNullptr};
+        Test<void> throwsException{"Assert::throwsException", testThrowsException};
+
+        Tests() = default;
+    } tests {};
 }

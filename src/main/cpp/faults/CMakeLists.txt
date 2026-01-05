@@ -13,7 +13,9 @@ target_sources(cpp-fault
         faults/failed/FileOpen.hpp
         faults/failed/Linking.hpp
         faults/invalid/Argument.hpp
+        faults/invalid/CircularDependency.hpp
         faults/missing/Configuration.hpp
+        faults/missing/Dependency.hpp
         faults/unsupported/CompilerVersion.hpp
         faults/unsupported/Cast.hpp
         faults/violated/Assertion.hpp

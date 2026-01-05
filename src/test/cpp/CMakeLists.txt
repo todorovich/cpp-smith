@@ -5,6 +5,7 @@ target_compile_definitions(test_definitions INTERFACE TEST_DATA_DIR=\"${CMAKE_SO
 
 target_include_directories(test_definitions INTERFACE ${CMAKE_SOURCE_DIR}/src/main/cpp/)
 
+add_subdirectory(algorithm)
 add_subdirectory(log)
 add_subdirectory(test)
 add_subdirectory(build)
