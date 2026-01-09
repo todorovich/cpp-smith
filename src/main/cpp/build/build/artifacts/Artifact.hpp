@@ -30,20 +30,6 @@ namespace cpp_smith
       protected:
         ProjectInterface& _parent;
 
-        /*static std::vector<TypeId>& addType(TypeId&& type, std::vector<TypeId>& types)
-        {
-            types.emplace_back(std::move(type));
-
-            return types;
-        }
-
-        static std::vector<TypeId>&& addType(TypeId&& type, std::vector<TypeId>&& types)
-        {
-            types.emplace_back(std::move(type));
-
-            return std::move(types);
-        }*/
-
         explicit Artifact(
             ProjectInterface& project,
             const ArtifactCoordinates& artifactCoordinate,

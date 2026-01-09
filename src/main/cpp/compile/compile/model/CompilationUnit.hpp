@@ -11,12 +11,12 @@ namespace cpp_smith
     class CompilationUnit
     {
         SourceFile _source;
-        CompilationConfiguration _configuration;
+        const CompilationConfiguration& _configuration;
 
     public:
-        CompilationUnit(SourceFile&& source, CompilationConfiguration configuration)
-            : _source(source)
-            , _configuration(std::move(configuration))
+        CompilationUnit(SourceFile&& source, const CompilationConfiguration& configuration)
+            : _source(std::move(source))
+            , _configuration(configuration)
         {}
 
         [[nodiscard]] const SourceFile& getSourceFile() const { return _source; }

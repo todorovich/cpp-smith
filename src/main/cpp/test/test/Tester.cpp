@@ -30,7 +30,16 @@ namespace test
 
         for(const auto sorted = sorter.sorted(); auto* test : sorted)
         {
+            log.print("\nExecuting Test: {}\n", test->name);
+
             auto [testFailures, testResults] = test->test();
+
+            log.print("\nFinished Executing Test: {}\n", test->name);
+
+            for (const auto& testResult : testResults)
+            {
+                log.print("\n{:a}\n", testResult);
+            }
 
             failures += testFailures;
 

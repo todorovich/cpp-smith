@@ -61,7 +61,7 @@ namespace test
         {
             std::filesystem::path path = std::filesystem::current_path();
 
-            std::unique_ptr<CompilationConfiguration> config = std::make_unique<CompilationConfiguration>(
+            auto config = std::make_unique<CompilationConfiguration>(
                 "release",
                 Triplet{ CompilerType::CLANG, Platform::MAC_OS, Architecture::ARM_64 },
                 ProjectPaths{path,path ,path ,path},

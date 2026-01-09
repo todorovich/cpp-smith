@@ -20,6 +20,10 @@ namespace cpp_smith
     // TODO: This should be in compile not cpp_smith
     class StaticLibrary final : public Artifact
     {
+        // TODO: seems like I have to take loggers in everywhere in order to print the output of tests to one logger
+        //      alt is capturing all terminal output, which has already been explored and sucks.
+        //      second alt could be to read this in the test and attach it to output. Although by default its still
+        //      going to the console... so that would have to be fixed.
         inline static logging::Logger logger = logging::Logger::defaultLogger("cpp_smith::StaticLibrary");
 
         const std::vector<std::filesystem::path> _sources;

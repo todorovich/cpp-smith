@@ -51,7 +51,7 @@ namespace cpp_smith
         CompilationConfigurationFactory& withLibraryDirectory(const std::filesystem::path& library_directory);
         CompilationConfigurationFactory& withObjectDirectory(const std::filesystem::path& build_directory);
 
-        // TODO: add with versions to replace all
+        // TODO: add withXXX versions to replace all
         CompilationConfigurationFactory& addFlag(std::string flag);
         CompilationConfigurationFactory& addFlags(std::vector<std::string> flags);
         CompilationConfigurationFactory& addDefine(std::string define);

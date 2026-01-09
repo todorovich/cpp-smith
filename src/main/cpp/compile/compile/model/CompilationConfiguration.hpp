@@ -55,7 +55,7 @@ namespace cpp_smith
 
     public:
         CompilationConfiguration(
-            std::string name,
+            const std::string& name,
             Triplet triplet,
             const ProjectPaths& paths,
             std::vector<std::string> flags,

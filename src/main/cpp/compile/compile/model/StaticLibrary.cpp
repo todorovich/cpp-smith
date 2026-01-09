@@ -71,7 +71,7 @@ namespace cpp_smith
         logger.print("Archiving: {}\n", out_archive.c_str());
         if (const int result_code = std::system(command.c_str()); result_code != 0)
         {
-            throw std::runtime_error("Failed to create static library archive: " + out_archive.string());
+            throw faults::failed::Linking("Failed to create static library archive: " + out_archive.string());
         }
     }
 

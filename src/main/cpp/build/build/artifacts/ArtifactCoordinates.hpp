@@ -43,10 +43,10 @@ namespace std
     template <>
     struct formatter<cpp_smith::ArtifactCoordinates, char> : formatter<std::string_view, char>
     {
-        constexpr auto parse(std::format_parse_context& ctx)
+        static constexpr auto parse(const std::format_parse_context& ctx)
         {
             // Accept only "{}" (no format specifiers)
-            auto it = ctx.begin();
+            const auto it = ctx.begin();
             if (it != ctx.end() && *it != '}')
                 throw std::format_error("ArtifactCoordinates does not support format specifiers");
             return it;

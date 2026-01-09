@@ -2,7 +2,6 @@
 
 // Wrap platform detection macros in constexpr variables.
 
-// TODO: move to System?
 namespace Platform {
 
 #if defined(_WIN32)

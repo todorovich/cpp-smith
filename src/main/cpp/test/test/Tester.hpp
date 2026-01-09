@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+#include "log/Logger.hpp"
+
 namespace test
 {
     struct TestResults
@@ -18,6 +20,8 @@ namespace test
 
     struct Tester
     {
+        inline static logging::Logger log = logging::Logger::defaultLogger("Tester");
+
         static std::pair<int, std::vector<TestResult>> test();
     };
 }

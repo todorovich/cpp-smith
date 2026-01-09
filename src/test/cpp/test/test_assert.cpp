@@ -4,9 +4,9 @@
 #include <concepts>
 #include <type_traits>
 
-#include "../../../main/cpp/faults/faults/faults.hpp"
+#include "faults/faults.hpp"
 
-#include "../../../main/cpp/test/test/Diff.hpp"
+#include "test/Diff.hpp"
 #include "test/Test.hpp"
 
 using namespace test;
@@ -17,7 +17,7 @@ namespace assert_tests
     concept AssertCallable = std::invocable<F, const std::string&>
         && std::same_as<void, std::invoke_result_t<F, const std::string&>>;
 
-    inline const static struct Tests
+    struct Tests
     {
         inline static logging::Logger logger = logging::Logger::defaultLogger("test::Tests");
 
@@ -318,7 +318,7 @@ namespace assert_tests
                },
                [](const std::string& message) {
                    Assert::throwsException<faults::invalid::Argument>(
-                       [] { logger.print("don't throw"); },
+                       [] { logger.print("don't throw\n"); },
                        message
                     );
                },
@@ -339,5 +339,7 @@ namespace assert_tests
         Test<void> throwsException{"Assert::throwsException", testThrowsException};
 
         Tests() = default;
-    } tests {};
+    };
+
+    inline const static Tests tests {};
 }

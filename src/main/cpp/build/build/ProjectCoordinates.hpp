@@ -44,7 +44,7 @@ namespace std
 	template <>
 	struct formatter<cpp_smith::SymanticVersion, char>
 	{
-		constexpr auto parse(std::format_parse_context& ctx)
+		static constexpr auto parse(const std::format_parse_context& ctx)
 		{
 			const auto it = ctx.begin();
 			if(it != ctx.end() && *it != '}')
@@ -85,7 +85,7 @@ namespace std
 	template <>
 	struct formatter<cpp_smith::ProjectCoordinates, char> : formatter<std::string_view, char>
 	{
-		constexpr auto parse(std::format_parse_context& ctx)
+		static constexpr auto parse(const std::format_parse_context& ctx)
 		{
 			// Accept only "{}" (no format specifiers)
 			const auto it = ctx.begin();

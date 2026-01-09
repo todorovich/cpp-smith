@@ -22,7 +22,9 @@ namespace cpp_smith
 			{
 				if (_ids[i] == id) return;
 			}
-			_ids[_size++] = id;
+			_ids[_size] = id;
+
+			_size++;
 		}
 
 	public:
@@ -30,7 +32,7 @@ namespace cpp_smith
 
 		constexpr TypeIdList(std::initializer_list<TypeId> ids) noexcept
 		{
-			for (TypeId id : ids)
+			for (const TypeId id : ids)
 			{
 				(void)try_add_unique(id);
 			}
@@ -42,8 +44,13 @@ namespace cpp_smith
 			{
 				if (_ids[i] == id) return true; // already present
 			}
+
 			if (_size >= TypeIdListMax) return false;
-			_ids[_size++] = id;
+
+			_ids[_size] = id;
+
+			_size++;
+
 			return true;
 		}
 

@@ -14,7 +14,7 @@ namespace logging
 
     public:
 
-        static Logger defaultLogger(std::string scope)
+        static Logger defaultLogger(const std::string& scope)
         {
             return Logger(
                 scope,
@@ -28,7 +28,7 @@ namespace logging
         explicit Logger(std::string scope, Sinks&&... sinks)
             : _scope(std::move(scope))
         {
-            (_sinks.emplace_back(std::move(sinks)), ...);
+            (_sinks.emplace_back(std::forward<Sinks>(sinks)), ...);
         }
 
         // ReSharper disable once CppMemberFunctionMayBeConst

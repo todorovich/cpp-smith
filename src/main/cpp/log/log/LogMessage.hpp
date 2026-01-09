@@ -8,9 +8,11 @@ namespace logging
 {
 	struct LogMessage
 	{
+		enum class Level { Trace, Debug, Info, Warn, Error, Critical };
+
 		std::string message;
 		std::string scope;
-		enum class Level { Trace, Debug, Info, Warn, Error, Critical } level;
+		Level level;
 		std::chrono::system_clock::time_point timestamp;
 		std::thread::id thread_id;
 	};

@@ -63,8 +63,8 @@ namespace test
         inline const static Test<void, std::string, std::filesystem::path> compile_and_run_hello_world {
             "compileAndRunHelloWorld", compileAndRunHelloWorld,
             {
-                { "hello world", cpp_smith_source_directory / "src/test/data/hello-world/hello_world.cpp" }//,
-                //{ "hello relative", "src/test/data/hello-world/hello_world.cpp" }
+                { "hello world", cpp_smith_source_directory / "src/test/data/hello-world/hello_world.cpp" },
+                { "hello relative", "src/test/data/hello-world/hello_world.cpp" }
             }
         };
 	};

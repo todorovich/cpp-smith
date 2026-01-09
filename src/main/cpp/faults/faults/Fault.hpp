@@ -16,7 +16,7 @@ namespace faults
 			const std::source_location sourceLocation = std::source_location::current(),
 			const std::stacktrace& stackTrace = std::stacktrace::current()
 		) noexcept
-			: message(std::move(message))
+			: message(message)
 			, source_location(sourceLocation)
 			, stacktrace(stackTrace)
 		{};

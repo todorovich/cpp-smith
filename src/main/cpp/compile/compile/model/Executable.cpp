@@ -65,7 +65,7 @@ namespace cpp_smith
         shared_library_files.reserve(getDependencies().size());
         static_library_files.reserve(getDependencies().size());
 
-        for (const auto dependency : getDependencies())
+        for (const auto& dependency : getDependencies())
         {
             const auto& artifact = _parent.getArtifact(dependency);
 

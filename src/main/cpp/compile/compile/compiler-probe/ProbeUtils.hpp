@@ -22,12 +22,12 @@ inline std::vector<std::filesystem::path> ParseSystemIncludeSearchPaths(const st
 
         while (std::getline(stream, line))
         {
-            if (line.find("#include <...> search starts here:") != std::string::npos)
+            if (line.contains("#include <...> search starts here:"))
             {
                 in_section = true;
                 continue;
             }
-            if (line.find("End of search list.") != std::string::npos)
+            if (line.contains("End of search list."))
             {
                 break;
             }

@@ -117,8 +117,8 @@ namespace cpp_smith::algorithm
                     throw faults::invalid::Argument{ "DependencyGraph: nodes contains nullptr" };
                 }
 
-                Key k = static_cast<Key>(std::invoke(key_of, _nodes[i]));
-                keys.push_back(k);
+                auto key = static_cast<Key>(std::invoke(key_of, _nodes[i]));
+                keys.push_back(key);
                 index_of.emplace(keys.back(), i);
             }
 
@@ -157,7 +157,7 @@ namespace cpp_smith::algorithm
                             throw faults::invalid::Argument{ "DependencyGraph: dependencies contains nullptr" };
                         }
 
-                        const Key dep_key = static_cast<Key>(std::invoke(key_of, const_cast<Node*>(dep_ptr)));
+                        const auto dep_key = static_cast<Key>(std::invoke(key_of, const_cast<Node*>(dep_ptr)));
 
                         const auto it = index_of.find(dep_key);
                         if (it == index_of.end())

@@ -5,7 +5,7 @@
 namespace cpp_smith
 {
     CompilationConfiguration::CompilationConfiguration(
-        std::string name,
+        const std::string& name,
         const Triplet triplet,
         const ProjectPaths& paths,
         std::vector<std::string> flags,
@@ -14,7 +14,7 @@ namespace cpp_smith
         std::vector<std::filesystem::path> system_includes
     )
         // TODO: failing to provide the right type gives the dumbest error. Make it make sense.
-        : Configuration(std::move(name), TypeId::of<CompilationConfiguration>())
+        : Configuration(name, TypeId::of<CompilationConfiguration>())
         , _compiler(triplet.compiler)
         , _platform(triplet.platform)
         , _architecture(triplet.architecture)

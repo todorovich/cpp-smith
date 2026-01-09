@@ -6,7 +6,7 @@
 
 namespace test
 {
-    inline const static struct Tests
+    struct Tests
     {
         inline static std::vector<std::string> executed{};
 
@@ -22,49 +22,49 @@ namespace test
         static void test_a()
         {
             assert_prefix({"D", "B", "E", "C", "F", "G", "H"});
-            executed.push_back("A");
+            executed.emplace_back("A");
         }
 
         static void test_b()
         {
             assert_prefix({"D"});
-            executed.push_back("B");
+            executed.emplace_back("B");
         }
 
         static void test_c()
         {
             assert_prefix({"D", "B", "E"});
-            executed.push_back("C");
+            executed.emplace_back("C");
         }
 
         static void test_d()
         {
             executed.clear();
-            executed.push_back("D");
+            executed.emplace_back("D");
         }
 
         static void test_e()
         {
             assert_prefix({"D", "B"});
-            executed.push_back("E");
+            executed.emplace_back("E");
         }
 
         static void test_f()
         {
             assert_prefix({"D", "B", "E", "C"});
-            executed.push_back("F");
+            executed.emplace_back("F");
         }
 
         static void test_g()
         {
             assert_prefix({"D", "B", "E", "C", "F"});
-            executed.push_back("G");
+            executed.emplace_back("G");
         }
 
         static void test_h()
         {
             assert_prefix({"D", "B", "E", "C", "F", "G"});
-            executed.push_back("H");
+            executed.emplace_back("H");
         }
 
         Test<void> A;
@@ -86,5 +86,7 @@ namespace test
             , G("Ordered Test: G", test_g, std::vector<TestInterface*>{ &F })
             , H("Ordered Test: H", test_h, std::vector<TestInterface*>{ &G })
         {}
-    } tests {};
+    };
+
+    inline const static Tests tests {};
 }

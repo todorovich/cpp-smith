@@ -17,7 +17,6 @@ namespace cpp_smith
         static constexpr std::string_view value = "cpp_smith::SharedLibrary";
     };
 
-    // TODO: This should be in compile not cpp_smith
     class SharedLibrary final : public Artifact
     {
         inline static logging::Logger logger = logging::Logger::defaultLogger("cpp_smith::SharedLibrary");

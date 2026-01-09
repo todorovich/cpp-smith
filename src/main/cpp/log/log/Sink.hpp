@@ -6,7 +6,6 @@ namespace logging
 {
     class Sink
     {
-    protected:
         std::unique_ptr<LogMessageFormatter> _formatter;
 
     public:
@@ -28,7 +27,7 @@ namespace logging
             doWrite(_formatter->format(msg));
         }
 
-        virtual void flush() {}
+        virtual void flush() { /* default implementation is no-op */ }
     };
 
     class ConsoleSink final : public Sink {

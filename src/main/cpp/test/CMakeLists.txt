@@ -9,11 +9,15 @@ target_sources(cpp-test
         test/Ansi.hpp
         test/Assert.hpp
         test/Diff.hpp
+        test/FailureInfo.hpp
+        test/FailureKind.hpp
+        test/FormatHelper.hpp
         test/Tester.hpp
         test/Test.hpp
         test/TestInterface.hpp
         test/TestRegistry.hpp
         test/TestResult.hpp
+        test/TestStatus.hpp
 )
 
 target_link_libraries(cpp-test
